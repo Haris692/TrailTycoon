@@ -194,6 +194,11 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 .picker-header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
 .picker-header h3{font-family:'Orbitron',sans-serif;font-weight:700;font-size:15px;}
 .picker-close{background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;}
+.picker-tabs{display:flex;border-bottom:1px solid var(--line);background:var(--bg);overflow-x:auto;}
+.picker-tabs button{padding:10px 16px;border:none;background:none;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;font-weight:500;display:flex;align-items:center;gap:5px;}
+.picker-tabs button.active{color:var(--green);border-bottom-color:var(--green);font-weight:700;background:rgba(34,197,94,.05);}
+.picker-tabs button:hover{color:var(--text);}
+.picker-tabs .ptab-count{font-size:9px;background:var(--bg3);color:var(--faint);padding:1px 5px;border-radius:3px;font-weight:600;}
 .picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);}
 .pick-card{background:var(--bg);padding:16px;cursor:pointer;transition:all .2s;border:2px solid transparent;}
 .pick-card:hover{background:var(--bg3);border-color:var(--green);}
@@ -1033,6 +1038,7 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
       <h3>Choose a training</h3>
       <button class="picker-close" onclick="closePicker()">✕</button>
     </div>
+    <div class="picker-tabs" id="picker-tabs"></div>
     <div class="picker-grid" id="picker-grid"></div>
   </div>
 </div>
@@ -1863,6 +1869,16 @@ function floatNumber(text,x,y,isPos){
 }
 
 /* ════ WEEKLY PLANNER ════ */
+const TRAINING_CATEGORIES = [
+  {id:'all', label:'All', icon:'📋', ids:null},
+  {id:'running', label:'Running', icon:'🏃', ids:['easy_run','long_run','interval','hill_repeats','trail_run']},
+  {id:'strength', label:'Strength', icon:'💪', ids:['muscu','renforcement','cross_training']},
+  {id:'recovery', label:'Recovery', icon:'🧘', ids:['rest','yoga']},
+  {id:'mental', label:'Mental', icon:'🧠', ids:['mental_training']},
+  {id:'elite', label:'Elite', icon:'🔥', ids:['night_run','back_to_back','altitude_camp']},
+];
+let activePickerTab='all';
+
 function openPicker(dayIdx){
   // Block picker on race days
   if(weekPlan[dayIdx].some(id => id.startsWith('race:') || id.startsWith('race_day2:'))){
@@ -1870,17 +1886,35 @@ function openPicker(dayIdx){
   }
   if(weekPlan[dayIdx].length>=slotsPerDay()){toast(`Max ${slotsPerDay()} training(s)/day at your level!`,'err');return;}
   pickerDayIdx=dayIdx;
+  activePickerTab='all';
+  renderPickerTabs();
+  renderPickerGrid();
+  document.getElementById('train-picker').classList.add('show');
+}
+
+function renderPickerTabs(){
+  const tabsEl=document.getElementById('picker-tabs');
+  tabsEl.innerHTML='';
+  TRAINING_CATEGORIES.forEach(cat=>{
+    const count = cat.ids ? TRAININGS.filter(t=>cat.ids.includes(t.id)).length : TRAININGS.length;
+    const btn=document.createElement('button');
+    btn.className=activePickerTab===cat.id?'active':'';
+    btn.innerHTML=`${cat.icon} ${cat.label} <span class="ptab-count">${count}</span>`;
+    btn.onclick=()=>{activePickerTab=cat.id;renderPickerTabs();renderPickerGrid();};
+    tabsEl.appendChild(btn);
+  });
+}
+
+function renderPickerGrid(){
   const grid=document.getElementById('picker-grid');grid.innerHTML='';
+  const prevDayHasRest = pickerDayIdx > 0 && weekPlan[pickerDayIdx - 1].some(id => id === 'rest');
+  const activeCat = TRAINING_CATEGORIES.find(c=>c.id===activePickerTab);
+  const filtered = activeCat.ids ? TRAININGS.filter(t=>activeCat.ids.includes(t.id)) : TRAININGS;
 
-  // Check if previous day has rest (for consecutive rest restriction)
-  const prevDayHasRest = dayIdx > 0 && weekPlan[dayIdx - 1].some(id => id === 'rest');
-
-  TRAININGS.forEach(t=>{
+  filtered.forEach(t=>{
     const locked=t.reqRank&&G.rank<t.reqRank;
-    // Consecutive rest restriction
     const isRestType = (t.id === 'rest');
     const restBlocked = isRestType && prevDayHasRest;
-    // Injury restriction
     const hasInjury = G.injuries.length > 0;
     const freshInjury = hasInjury && G.injuries.some(inj => inj.duration >= inj.maxDuration);
     const injuryBlocked = hasInjury && (freshInjury ? (t.id !== 'rest' && t.id !== 'yoga') : !LIGHT_TRAININGS.includes(t.id));
@@ -1898,7 +1932,6 @@ function openPicker(dayIdx){
     if(!locked&&!restBlocked&&!injuryBlocked) card.onclick=()=>{weekPlan[pickerDayIdx].push(t.id);closePicker();renderPlanner();};
     grid.appendChild(card);
   });
-  document.getElementById('train-picker').classList.add('show');
 }
 
 function closePicker(){document.getElementById('train-picker').classList.remove('show');pickerDayIdx=-1;}
