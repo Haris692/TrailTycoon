@@ -389,8 +389,9 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 .day-slot.race-day-blocked { border-style: solid; border-color: var(--orange); background: rgba(249,115,22,.05); cursor: default; opacity: .7; }
 
 /* ═══ KINÉ BUTTON ═══ */
-.btn-kine { display: inline-flex; align-items: center; gap: 4px; background: none; border: 1px solid var(--blue); color: var(--blue); padding: 4px 10px; font-size: 10px; font-weight: 600; cursor: pointer; border-radius: 4px; margin-left: 8px; transition: all .2s; letter-spacing: .5px; text-transform: uppercase; }
+.btn-kine { display: inline-flex; align-items: center; gap: 4px; background: none; border: 1px solid var(--blue); color: var(--blue); padding: 4px 10px; font-size: 10px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all .2s; letter-spacing: .5px; text-transform: uppercase; }
 .btn-kine:hover { background: rgba(56,189,248,.12); box-shadow: 0 0 8px rgba(56,189,248,.3); }
+.btn-kine:disabled { cursor: not-allowed; }
 
 /* ═══ RACE DETAIL MODAL ═══ */
 #race-detail-modal { display: none; position: fixed; inset: 0; background: rgba(11,26,15,.92); backdrop-filter: blur(6px); z-index: 450; align-items: center; justify-content: center; padding: 30px; }
@@ -1384,13 +1385,14 @@ const COACH_TIPS=[
 
 /* ════ INJURIES ════ */
 const INJURIES = [
-  {id:'itband', name:"IT Band Syndrome", minDur:2, maxDur:4, perfMalus:15, icon:'🦵'},
-  {id:'achilles', name:"Achilles Tendinitis", minDur:3, maxDur:6, perfMalus:20, icon:'🦶'},
-  {id:'stress_fracture', name:"Stress Fracture", minDur:6, maxDur:10, perfMalus:30, icon:'🦴'},
-  {id:'ankle_sprain', name:"Ankle Sprain", minDur:2, maxDur:5, perfMalus:20, icon:'🩹'},
-  {id:'shin_splints', name:"Shin Splints", minDur:3, maxDur:5, perfMalus:15, icon:'🦵'},
-  {id:'plantar', name:"Plantar Fasciitis", minDur:3, maxDur:6, perfMalus:18, icon:'🦶'},
+  {id:'itband', name:"IT Band Syndrome", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
+  {id:'achilles', name:"Achilles Tendinitis", minDur:2, maxDur:3, perfMalus:15, icon:'🦶', weight:4, context:'overload'},
+  {id:'stress_fracture', name:"Stress Fracture", minDur:3, maxDur:5, perfMalus:25, icon:'🦴', weight:1, context:'overload'},
+  {id:'ankle_sprain', name:"Ankle Sprain", minDur:1, maxDur:3, perfMalus:15, icon:'🩹', weight:6, context:'technical'},
+  {id:'shin_splints', name:"Shin Splints", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
+  {id:'plantar', name:"Plantar Fasciitis", minDur:2, maxDur:3, perfMalus:12, icon:'🦶', weight:4, context:'overload'},
 ];
+const LIGHT_TRAININGS = ['easy_run','yoga','rest','cross_training','renforcement','mental_training'];
 
 /* ════ CREW ════ */
 const CREW = [
@@ -1781,22 +1783,36 @@ function calcInjuryRiskLabel(risk) {
   return {label:'Extreme', cls:'extreme'};
 }
 
-function rollInjury(riskPercent) {
+function rollInjury(riskPercent, context) {
   if(Math.random()*100 < riskPercent) {
-    const template = INJURIES[Math.floor(Math.random()*INJURIES.length)];
+    // Weighted selection, boosted by context match
+    const weights = INJURIES.map(inj => {
+      let w = inj.weight;
+      if(context && inj.context === context) w *= 2;
+      return w;
+    });
+    const totalW = weights.reduce((a,b)=>a+b,0);
+    let roll = Math.random() * totalW;
+    let template = INJURIES[0];
+    for(let i=0;i<INJURIES.length;i++){
+      roll -= weights[i];
+      if(roll <= 0){ template = INJURIES[i]; break; }
+    }
     const dur = template.minDur + Math.floor(Math.random()*(template.maxDur - template.minDur + 1));
     const injury = {
       id: template.id,
       name: template.name,
       icon: template.icon,
       duration: dur,
+      maxDuration: dur,
       perfMalus: template.perfMalus,
       weekInjured: G.week,
-      relapseRisk: 30
+      relapseRisk: 20,
+      selfCareUsed: false
     };
     G.injuries.push(injury);
-    G.health = Math.max(10, G.health - 15);
-    if(dur >= 4) gainReputation(-15,'serious injury');
+    G.health = Math.max(10, G.health - 10);
+    if(dur >= 4) gainReputation(-10,'serious injury');
     toast(`${template.icon} ${template.name} (${dur} wk.)`, 'err');
     addLog(`${template.icon} Injury: ${template.name} — rest ${dur} wk.`, 'injury');
     return true;
@@ -1804,13 +1820,35 @@ function rollInjury(riskPercent) {
   return false;
 }
 
+function useSelfCare(injuryIdx) {
+  if(injuryIdx < 0 || injuryIdx >= G.injuries.length) return;
+  const inj = G.injuries[injuryIdx];
+  if(inj.selfCareUsed) { toast('Already used self-care on this injury','err'); return; }
+  inj.selfCareUsed = true;
+  inj.duration = Math.max(1, inj.duration - 1);
+  toast('🧊 Self-care: duration reduced by 1 week','ok');
+  renderAll();
+}
 function useKine(injuryIdx) {
-  const cost = 150;
-  if(G.cash < cost) { toast('Not enough cash (150\u20ac)','err'); return; }
+  const cost = 80;
+  if(G.cash < cost) { toast('Not enough cash (80\u20ac)','err'); return; }
   if(injuryIdx < 0 || injuryIdx >= G.injuries.length) return;
   G.cash -= cost;
-  G.injuries[injuryIdx].duration = Math.max(1, G.injuries[injuryIdx].duration - 2);
-  toast('💆 Physio: duration reduced by 2 weeks','ok');
+  const inj = G.injuries[injuryIdx];
+  inj.duration = Math.max(1, inj.duration - 1);
+  inj.perfMalus = Math.max(0, inj.perfMalus - 5);
+  toast('💆 Physio: -1 week, -5% malus','ok');
+  renderAll();
+}
+function useDoctor(injuryIdx) {
+  const cost = 200;
+  if(G.cash < cost) { toast('Not enough cash (200\u20ac)','err'); return; }
+  if(injuryIdx < 0 || injuryIdx >= G.injuries.length) return;
+  G.cash -= cost;
+  const inj = G.injuries[injuryIdx];
+  inj.duration = Math.max(1, inj.duration - 2);
+  inj.perfMalus = Math.max(0, inj.perfMalus - 10);
+  toast('🏥 Doctor: -2 weeks, -10% malus','ok');
   renderAll();
 }
 
@@ -1842,16 +1880,22 @@ function openPicker(dayIdx){
     // Consecutive rest restriction
     const isRestType = (t.id === 'rest');
     const restBlocked = isRestType && prevDayHasRest;
+    // Injury restriction
+    const hasInjury = G.injuries.length > 0;
+    const freshInjury = hasInjury && G.injuries.some(inj => inj.duration >= inj.maxDuration);
+    const injuryBlocked = hasInjury && (freshInjury ? (t.id !== 'rest' && t.id !== 'yoga') : !LIGHT_TRAININGS.includes(t.id));
 
     const card=document.createElement('div');
-    card.className='pick-card'+((locked||restBlocked)?' disabled':'');
+    card.className='pick-card'+((locked||restBlocked||injuryBlocked)?' disabled':'');
     card.innerHTML=`<div class="pc-icon">${t.icon}</div>
       <div class="pc-name">${t.name}</div>
       <div class="pc-effect">${t.effect}</div>
       <div class="pc-cost">⚡ ${t.energyCost>0?'-'+t.energyCost:'+'+Math.abs(t.energyCost)} energy${t.cashCost?' · '+t.cashCost+'€':''}</div>
       ${locked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🔒 '+RANKS[t.reqRank].name+'</div>':''}
-      ${restBlocked?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ Consecutive rest forbidden</div>':''}`;
-    if(!locked&&!restBlocked) card.onclick=()=>{weekPlan[pickerDayIdx].push(t.id);closePicker();renderPlanner();};
+      ${restBlocked?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ Consecutive rest forbidden</div>':''}
+      ${injuryBlocked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🤕 '+(freshInjury?'Rest only (fresh injury)':'Too intense while injured')+'</div>':''}
+      ${hasInjury&&!injuryBlocked&&t.id!=='rest'&&t.id!=='yoga'?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ 50% efficiency (injured)</div>':''}`;
+    if(!locked&&!restBlocked&&!injuryBlocked) card.onclick=()=>{weekPlan[pickerDayIdx].push(t.id);closePicker();renderPlanner();};
     grid.appendChild(card);
   });
   document.getElementById('train-picker').classList.add('show');
@@ -1896,16 +1940,22 @@ function executeWeek(){
   // Check if there's a race in the planner
   const hasRaceInPlan = weekPlan.some(day => day.some(id => id.startsWith('race:')));
 
-  // Check injuries - block non-rest training (but allow race days)
+  // Check injuries - first week: only rest/yoga. After that: light training allowed at 50% efficiency
   if(G.injuries.length > 0) {
-    let hasHardTraining = false;
+    const freshInjury = G.injuries.some(inj => inj.duration >= inj.maxDuration); // still in first week
+    let hasBlockedTraining = false;
     weekPlan.forEach(dayTrainings => {
       dayTrainings.forEach(id => {
-        if(id !== 'rest' && id !== 'yoga' && !id.startsWith('race:') && !id.startsWith('race_day2:')) hasHardTraining = true;
+        if(id.startsWith('race:') || id.startsWith('race_day2:')) return;
+        if(freshInjury) {
+          if(id !== 'rest' && id !== 'yoga') hasBlockedTraining = true;
+        } else {
+          if(!LIGHT_TRAININGS.includes(id)) hasBlockedTraining = true;
+        }
       });
     });
-    if(hasHardTraining) {
-      toast('🤕 Injured! Only rest and yoga allowed.','err');
+    if(hasBlockedTraining) {
+      toast(freshInjury ? '🤕 Fresh injury! Only rest and yoga this week.' : '🤕 Injured! Only light training allowed (easy run, cross-training, strengthening, yoga, rest, visualization).','err');
       return;
     }
   }
@@ -1943,6 +1993,8 @@ function executeWeek(){
 
       // Effectiveness multiplier
       let effMult = G.health<50 ? 0.5 : G.energy<20 ? 0.6 : 1;
+      // Injured: light training at 50% efficiency
+      if(G.injuries.length > 0 && t.id !== 'rest' && t.id !== 'yoga') effMult *= 0.5;
       // Fatigue penalty
       if(G.fatigue > 90) effMult *= 0.5;
       else if(G.fatigue > 70) effMult *= 0.5;
@@ -1967,7 +2019,8 @@ function executeWeek(){
       if(hasSkill('focus')) injuryBaseRisk = Math.round(injuryBaseRisk * 0.85);
 
       if(injuryBaseRisk > 0 && t.id !== 'rest' && t.id !== 'yoga') {
-        rollInjury(injuryBaseRisk);
+        const ctx = ['trail_run','hill_repeats','night_run'].includes(t.id) ? 'technical' : 'overload';
+        rollInjury(injuryBaseRisk, ctx);
       }
 
       totalXP+=t.xp;
@@ -2055,9 +2108,9 @@ function showWeekRecap(){
 function advanceWeek(){
   G.week++;
 
-  // Natural recovery
+  // Natural recovery (faster health recovery when injured)
   G.energy=Math.min(G.maxEnergy,G.energy+20);
-  G.health=Math.min(100,G.health+5);
+  G.health=Math.min(100,G.health+(G.injuries.length > 0 ? 8 : 5));
 
   // Natural fatigue decay
   G.fatigue = Math.max(0, G.fatigue - 5);
@@ -2619,7 +2672,7 @@ function finishRace(race,kmDone,elapsed,isDNF){
       if(G.raceStrategy==='conservative') raceRisk=Math.round(raceRisk*0.5);
       else if(G.raceStrategy==='aggressive') raceRisk=Math.round(raceRisk*1.5);
     }
-    rollInjury(raceRisk);
+    rollInjury(raceRisk, race.elev > 2000 ? 'technical' : 'overload');
 
     // Rival race participation
     processRivalRace(race, pos, total, false);
@@ -3975,11 +4028,16 @@ function renderAside(){
   let tipHTML='';
   // Show injuries with kiné button
   if(G.injuries.length) {
-    tipHTML += '<div style="margin-bottom:8px">';
+    tipHTML += '<div style="margin-bottom:10px">';
     G.injuries.forEach((inj, idx) => {
-      tipHTML += `<div style="color:var(--red);font-weight:600;margin-bottom:6px;display:flex;align-items:center;flex-wrap:wrap">
-        ${inj.icon} ${inj.name} (${inj.duration} wk.) — -${inj.perfMalus}% perf
-        <button class="btn-kine" onclick="useKine(${idx})">💆 Physio (150€)</button>
+      const freshTag = inj.duration >= inj.maxDuration ? ' <span style="color:var(--amber);font-size:9px;letter-spacing:1px">FRESH — REST ONLY</span>' : ' <span style="color:var(--green);font-size:9px;letter-spacing:1px">LIGHT TRAINING OK</span>';
+      tipHTML += `<div style="color:var(--red);font-weight:600;margin-bottom:8px">
+        ${inj.icon} ${inj.name} (${inj.duration} wk.) — -${inj.perfMalus}% perf${freshTag}
+        <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">
+          <button class="btn-kine" onclick="useSelfCare(${idx})" ${inj.selfCareUsed?'disabled style="opacity:.4"':''}>🧊 Self-care (free)</button>
+          <button class="btn-kine" onclick="useKine(${idx})">💆 Physio (80€)</button>
+          <button class="btn-kine" onclick="useDoctor(${idx})">🏥 Doctor (200€)</button>
+        </div>
       </div>`;
     });
     tipHTML += '</div>';
