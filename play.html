@@ -213,6 +213,9 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 
 /* ═══ RACE CARDS ═══ */
 .race-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--line);}
+.rf-btn{padding:6px 14px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;}
+.rf-btn.active{background:var(--green);color:var(--bg);border-color:var(--green);font-weight:700;}
+.rf-btn:hover{border-color:var(--faint);color:var(--text);}
 .race-card{background:var(--bg);padding:20px;cursor:pointer;transition:all .25s;border:1px solid transparent;position:relative;overflow:hidden;}
 .race-card:hover{background:var(--bg2);border-color:var(--faint);transform:translateY(-2px);}
 .race-card.locked{opacity:.6;}
@@ -798,14 +801,15 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
     You are 26 years old, passionate about sports.<br>
     You just ran your first <strong>10K</strong> in 52 minutes.<br>
     A friend finished the <strong>UTMB</strong> last year. It sparked something in you.<br><br>
-    Goal: <strong>finish the UTMB</strong> (171 km, 10,000 D+) in <strong>52 weeks</strong>.<br>
+    Goal: <strong>finish the UTMB</strong> (171 km, 10,000 D+).<br>
+    Race the world — from <strong>Chamonix</strong> to <strong>Western States</strong> to the <strong>Sahara</strong>.<br>
     Plan your week, run races, manage your body, buy gear.<br>
-    Every choice matters.
+    Every choice matters. No time limit — build your legacy.
   </p>
   <div class="intro-grid">
-    <div class="ig"><div class="iv">52</div><div class="il">Weeks</div></div>
-    <div class="ig"><div class="iv">171</div><div class="il">Target KM</div></div>
-    <div class="ig"><div class="iv">10K</div><div class="il">Target D+</div></div>
+    <div class="ig"><div class="iv">∞</div><div class="il">Weeks</div></div>
+    <div class="ig"><div class="iv">36</div><div class="il">Races</div></div>
+    <div class="ig"><div class="iv">3</div><div class="il">Continents</div></div>
     <div class="ig"><div class="iv">0</div><div class="il">Starting XP</div></div>
   </div>
   <button class="btn-start" onclick="showCharCreate(true)">Lace up your shoes</button>
@@ -875,7 +879,7 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
     </div>
     <div class="hdr-right">
       <div class="season-badge spring" id="season-badge">Spring</div>
-      <div class="week-pill">Wk. <strong id="weeknum">1</strong>/52</div>
+      <div class="week-pill">Yr. <strong id="yearnum">1</strong> · Wk. <strong id="weeknum">1</strong></div>
       <button onclick="startTutorial()" title="Tutorial" style="background:none;border:1px solid var(--line);color:var(--muted);padding:4px 10px;font-size:13px;cursor:pointer;border-radius:4px;transition:all .15s;font-weight:600;">?</button>
       <button class="hdr-support-btn" onclick="openSupporterModal()" id="hdr-sup-btn">⭐ Support</button>
     </div>
@@ -1301,16 +1305,47 @@ const TRAININGS=[
 ];
 
 const RACES=[
-  {id:'5k_city',name:'5K des Quais',loc:'Grenoble, plat',dist:5,elev:50,diff:'easy',prize:30,xp:15,reqFitness:0,reqRank:0,season:'any'},
-  {id:'10k_park',name:'10K du Parc',loc:'Grenoble, parc',dist:10,elev:100,diff:'easy',prize:50,xp:25,reqFitness:10,reqRank:0,season:'any'},
-  {id:'trail_15',name:'Trail des Collines',loc:'Chartreuse, 15 km',dist:15,elev:600,diff:'medium',prize:80,xp:40,reqFitness:25,reqRank:1,season:'spring'},
-  {id:'trail_25',name:'Trail du Vercors',loc:'Vercors, 25 km',dist:25,elev:1200,diff:'medium',prize:120,xp:55,reqFitness:40,reqRank:2,season:'spring'},
-  {id:'semi_trail',name:'Semi-Marathon Trail',loc:'Belledonne, 21 km',dist:21,elev:900,diff:'medium',prize:100,xp:45,reqFitness:35,reqRank:1,season:'any'},
-  {id:'marathon_trail',name:'Marathon des Cimes',loc:'Alpes, 42 km',dist:42,elev:2500,diff:'hard',prize:200,xp:90,reqFitness:55,reqRank:3,season:'summer'},
-  {id:'trail_50',name:'Ultra Trail 50K',loc:'Mont-Blanc, 50 km',dist:50,elev:3200,diff:'hard',prize:300,xp:120,reqFitness:65,reqRank:3,season:'summer'},
-  {id:'trail_80',name:'CCC (80 km)',loc:'Chamonix-Courmayeur',dist:80,elev:5000,diff:'extreme',prize:500,xp:200,reqFitness:75,reqRank:4,season:'autumn'},
-  {id:'trail_100',name:'TDS (120 km)',loc:'Chamonix, 120 km',dist:120,elev:7200,diff:'extreme',prize:800,xp:300,reqFitness:85,reqRank:5,season:'autumn'},
-  {id:'utmb',name:'UTMB',loc:'Chamonix — 171 km, 10 000 D+',dist:171,elev:10000,diff:'legendary',prize:2000,xp:500,reqFitness:95,reqRank:6,season:'autumn'},
+  // ═══ EUROPE — France / Alps ═══
+  {id:'5k_city',name:'5K des Quais',loc:'Grenoble, France',dist:5,elev:50,diff:'easy',prize:30,xp:15,reqFitness:0,reqRank:0,season:'any',region:'europe'},
+  {id:'10k_park',name:'10K du Parc',loc:'Grenoble, France',dist:10,elev:100,diff:'easy',prize:50,xp:25,reqFitness:10,reqRank:0,season:'any',region:'europe'},
+  {id:'trail_15',name:'Trail des Collines',loc:'Chartreuse, France',dist:15,elev:600,diff:'medium',prize:80,xp:40,reqFitness:25,reqRank:1,season:'spring',region:'europe'},
+  {id:'trail_25',name:'Trail du Vercors',loc:'Vercors, France',dist:25,elev:1200,diff:'medium',prize:120,xp:55,reqFitness:40,reqRank:2,season:'spring',region:'europe'},
+  {id:'semi_trail',name:'Semi-Marathon Trail',loc:'Belledonne, France',dist:21,elev:900,diff:'medium',prize:100,xp:45,reqFitness:35,reqRank:1,season:'any',region:'europe'},
+  {id:'marathon_trail',name:'Marathon des Cimes',loc:'Alpes, France',dist:42,elev:2500,diff:'hard',prize:200,xp:90,reqFitness:55,reqRank:3,season:'summer',region:'europe'},
+  {id:'trail_50',name:'Ultra Trail 50K',loc:'Mont-Blanc, France',dist:50,elev:3200,diff:'hard',prize:300,xp:120,reqFitness:65,reqRank:3,season:'summer',region:'europe'},
+  {id:'trail_80',name:'CCC (80 km)',loc:'Chamonix-Courmayeur',dist:80,elev:5000,diff:'extreme',prize:500,xp:200,reqFitness:75,reqRank:4,season:'autumn',region:'europe'},
+  {id:'trail_100',name:'TDS (120 km)',loc:'Chamonix, France',dist:120,elev:7200,diff:'extreme',prize:800,xp:300,reqFitness:85,reqRank:5,season:'autumn',region:'europe'},
+  {id:'utmb',name:'UTMB',loc:'Chamonix — 171 km, 10 000 D+',dist:171,elev:10000,diff:'legendary',prize:2000,xp:500,reqFitness:95,reqRank:6,season:'autumn',region:'europe'},
+
+  // ═══ USA — Trails & Marathons ═══
+  {id:'boston',name:'Boston Marathon',loc:'Boston, Massachusetts',dist:42,elev:150,diff:'medium',prize:250,xp:80,reqFitness:45,reqRank:2,season:'spring',region:'usa'},
+  {id:'nyc_marathon',name:'NYC Marathon',loc:'New York City',dist:42,elev:100,diff:'medium',prize:250,xp:80,reqFitness:45,reqRank:2,season:'autumn',region:'usa'},
+  {id:'chicago_marathon',name:'Chicago Marathon',loc:'Chicago, Illinois',dist:42,elev:50,diff:'easy',prize:200,xp:70,reqFitness:35,reqRank:1,season:'autumn',region:'usa'},
+  {id:'big_sur',name:'Big Sur Marathon',loc:'California Coast',dist:42,elev:600,diff:'medium',prize:180,xp:75,reqFitness:40,reqRank:2,season:'spring',region:'usa'},
+  {id:'moab_trail',name:'Moab Trail Marathon',loc:'Moab, Utah',dist:42,elev:1500,diff:'hard',prize:200,xp:95,reqFitness:55,reqRank:3,season:'spring',region:'usa'},
+  {id:'pikes_peak',name:'Pikes Peak Ascent',loc:'Colorado Springs, Colorado',dist:21,elev:2380,diff:'hard',prize:250,xp:100,reqFitness:60,reqRank:3,season:'summer',region:'usa'},
+  {id:'speedgoat',name:'Speedgoat 50K',loc:'Snowbird, Utah',dist:50,elev:3500,diff:'hard',prize:350,xp:130,reqFitness:65,reqRank:3,season:'summer',region:'usa'},
+  {id:'western_states',name:'Western States 100',loc:'Squaw Valley to Auburn, California',dist:161,elev:5500,diff:'legendary',prize:1800,xp:480,reqFitness:90,reqRank:6,season:'summer',region:'usa'},
+  {id:'leadville',name:'Leadville 100',loc:'Leadville, Colorado — 3000m altitude',dist:161,elev:4800,diff:'legendary',prize:1600,xp:460,reqFitness:90,reqRank:6,season:'summer',region:'usa'},
+  {id:'hardrock',name:'Hardrock 100',loc:'Silverton, Colorado',dist:161,elev:10000,diff:'legendary',prize:2000,xp:550,reqFitness:95,reqRank:6,season:'summer',region:'usa'},
+  {id:'wasatch',name:'Wasatch Front 100',loc:'Utah',dist:161,elev:8000,diff:'extreme',prize:1200,xp:400,reqFitness:85,reqRank:5,season:'autumn',region:'usa'},
+  {id:'bear_100',name:'Bear 100',loc:'Utah-Idaho border',dist:161,elev:6700,diff:'extreme',prize:1000,xp:380,reqFitness:85,reqRank:5,season:'autumn',region:'usa'},
+  {id:'run_rim_run',name:'Grand Canyon R2R2R',loc:'Grand Canyon, Arizona',dist:68,elev:3200,diff:'extreme',prize:600,xp:220,reqFitness:75,reqRank:4,season:'spring',region:'usa'},
+  {id:'javelina',name:'Javelina Jundred',loc:'Phoenix, Arizona',dist:161,elev:2000,diff:'extreme',prize:900,xp:350,reqFitness:80,reqRank:5,season:'autumn',region:'usa'},
+  {id:'tahoe_200',name:'Tahoe 200',loc:'Lake Tahoe, California-Nevada',dist:322,elev:12000,diff:'legendary',prize:3000,xp:700,reqFitness:95,reqRank:6,season:'summer',region:'usa'},
+  {id:'mt_rainier',name:'Wonderland Trail',loc:'Mt Rainier, Washington',dist:150,elev:6800,diff:'extreme',prize:1000,xp:360,reqFitness:85,reqRank:5,season:'summer',region:'usa'},
+
+  // ═══ AFRICA ═══
+  {id:'kilimanjaro',name:'Kilimanjaro Marathon',loc:'Moshi, Tanzania',dist:42,elev:400,diff:'medium',prize:200,xp:85,reqFitness:40,reqRank:2,season:'spring',region:'africa'},
+  {id:'comrades',name:'Comrades Marathon',loc:'KwaZulu-Natal, South Africa',dist:89,elev:1700,diff:'hard',prize:500,xp:180,reqFitness:65,reqRank:3,season:'winter',region:'africa'},
+  {id:'two_oceans',name:'Two Oceans Ultra',loc:'Cape Town, South Africa',dist:56,elev:1200,diff:'hard',prize:350,xp:140,reqFitness:60,reqRank:3,season:'spring',region:'africa'},
+  {id:'marathon_sables',name:'Marathon des Sables',loc:'Sahara Desert, Morocco',dist:250,elev:1500,diff:'legendary',prize:2500,xp:600,reqFitness:95,reqRank:6,season:'spring',region:'africa'},
+  {id:'ultra_trail_atlas',name:'Ultra Trail Atlas Toubkal',loc:'Atlas Mountains, Morocco',dist:105,elev:5500,diff:'extreme',prize:800,xp:280,reqFitness:80,reqRank:5,season:'autumn',region:'africa'},
+  {id:'cape_town_trail',name:'Cape Town Trail Challenge',loc:'Table Mountain, South Africa',dist:35,elev:1800,diff:'hard',prize:220,xp:100,reqFitness:50,reqRank:3,season:'winter',region:'africa'},
+  {id:'otter_trail',name:'Otter African Trail Run',loc:'Garden Route, South Africa',dist:42,elev:2000,diff:'hard',prize:250,xp:110,reqFitness:55,reqRank:3,season:'autumn',region:'africa'},
+  {id:'ultra_mirage',name:'Ultra Mirage',loc:'Merzouga Desert, Morocco',dist:100,elev:800,diff:'extreme',prize:700,xp:250,reqFitness:75,reqRank:4,season:'spring',region:'africa'},
+  {id:'great_ethiopian',name:'Great Ethiopian Run',loc:'Addis Ababa, Ethiopia',dist:10,elev:200,diff:'easy',prize:60,xp:30,reqFitness:10,reqRank:0,season:'winter',region:'africa'},
+  {id:'run_the_wild',name:'Run the Wild — Kenya',loc:'Masai Mara, Kenya',dist:50,elev:1000,diff:'hard',prize:400,xp:150,reqFitness:60,reqRank:3,season:'summer',region:'africa'},
 ];
 
 const GEAR={
@@ -1730,11 +1765,13 @@ function findGear(id){
 }
 
 function getSeason(week){
-  if(week<=13) return {name:'Spring',cls:'spring',idx:0};
-  if(week<=26) return {name:'Summer',cls:'summer',idx:1};
-  if(week<=39) return {name:'Autumn',cls:'autumn',idx:2};
+  const w = ((week-1) % 52) + 1; // cycle every 52 weeks
+  if(w<=13) return {name:'Spring',cls:'spring',idx:0};
+  if(w<=26) return {name:'Summer',cls:'summer',idx:1};
+  if(w<=39) return {name:'Autumn',cls:'autumn',idx:2};
   return {name:'Winter',cls:'winter',idx:3};
 }
+function getYear(week){ return Math.floor((week-1)/52)+1; }
 
 function gainXP(pts){
   G.xp+=pts;
@@ -1968,7 +2005,7 @@ function totalPlannedSessions(){
 function executeWeek(){
   const totalSessions=totalPlannedSessions();
   if(totalSessions===0){toast('Plan at least 1 training!','err');return;}
-  if(G.week>=52&&!G.utmbCompleted){endGame(false);return;}
+  // No week limit — the game continues across years
 
   // Check if there's a race in the planner
   const hasRaceInPlan = weekPlan.some(day => day.some(id => id.startsWith('race:')));
@@ -2219,8 +2256,12 @@ function advanceWeek(){
     setTimeout(()=>showEventModal(rolledEvent),600);
   }
 
-  // Check end
-  if(G.week>52&&!G.utmbCompleted) setTimeout(()=>endGame(false),500);
+  // Year milestone notification
+  if(G.week > 1 && (G.week - 1) % 52 === 0) {
+    const yr = getYear(G.week);
+    toast(`📅 Year ${yr} begins! New season of races ahead.`, 'ok');
+    addLog(`📅 Year ${yr} — A new season begins.`, 'milestone');
+  }
 }
 
 /* ════ GEAR ════ */
@@ -2262,11 +2303,16 @@ function openRaceDetail(raceId) {
   rows += `<div class="rd-info-row"><span class="rd-key">Prize</span><span class="rd-value" style="color:var(--green)">🏆 ${race.prize}€</span></div>`;
   rows += `<div class="rd-info-row"><span class="rd-key">Season</span><span class="rd-value">${race.season === 'any' ? 'All seasons' : race.season} ${seasonOk ? '✓' : '(off season)'}</span></div>`;
 
+  rows += `<div class="rd-info-row"><span class="rd-key">Region</span><span class="rd-value">${REGION_FLAGS[race.region]||''} ${REGION_LABELS[race.region]||race.region}</span></div>`;
+  const completedThisYear = G.racesCompleted.some(x=>x.raceId===race.id && getYear(x.week)===getYear(G.week));
+  if(completedThisYear) rows += `<div class="rd-info-row"><span class="rd-key">Status</span><span class="rd-value" style="color:var(--green)">✓ Done this year</span></div>`;
+
   document.getElementById('rd-info-rows').innerHTML = rows;
 
   const btn = document.getElementById('rd-inscribe-btn');
-  btn.disabled = locked || lowFit || !seasonOk || !!G.nextRace;
-  if(G.nextRace) btn.textContent = 'Already registered';
+  btn.disabled = locked || lowFit || !seasonOk || !!G.nextRace || completedThisYear;
+  if(completedThisYear) btn.textContent = '✓ Already done this year';
+  else if(G.nextRace) btn.textContent = 'Already registered';
   else if(locked) btn.textContent = '🔒 Rank too low';
   else if(lowFit) btn.textContent = '⚠️ Fitness too low';
   else if(!seasonOk) btn.textContent = 'Off season';
@@ -2756,7 +2802,13 @@ function finishRace(race,kmDone,elapsed,isDNF){
 
     setTimeout(() => showRaceResultsModal(race, results, elapsed), 500);
 
-    if(race.id==='utmb'){G.utmbCompleted=true;setTimeout(()=>endGame(true),2500);}
+    if(race.id==='utmb' && !G.utmbCompleted){
+      G.utmbCompleted=true;
+      G.utmbCompletedWeek=G.week;
+      setTimeout(()=>{
+        showNotif('🏆','UTMB COMPLETED!',`${PLAYER.name} finished the UTMB in Year ${getYear(G.week)}!<br><strong>171 km, 10,000 D+</strong>.<br>The dream is real. But the mountains are calling for more...<br><br>The game continues — new races, new challenges await!`);
+      },2500);
+    }
   }
   G.nextRace=null;G.raceBag=null;activeRace=null;renderAll();
 }
@@ -3632,7 +3684,8 @@ function renderHeader(){
   document.getElementById('h-races').textContent=G.racesTotal;
   document.getElementById('h-rep').textContent=G.reputation;
   const spEl=document.getElementById('h-sp');spEl.textContent=G.skillPoints;spEl.className='v '+(G.skillPoints>0?'ora':'');
-  document.getElementById('weeknum').textContent=G.week;
+  document.getElementById('weeknum').textContent=((G.week-1)%52)+1;
+  document.getElementById('yearnum').textContent=getYear(G.week);
   const season=getSeason(G.week);
   const sb=document.getElementById('season-badge');sb.textContent=season.name;sb.className='season-badge '+season.cls;
   const supBtn=document.getElementById('hdr-sup-btn');
@@ -3795,21 +3848,45 @@ function renderPlanner(){
   </div>`).join('');
 }
 
+const REGION_FLAGS = {europe:'🇪🇺',usa:'🇺🇸',africa:'🌍'};
+const REGION_LABELS = {europe:'Europe',usa:'USA',africa:'Africa'};
+let raceFilterRegion = 'all';
+
 function renderRaces(){
   const grid=document.getElementById('race-grid');grid.innerHTML='';
-  RACES.forEach(r=>{
+
+  // Region filter tabs
+  let filterHTML='<div class="race-region-filter" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding:0 16px">';
+  filterHTML+=`<button class="rf-btn${raceFilterRegion==='all'?' active':''}" onclick="raceFilterRegion='all';renderRaces()">📋 All (${RACES.length})</button>`;
+  ['europe','usa','africa'].forEach(reg=>{
+    const count=RACES.filter(r=>r.region===reg).length;
+    filterHTML+=`<button class="rf-btn${raceFilterRegion===reg?' active':''}" onclick="raceFilterRegion='${reg}';renderRaces()">${REGION_FLAGS[reg]} ${REGION_LABELS[reg]} (${count})</button>`;
+  });
+  filterHTML+='</div>';
+  grid.insertAdjacentHTML('beforebegin','');
+  const existingFilter=grid.parentElement.querySelector('.race-region-filter');
+  if(existingFilter) existingFilter.remove();
+  grid.insertAdjacentHTML('beforebegin',filterHTML);
+
+  const filtered = raceFilterRegion==='all' ? RACES : RACES.filter(r=>r.region===raceFilterRegion);
+
+  filtered.forEach(r=>{
     const locked=r.reqRank>G.rank;const lowFit=fitness()<r.reqFitness;
-    const completed=G.racesCompleted.some(x=>x.raceId===r.id);
+    // Completed this year (can redo each year)
+    const currentYear = getYear(G.week);
+    const completedThisYear=G.racesCompleted.some(x=>x.raceId===r.id && getYear(x.week)===currentYear);
+    const completedEver=G.racesCompleted.some(x=>x.raceId===r.id);
     const season=getSeason(G.week);const seasonOk=r.season==='any'||r.season===season.cls;
 
     // Injury risk
     const risk = calcInjuryRisk(r);
     const riskInfo = calcInjuryRiskLabel(risk);
+    const regionFlag = REGION_FLAGS[r.region]||'';
 
     const card=document.createElement('div');
-    card.className='race-card'+(locked?' locked':'')+(completed?' completed':'');
+    card.className='race-card'+(locked?' locked':'')+(completedThisYear?' completed':'');
     card.innerHTML=`<div class="rc-dist">${r.dist}</div><div class="rc-unit">KM · ${r.elev} D+</div>
-      <div class="rc-name">${r.name}</div><div class="rc-loc">📍 ${r.loc}</div>
+      <div class="rc-name">${regionFlag} ${r.name}</div><div class="rc-loc">📍 ${r.loc}</div>
       <div class="rc-info">
         <span class="rc-tag ${r.diff}">${r.diff==='easy'?'Easy':r.diff==='medium'?'Medium':r.diff==='hard'?'Hard':r.diff==='extreme'?'Extreme':'Legendary'}</span>
         <span class="rc-injury-risk ${riskInfo.cls}">🩹 ${riskInfo.label}</span>
@@ -3818,8 +3895,8 @@ function renderRaces(){
       <div class="rc-prize">🏆 ${r.prize}€</div>
       ${locked?`<div class="rc-req">🔒 Rank ${RANKS[r.reqRank].name}</div>`:''}
       ${!locked&&lowFit?`<div class="rc-req">⚠️ Fitness ${r.reqFitness} required (${fitness()})</div>`:''}
-      ${completed?'<div class="rc-done">✓ Completed</div>':''}`;
-    // Click opens race detail modal instead of directly inscribing
+      ${completedThisYear?'<div class="rc-done">✓ Done this year</div>':''}
+      ${!completedThisYear&&completedEver?'<div class="rc-done" style="color:var(--muted)">↻ Run again this year</div>':''}`;
     card.onclick=()=>openRaceDetail(r.id);
     grid.appendChild(card);
   });
@@ -4136,7 +4213,7 @@ const TUTORIAL_STEPS=[
   {
     icon:'🏔️',
     title:'Welcome to Trail Tycoon!',
-    text:'Your goal is to go from a casual jogger to an <strong>UTMB finisher</strong> in 52 weeks.<br><br>This tutorial will walk you through all the game mechanics. You can skip it anytime or replay it later using the <strong class="tut-key">?</strong> button in the header.',
+    text:'Your goal is to go from a casual jogger to an <strong>UTMB finisher</strong>. No time limit — race across <strong>Europe, USA, and Africa</strong> and build your legacy.<br><br>This tutorial will walk you through all the game mechanics. You can skip it anytime or replay it later using the <strong class="tut-key">?</strong> button in the header.',
     target:null, position:'center'
   },
   {
@@ -4525,23 +4602,20 @@ function switchTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');btn.classList.add('active');
 }
 
-function endGame(won){
+function endGame(){
   const go=document.getElementById('gameover');go.classList.add('show');
-  if(won){
-    document.getElementById('go-title').innerHTML='🏆 UTMB COMPLETED!';
-    document.getElementById('go-msg').innerHTML=`${PLAYER.name} achieved ${PLAYER.gender==='female'?'her':'his'} dream. <strong>171 km, 10,000 D+</strong>.<br>From simple jogger to UTMB finisher in ${G.week} weeks.<br>The mountain will never be the same.`;
-  } else {
-    document.getElementById('go-title').innerHTML='Season over';
-    document.getElementById('go-msg').innerHTML=`52 weeks elapsed. ${PLAYER.name} did not finish the UTMB this year.<br>Final fitness: <strong>${fitness()}/100</strong>. ${fitness()>=80?PLAYER.gender==='female'?'She was so close...':'He was so close...':'Maybe next year.'}`;
-  }
+  const yr = getYear(G.week);
+  document.getElementById('go-title').innerHTML='🏆 Career Summary';
+  document.getElementById('go-msg').innerHTML=`${PLAYER.name} — Year ${yr}, Week ${((G.week-1)%52)+1}.<br>${G.utmbCompleted?'<strong>UTMB Finisher</strong> (Year '+getYear(G.utmbCompletedWeek||G.week)+')':'The UTMB dream lives on...'}`;
   document.getElementById('go-stats').innerHTML=`
     <div class="go-stat"><div class="gv">${G.racesTotal}</div><div class="gl">Races</div></div>
     <div class="go-stat"><div class="gv">${G.racesPodium}</div><div class="gl">Podiums</div></div>
-    <div class="go-stat"><div class="gv">${G.totalKm} km</div><div class="gl">Distance</div></div>
-    <div class="go-stat"><div class="gv">${G.totalElev} D+</div><div class="gl">Elevation</div></div>
-    <div class="go-stat"><div class="gv">${RANKS[G.rank].name}</div><div class="gl">Final rank</div></div>
+    <div class="go-stat"><div class="gv">${Math.round(G.totalKm)} km</div><div class="gl">Distance</div></div>
+    <div class="go-stat"><div class="gv">${Math.round(G.totalElev)} D+</div><div class="gl">Elevation</div></div>
+    <div class="go-stat"><div class="gv">${RANKS[G.rank].name}</div><div class="gl">Rank</div></div>
     <div class="go-stat"><div class="gv">${G.reputation}</div><div class="gl">Reputation</div></div>
     <div class="go-stat"><div class="gv" style="color:var(--red)">${G.rival.losses}-${G.rival.wins}</div><div class="gl">vs Ryder</div></div>
+    <div class="go-stat"><div class="gv">${yr}</div><div class="gl">Years</div></div>
     ${loadSupporterStatus()?'<div class="go-stat"><div class="gv">⭐</div><div class="gl">Supporter</div></div>':''}`;
 }
 
