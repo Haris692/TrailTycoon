@@ -720,6 +720,31 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
   .sup-theme-grid{grid-template-columns:repeat(2,1fr);}
 }
 
+/* ═══ PROFILE / SAVE SYSTEM ═══ */
+#profile-screen{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 20%,#1a3322 0%,#0b1a0f 70%);z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;overflow-y:auto;}
+#profile-screen.hidden{display:none;}
+.ps-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;margin-bottom:8px;animation:fadeInUp .6s ease both;}
+.ps-title .orange{color:var(--orange);}
+.ps-sub{font-size:13px;color:var(--muted);margin-bottom:32px;letter-spacing:1px;animation:fadeInUp .6s ease .2s both;}
+.ps-slots{display:grid;grid-template-columns:1fr;gap:12px;max-width:420px;width:100%;margin-bottom:24px;animation:fadeInUp .6s ease .4s both;}
+.ps-slot{background:var(--bg2);border:2px solid var(--line);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .25s;text-align:left;position:relative;}
+.ps-slot:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.ps-slot.empty{border-style:dashed;text-align:center;color:var(--faint);}
+.ps-slot.empty:hover{color:var(--text);border-color:var(--green);}
+.ps-slot-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px;}
+.ps-slot-info{font-size:11px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;}
+.ps-slot-info span{display:inline-flex;align-items:center;gap:3px;}
+.ps-slot-actions{position:absolute;top:12px;right:12px;display:flex;gap:6px;}
+.ps-slot-btn{background:none;border:1px solid var(--line);color:var(--faint);padding:3px 8px;font-size:10px;cursor:pointer;border-radius:3px;transition:all .15s;font-weight:600;}
+.ps-slot-btn:hover{border-color:var(--red);color:var(--red);}
+.ps-slot-btn.export-btn:hover{border-color:var(--blue);color:var(--blue);}
+.ps-import-area{max-width:420px;width:100%;animation:fadeInUp .6s ease .6s both;}
+.ps-import-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:10px 20px;font-size:12px;cursor:pointer;border-radius:6px;transition:all .2s;font-weight:600;letter-spacing:1px;}
+.ps-import-btn:hover{border-color:var(--green);color:var(--green);}
+.ps-auto-tag{display:inline-block;font-size:9px;background:var(--green);color:var(--bg);padding:2px 6px;border-radius:3px;font-weight:700;letter-spacing:1px;margin-left:8px;text-transform:uppercase;}
+.hdr-save-btn{background:none;border:1px solid var(--green);color:var(--green);padding:4px 10px;font-size:11px;cursor:pointer;border-radius:4px;transition:all .15s;font-weight:600;white-space:nowrap;}
+.hdr-save-btn:hover{background:rgba(34,197,94,.1);}
+
 /* ═══ CHARACTER CREATION ═══ */
 #char-create{display:none;position:fixed;inset:0;background:radial-gradient(ellipse at 50% 20%,#1a3322 0%,#0b1a0f 70%);z-index:650;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:24px 16px;align-items:center;justify-content:flex-start;}
 #char-create.show{display:flex;flex-direction:column;align-items:center;}
@@ -795,8 +820,19 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 
 <canvas id="particles"></canvas>
 
+<!-- ══════ PROFILE SELECT ══════ -->
+<div id="profile-screen">
+  <h1 class="ps-title">TRAIL <span class="orange">TYCOON</span></h1>
+  <p class="ps-sub">Select a save slot or start a new game</p>
+  <div class="ps-slots" id="ps-slots"></div>
+  <div class="ps-import-area">
+    <button class="ps-import-btn" onclick="importSave()">📂 Import save file</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImportFile(event)">
+  </div>
+</div>
+
 <!-- ══════ INTRO ══════ -->
-<div id="intro">
+<div id="intro" style="display:none">
   <p class="intro-kicker">Simulation · Trail Running · Season 2024</p>
   <h1 class="intro-h">TRAIL <span class="trail">TYCOON</span></h1>
   <p class="intro-sub">From 0 to UTMB</p>
@@ -884,6 +920,7 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
       <div class="season-badge spring" id="season-badge">Spring</div>
       <div class="week-pill">Yr. <strong id="yearnum">1</strong> · Wk. <strong id="weeknum">1</strong></div>
       <button onclick="startTutorial()" title="Tutorial" style="background:none;border:1px solid var(--line);color:var(--muted);padding:4px 10px;font-size:13px;cursor:pointer;border-radius:4px;transition:all .15s;font-weight:600;">?</button>
+      <button class="hdr-save-btn" onclick="manualSave()" id="hdr-save-btn" title="Save game">💾 Save</button>
       <button class="hdr-support-btn" onclick="openSupporterModal()" id="hdr-sup-btn">⭐ Support</button>
     </div>
   </header>
@@ -1116,7 +1153,7 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
   <h2 class="go-title" id="go-title">—</h2>
   <p class="go-msg" id="go-msg">—</p>
   <div class="go-stats" id="go-stats"></div>
-  <button class="go-btn" onclick="restart()">Restart</button>
+  <button class="go-btn" onclick="restart()">Back to profiles</button>
 </div>
 
 <!-- ══════ RACE DETAIL MODAL ══════ -->
@@ -1556,6 +1593,223 @@ function initState(){
   G.selectedTheme=localStorage.getItem('trailTycoon_theme')||'default';
   G.coachNotes=localStorage.getItem('trailTycoon_notes')||'';
 }
+
+/* ════ SAVE / LOAD SYSTEM ════ */
+const SAVE_PREFIX = 'tt_save_';
+const MAX_SLOTS = 5;
+let activeSlot = null; // 0-4
+
+function serializeState(){
+  // Convert Sets to arrays for JSON
+  const data = JSON.parse(JSON.stringify(G, (key, val) => {
+    if(val instanceof Set) return {__set:true, values:[...val]};
+    return val;
+  }));
+  return {
+    version: 2,
+    timestamp: Date.now(),
+    player: {...PLAYER},
+    gameState: data,
+    weekPlan: weekPlan,
+  };
+}
+
+function deserializeState(save){
+  if(!save || !save.gameState) return false;
+  // Restore PLAYER
+  if(save.player){
+    PLAYER.name=save.player.name||'Runner';
+    PLAYER.gender=save.player.gender||'male';
+    PLAYER.height=save.player.height||175;
+    PLAYER.weight=save.player.weight||70;
+  }
+  // Restore G with Set reconstruction
+  G = JSON.parse(JSON.stringify(save.gameState), (key, val) => {
+    if(val && val.__set) return new Set(val.values);
+    return val;
+  });
+  weekPlan = save.weekPlan || [[],[],[],[],[],[],[]];
+  lastWeekGains = null;
+  selectedRaceId = null;
+  return true;
+}
+
+function saveToSlot(slot){
+  const save = serializeState();
+  localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(save));
+  activeSlot = slot;
+}
+
+function loadFromSlot(slot){
+  const raw = localStorage.getItem(SAVE_PREFIX + slot);
+  if(!raw) return false;
+  try {
+    const save = JSON.parse(raw);
+    if(!deserializeState(save)) return false;
+    activeSlot = slot;
+    return true;
+  } catch(e) { console.error('Load error:', e); return false; }
+}
+
+function deleteSlot(slot){
+  localStorage.removeItem(SAVE_PREFIX + slot);
+}
+
+function getSlotInfo(slot){
+  const raw = localStorage.getItem(SAVE_PREFIX + slot);
+  if(!raw) return null;
+  try {
+    const save = JSON.parse(raw);
+    const g = save.gameState;
+    return {
+      name: save.player?.name || 'Unknown',
+      week: g.week || 1,
+      year: Math.floor(((g.week||1)-1)/52)+1,
+      fitness: g.stats ? Math.round((g.stats.endurance*0.35+g.stats.speed*0.25+g.stats.technique*0.25+g.stats.mental*0.15)) : 0,
+      races: g.racesTotal || 0,
+      rank: g.rank || 0,
+      utmb: g.utmbCompleted || false,
+      timestamp: save.timestamp || 0,
+    };
+  } catch(e) { return null; }
+}
+
+function autoSave(){
+  if(activeSlot === null) return;
+  saveToSlot(activeSlot);
+}
+
+function manualSave(){
+  if(activeSlot === null) { toast('No active save slot!','err'); return; }
+  saveToSlot(activeSlot);
+  toast('💾 Game saved!','ok');
+}
+
+function exportSave(){
+  if(activeSlot === null) return;
+  const save = serializeState();
+  const blob = new Blob([JSON.stringify(save,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `trail-tycoon-${PLAYER.name.toLowerCase().replace(/\s+/g,'-')}-yr${getYear(G.week)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('📤 Save exported!','ok');
+}
+
+function exportSlot(slot, e){
+  e.stopPropagation();
+  const raw = localStorage.getItem(SAVE_PREFIX + slot);
+  if(!raw) return;
+  const save = JSON.parse(raw);
+  const name = save.player?.name || 'runner';
+  const blob = new Blob([JSON.stringify(save,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `trail-tycoon-${name.toLowerCase().replace(/\s+/g,'-')}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importSave(){
+  document.getElementById('import-file').click();
+}
+
+function handleImportFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const save = JSON.parse(e.target.result);
+      if(!save.gameState) { toast('Invalid save file','err'); return; }
+      // Find first empty slot, or use last
+      let slot = -1;
+      for(let i=0;i<MAX_SLOTS;i++){ if(!localStorage.getItem(SAVE_PREFIX+i)){slot=i;break;} }
+      if(slot===-1) slot = MAX_SLOTS-1; // overwrite last if full
+      localStorage.setItem(SAVE_PREFIX + slot, JSON.stringify(save));
+      toast(`📥 Save imported to slot ${slot+1}!`,'ok');
+      renderProfileScreen();
+    } catch(err) { toast('Error reading file','err'); }
+  };
+  reader.readAsText(file);
+  event.target.value=''; // reset
+}
+
+function renderProfileScreen(){
+  const container = document.getElementById('ps-slots');
+  container.innerHTML = '';
+  for(let i=0;i<MAX_SLOTS;i++){
+    const info = getSlotInfo(i);
+    const div = document.createElement('div');
+    if(info){
+      const date = new Date(info.timestamp);
+      const dateStr = info.timestamp ? date.toLocaleDateString()+' '+date.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
+      const rankInfo = typeof RANKS!=='undefined' && RANKS[info.rank] ? RANKS[info.rank] : {icon:'🌱',name:'Rookie'};
+      div.className = 'ps-slot';
+      div.innerHTML = `
+        <div class="ps-slot-name">${info.name} ${info.utmb?'🏆':''}<span class="ps-auto-tag">Slot ${i+1}</span></div>
+        <div class="ps-slot-info">
+          <span>📅 Year ${info.year} · Wk ${((info.week-1)%52)+1}</span>
+          <span>💪 Fit ${info.fitness}</span>
+          <span>🏁 ${info.races} races</span>
+          <span>${rankInfo.icon} ${rankInfo.name}</span>
+        </div>
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">${dateStr}</div>
+        <div class="ps-slot-actions">
+          <button class="ps-slot-btn export-btn" onclick="exportSlot(${i},event)" title="Export">📤</button>
+          <button class="ps-slot-btn" onclick="confirmDeleteSlot(${i},event)" title="Delete">🗑️</button>
+        </div>
+      `;
+      div.onclick = () => loadSlotAndPlay(i);
+    } else {
+      div.className = 'ps-slot empty';
+      div.innerHTML = `<div style="padding:8px 0">➕ New Game — Slot ${i+1}</div>`;
+      div.onclick = () => newGameSlot(i);
+    }
+    container.appendChild(div);
+  }
+}
+
+function confirmDeleteSlot(slot, e){
+  e.stopPropagation();
+  const info = getSlotInfo(slot);
+  if(!info) return;
+  if(confirm(`Delete "${info.name}" save (Year ${info.year})? This cannot be undone.`)){
+    deleteSlot(slot);
+    renderProfileScreen();
+  }
+}
+
+function loadSlotAndPlay(slot){
+  if(!loadFromSlot(slot)){
+    toast('Failed to load save','err');
+    return;
+  }
+  document.getElementById('profile-screen').classList.add('hidden');
+  document.getElementById('intro').style.display='none';
+  document.getElementById('game').style.display='block';
+  renderAll();
+  toast(`Welcome back, ${PLAYER.name}!`,'ok');
+}
+
+function newGameSlot(slot){
+  activeSlot = slot;
+  document.getElementById('profile-screen').classList.add('hidden');
+  document.getElementById('intro').style.display='flex';
+}
+
+function backToProfiles(){
+  document.getElementById('game').style.display='none';
+  document.getElementById('intro').style.display='none';
+  document.getElementById('profile-screen').classList.remove('hidden');
+  renderProfileScreen();
+}
+
+// Boot: show profile screen
+document.addEventListener('DOMContentLoaded', () => {
+  renderProfileScreen();
+});
 
 /* ════ RANDOM EVENTS ════ */
 const EVENTS=[
@@ -3677,6 +3931,7 @@ function exportSeasonReport(){
 /* ════ RENDER ════ */
 function renderAll(){
   renderHeader();renderDashboard();renderPlanner();renderRaces();renderGear();renderHistory();renderSponsors();renderAside();renderCrew();renderLootShop();renderSkills();renderRivalTab();renderRivalAside();renderCoachNotes();renderSupporterAnalytics();
+  autoSave();
 }
 
 function renderHeader(){
@@ -4609,6 +4864,7 @@ function confirmCharCreate(){
 function startGame(withTutorial){
   try{
     document.getElementById('intro').style.display='none';
+    document.getElementById('profile-screen').classList.add('hidden');
     document.getElementById('game').style.display='block';
     initState();renderAll();
     if(withTutorial) setTimeout(()=>startTutorial(),400);
@@ -4641,7 +4897,7 @@ function endGame(){
     ${loadSupporterStatus()?'<div class="go-stat"><div class="gv">⭐</div><div class="gl">Supporter</div></div>':''}`;
 }
 
-function restart(){document.getElementById('gameover').classList.remove('show');clearInterval(raceInterval);startGame();}
+function restart(){document.getElementById('gameover').classList.remove('show');clearInterval(raceInterval);backToProfiles();}
 function showNotif(icon,title,text){document.getElementById('nm-icon').textContent=icon;document.getElementById('nm-title').textContent=title;document.getElementById('nm-text').innerHTML=text;document.getElementById('notif-modal').classList.add('show');}
 function closeNotif(){document.getElementById('notif-modal').classList.remove('show');}
 
