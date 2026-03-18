@@ -213,9 +213,12 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 
 /* ═══ RACE CARDS ═══ */
 .race-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--line);}
-.rf-btn{padding:6px 14px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;border-radius:4px;transition:all .2s;text-transform:uppercase;}
+.race-filter-bar{display:flex;gap:4px;padding:12px 16px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:var(--bg2);position:sticky;top:0;z-index:5;}
+.rf-btn{padding:5px 10px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:10px;font-weight:600;letter-spacing:.5px;cursor:pointer;border-radius:4px;transition:all .2s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;}
 .rf-btn.active{background:var(--green);color:var(--bg);border-color:var(--green);font-weight:700;}
 .rf-btn:hover{border-color:var(--faint);color:var(--text);}
+.rf-count{font-size:9px;background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px;}
+.rf-btn.active .rf-count{background:rgba(0,0,0,.2);}
 .race-card{background:var(--bg);padding:20px;cursor:pointer;transition:all .25s;border:1px solid transparent;position:relative;overflow:hidden;}
 .race-card:hover{background:var(--bg2);border-color:var(--faint);transform:translateY(-2px);}
 .race-card.locked{opacity:.6;}
@@ -3850,35 +3853,54 @@ function renderPlanner(){
 
 const REGION_FLAGS = {europe:'🇪🇺',usa:'🇺🇸',africa:'🌍'};
 const REGION_LABELS = {europe:'Europe',usa:'USA',africa:'Africa'};
-let raceFilterRegion = 'all';
+
+const RACE_FILTERS = [
+  {id:'all',       label:'All',        icon:'📋', fn: ()=>true},
+  {id:'eligible',  label:'Eligible',   icon:'✅', fn: r=>r.reqRank<=G.rank && fitness()>=r.reqFitness},
+  {id:'season',    label:'In Season',  icon:'📅', fn: r=>{const s=getSeason(G.week);return r.season==='any'||r.season===s.cls;}},
+  {id:'short',     label:'≤10 km',     icon:'🏃', fn: r=>r.dist<=10},
+  {id:'half',      label:'11-21 km',   icon:'🛤️', fn: r=>r.dist>=11&&r.dist<=21},
+  {id:'marathon',  label:'Marathon',   icon:'🏅', fn: r=>r.dist>=35&&r.dist<=50},
+  {id:'ultra',     label:'Ultra 50+',  icon:'🔥', fn: r=>r.dist>50&&r.dist<=170},
+  {id:'mega',      label:'100mi+',     icon:'💀', fn: r=>r.dist>170},
+  {id:'europe',    label:'Europe',     icon:'🇪🇺', fn: r=>r.region==='europe'},
+  {id:'usa',       label:'USA',        icon:'🇺🇸', fn: r=>r.region==='usa'},
+  {id:'africa',    label:'Africa',     icon:'🌍', fn: r=>r.region==='africa'},
+];
+let raceFilterId = 'all';
 
 function renderRaces(){
   const grid=document.getElementById('race-grid');grid.innerHTML='';
+  const season=getSeason(G.week);
+  const currentYear=getYear(G.week);
+  const fit=fitness();
 
-  // Region filter tabs
-  let filterHTML='<div class="race-region-filter" style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding:0 16px">';
-  filterHTML+=`<button class="rf-btn${raceFilterRegion==='all'?' active':''}" onclick="raceFilterRegion='all';renderRaces()">📋 All (${RACES.length})</button>`;
-  ['europe','usa','africa'].forEach(reg=>{
-    const count=RACES.filter(r=>r.region===reg).length;
-    filterHTML+=`<button class="rf-btn${raceFilterRegion===reg?' active':''}" onclick="raceFilterRegion='${reg}';renderRaces()">${REGION_FLAGS[reg]} ${REGION_LABELS[reg]} (${count})</button>`;
+  // Build filter bar
+  let filterHTML='<div class="race-filter-bar">';
+  RACE_FILTERS.forEach(f=>{
+    const count=RACES.filter(f.fn).length;
+    filterHTML+=`<button class="rf-btn${raceFilterId===f.id?' active':''}" onclick="raceFilterId='${f.id}';renderRaces()">${f.icon} ${f.label} <span class="rf-count">${count}</span></button>`;
   });
   filterHTML+='</div>';
-  grid.insertAdjacentHTML('beforebegin','');
-  const existingFilter=grid.parentElement.querySelector('.race-region-filter');
+
+  const existingFilter=grid.parentElement.querySelector('.race-filter-bar');
   if(existingFilter) existingFilter.remove();
   grid.insertAdjacentHTML('beforebegin',filterHTML);
 
-  const filtered = raceFilterRegion==='all' ? RACES : RACES.filter(r=>r.region===raceFilterRegion);
+  const activeFilter = RACE_FILTERS.find(f=>f.id===raceFilterId) || RACE_FILTERS[0];
+  const filtered = RACES.filter(activeFilter.fn);
+
+  if(filtered.length===0){
+    grid.innerHTML='<div style="padding:40px;text-align:center;color:var(--faint)">No races match this filter.</div>';
+    return;
+  }
 
   filtered.forEach(r=>{
-    const locked=r.reqRank>G.rank;const lowFit=fitness()<r.reqFitness;
-    // Completed this year (can redo each year)
-    const currentYear = getYear(G.week);
+    const locked=r.reqRank>G.rank;const lowFit=fit<r.reqFitness;
     const completedThisYear=G.racesCompleted.some(x=>x.raceId===r.id && getYear(x.week)===currentYear);
     const completedEver=G.racesCompleted.some(x=>x.raceId===r.id);
-    const season=getSeason(G.week);const seasonOk=r.season==='any'||r.season===season.cls;
+    const seasonOk=r.season==='any'||r.season===season.cls;
 
-    // Injury risk
     const risk = calcInjuryRisk(r);
     const riskInfo = calcInjuryRiskLabel(risk);
     const regionFlag = REGION_FLAGS[r.region]||'';
