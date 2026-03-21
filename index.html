@@ -14,6 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trail Tycoon — From Couch to UTMB</title>
 <meta name="description" content="A free trail running management game. Train your runner, sign sponsors, race the mountains. Play now in your browser.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -404,7 +405,7 @@ footer {
       Train your runner, sign sponsors, race the mountains.
     </p>
     <div class="hero-stats">
-      <span class="hero-stat"><span>251 Players</span></span>
+      <span class="hero-stat"><span id="hero-online" style="color:var(--green)">—</span></span>
       <span class="hero-stat"><span>Free</span></span>
       <span class="hero-stat"><span>Browser Game</span></span>
       <span class="hero-stat"><span>Solo Dev</span></span>
@@ -466,8 +467,8 @@ footer {
 <section id="stats-bar">
   <div class="stats-row">
     <div class="stat-block reveal">
-      <div class="stat-num">251+</div>
-      <div class="stat-label">Players</div>
+      <div class="stat-num" id="stat-online">—</div>
+      <div class="stat-label">Online Now</div>
     </div>
     <div class="stat-block reveal">
       <div class="stat-num">0&euro;</div>
@@ -516,6 +517,31 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ═══ SUPABASE PRESENCE ═══ */
+(function(){
+  try{
+    const sb=window.supabase.createClient(
+      'https://yobmyrjccsxkuvafqiri.supabase.co',
+      'sb_publishable__-EizijNbJC3bLPi67Xtag_6UROlaCk'
+    );
+    const channel=sb.channel('online-players',{config:{presence:{key:crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)}}});
+    function updateCount(){
+      const state=channel.presenceState();
+      const count=Object.keys(state).length;
+      const hero=document.getElementById('hero-online');
+      const stat=document.getElementById('stat-online');
+      if(hero) hero.textContent=count+' online now';
+      if(stat) stat.textContent=count;
+    }
+    channel.on('presence',{event:'sync'},updateCount);
+    channel.subscribe(async(status)=>{
+      if(status==='SUBSCRIBED'){
+        await channel.track({joined_at:new Date().toISOString(),page:'home'});
+      }
+    });
+  }catch(e){console.warn('Presence init failed:',e);}
+})();
 </script>
 
 </body>
