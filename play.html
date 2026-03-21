@@ -360,8 +360,192 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 
 /* ═══ MISC ═══ */
 .empty-msg{font-size:12px;color:var(--muted);padding:16px 0;}
-@media(max-width:900px){.layout{grid-template-columns:1fr;}.aside{max-height:none;}.planner-grid{grid-template-columns:repeat(4,1fr);}.fut-card-wrap{flex-direction:column;align-items:center;}}
-@media(max-width:550px){.planner-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;}
+  .aside{max-height:none;border-right:none;border-top:1px solid var(--line);}
+  .main{max-height:none;border-right:none;}
+  .planner-grid{grid-template-columns:repeat(4,1fr);}
+  .fut-card-wrap{flex-direction:column;align-items:center;}
+}
+
+/* ═══ MOBILE — TABLETS ═══ */
+@media(max-width:768px){
+  /* Header: hide non-essential stats, stack layout */
+  header{flex-wrap:wrap;height:auto;padding:8px 12px;gap:8px;}
+  .hdr-brand{font-size:12px;margin-right:auto;}
+  .hdr-stats{order:3;width:100%;flex:none;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;}
+  .hdr-stats::-webkit-scrollbar{display:none;}
+  .hs{min-width:70px;padding:0 10px;}
+  .hs .l{font-size:8px;letter-spacing:1px;}
+  .hs .v{font-size:12px;}
+  .hdr-right{gap:6px;}
+  .hdr-right .week-pill{font-size:10px;}
+  .hdr-right .week-pill strong{font-size:12px;}
+  .season-badge{font-size:9px;padding:3px 7px;}
+  .hdr-save-btn,.hdr-support-btn{padding:6px 8px;font-size:10px;}
+
+  /* Tabs: better touch targets */
+  .tab-nav button{padding:12px 14px;font-size:11px;min-height:44px;}
+
+  /* Planner */
+  .planner-wrap{padding:0 12px 16px;}
+  .planner-actions{flex-wrap:wrap;}
+  .btn-exec-week{width:100%;order:1;}
+  .btn-reset-week{order:2;}
+  .planner-energy{width:100%;order:3;text-align:center;margin-top:4px;}
+
+  /* FUT card */
+  .fut-card{width:220px;min-width:220px;}
+  .fut-card-wrap{padding:16px;}
+  .dash-right{min-width:auto;}
+
+  /* Race grid */
+  .race-grid{grid-template-columns:1fr;}
+  .race-filter-bar{padding:8px 10px;gap:3px;}
+  .rf-btn{padding:6px 8px;font-size:9px;min-height:36px;}
+
+  /* Gear grid */
+  .gear-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+
+  /* Modals: near full-screen on mobile */
+  #race-modal,#notif-modal,#race-detail-modal,#bag-modal,#lootbox-modal,#race-results-modal,#crew-modal,#event-modal,#rival-msg-modal,#supporter-modal,#train-picker{padding:12px;}
+  .race-live,.nm-box,.rd-box,.bag-box,.loot-box,.rr-box,.crew-box,.evt-box,.rival-msg-box,.sup-box,.picker-box{max-width:100%;width:100%;border-radius:10px;}
+  .picker-grid{grid-template-columns:1fr;}
+
+  /* Skill tree */
+  .skill-tree-grid{grid-template-columns:1fr;gap:12px;}
+
+  /* Race detail modal */
+  .rd-stats-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .rd-stat .rd-val{font-size:1rem;}
+  .rd-actions{flex-direction:column;}
+  .rd-actions button{width:100%;}
+
+  /* Race live modal */
+  .rl-stats{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .rl-stat .rv{font-size:1rem;}
+  .rl-choices{flex-direction:column;}
+  .rl-choice{min-width:auto;}
+
+  /* Section titles */
+  .section-title{padding:12px 16px 8px;font-size:12px;}
+
+  /* Aside blocks */
+  .aside-block{padding:14px 14px 0;}
+
+  /* Bag items */
+  .bag-items{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+}
+
+/* ═══ MOBILE — PHONES ═══ */
+@media(max-width:550px){
+  .planner-grid{grid-template-columns:repeat(3,1fr);}
+
+  /* Header: minimal */
+  header{padding:6px 10px;}
+  .hdr-brand{font-size:11px;}
+  .hs{min-width:60px;padding:0 8px;}
+
+  /* Day slots */
+  .day-slot{min-height:100px;padding:8px 6px;}
+  .day-slot .day-icon{font-size:1.4rem;}
+  .day-slot .day-name{font-size:10px;}
+  .day-slot .day-label{font-size:9px;letter-spacing:1px;}
+  .day-slot .day-effect{font-size:8px;}
+
+  /* FUT card smaller */
+  .fut-card{width:200px;min-width:200px;}
+  .fut-rating-num{font-size:2.4rem;}
+  .fut-avatar{width:70px;height:90px;font-size:4rem;}
+  .fut-card-name h2{font-size:.9rem;}
+  .fut-stat-val{font-size:.9rem;}
+
+  /* Stat bars */
+  .stat-row{gap:6px;}
+  .stat-label{min-width:60px;font-size:10px;}
+  .stat-val{font-size:11px;min-width:30px;}
+
+  /* Recap */
+  .week-recap-box{padding:14px 16px;}
+  .recap-gains{gap:10px;}
+
+  /* History */
+  .hist-item{padding:10px 14px;gap:10px;}
+  .hi-pos{font-size:1.2rem;min-width:36px;}
+  .hi-name{font-size:12px;}
+  .hi-time{font-size:12px;}
+
+  /* Sponsor */
+  .sponsor-v2-card{padding:14px 16px;}
+
+  /* Game over */
+  #gameover{padding:24px 16px;}
+  .go-title{font-size:clamp(1.6rem,5vw,3rem);}
+  .go-stats{gap:16px;}
+  .go-stat .gv{font-size:1.2rem;}
+
+  /* Race results */
+  .rr-summary{padding:12px 16px;gap:12px;}
+  .rr-row{padding:8px 14px;gap:8px;font-size:12px;}
+  .rr-pos{font-size:.9rem;min-width:32px;}
+  .rr-runner-time{font-size:12px;min-width:60px;}
+  .rr-runner-gap{font-size:10px;min-width:50px;}
+
+  /* Crew */
+  .crew-grid{grid-template-columns:1fr;}
+
+  /* Supporter */
+  .sup-skin-grid,.sup-theme-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ═══ MOBILE — SMALL PHONES ═══ */
+@media(max-width:400px){
+  .planner-grid{grid-template-columns:repeat(2,1fr);}
+  .tab-nav button{padding:10px 10px;font-size:10px;}
+  .hs{min-width:55px;padding:0 6px;}
+  .hs .v{font-size:11px;}
+  .hdr-right{flex-wrap:wrap;justify-content:flex-end;}
+  .fut-card{width:180px;min-width:180px;}
+  .race-card .rc-name{font-size:13px;}
+  .race-card .rc-dist{font-size:1.6rem;}
+  .nm-box{padding:24px 16px;}
+  .nm-title{font-size:1.2rem;}
+}
+
+/* ═══ TOUCH TARGETS — all interactive elements ═══ */
+@media(pointer:coarse){
+  button,a,.day-slot,.pick-card,.race-card,.gear-card,.sponsor-v2-card,.evt-choice,.bag-item,.crew-card,.skill-node.available{
+    min-height:44px;
+  }
+  .day-slot .day-remove{opacity:1;font-size:16px;padding:6px 8px;min-height:32px;min-width:32px;}
+  .day-train-item .dti-rm{opacity:1;font-size:14px;padding:4px 6px;min-height:28px;}
+  .picker-close,.bag-close,.rr-close,.crew-close{font-size:24px;padding:8px 12px;min-height:44px;min-width:44px;}
+  .rf-btn{min-height:36px;padding:8px 10px;}
+}
+
+/* ═══ SAFE AREAS (notch phones) ═══ */
+@supports(padding:max(0px)){
+  header{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));}
+  #toast-wrap{bottom:max(20px,env(safe-area-inset-bottom));right:max(20px,env(safe-area-inset-right));}
+  #gameover,#intro,#profile-screen,#char-create{
+    padding-left:max(16px,env(safe-area-inset-left));
+    padding-right:max(16px,env(safe-area-inset-right));
+    padding-bottom:max(16px,env(safe-area-inset-bottom));
+  }
+}
+
+/* ═══ LANDSCAPE PHONES ═══ */
+@media(max-height:500px) and (orientation:landscape){
+  header{height:auto;padding:4px 12px;}
+  .hdr-stats{order:0;flex:1;}
+  .hs{padding:0 8px;}
+  .tab-nav button{padding:8px 14px;min-height:36px;}
+  #intro{padding:12px 24px;}
+  .intro-h{font-size:clamp(1.5rem,5vw,2.5rem);}
+  .intro-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+  .btn-start{padding:12px 32px;font-size:13px;}
+  #gameover{padding:16px;}
+}
 
 /* ═══ RARITY COLORS ═══ */
 .rarity-common { border-left: 3px solid #9ca3af; }
@@ -741,6 +925,10 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 .ps-import-area{max-width:420px;width:100%;animation:fadeInUp .6s ease .6s both;}
 .ps-import-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:10px 20px;font-size:12px;cursor:pointer;border-radius:6px;transition:all .2s;font-weight:600;letter-spacing:1px;}
 .ps-import-btn:hover{border-color:var(--green);color:var(--green);}
+.ps-lang-bar{display:flex;gap:8px;margin-bottom:24px;animation:fadeIn .6s ease both;}
+.ps-lang-btn{padding:6px 16px;border:2px solid var(--line);background:var(--bg2);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;border-radius:6px;transition:all .2s;}
+.ps-lang-btn.active{border-color:var(--orange);color:var(--orange);background:rgba(249,115,22,.08);}
+.ps-lang-btn:hover{border-color:var(--faint);color:var(--text);}
 .ps-auto-tag{display:inline-block;font-size:9px;background:var(--green);color:var(--bg);padding:2px 6px;border-radius:3px;font-weight:700;letter-spacing:1px;margin-left:8px;text-transform:uppercase;}
 .hdr-save-btn{background:none;border:1px solid var(--green);color:var(--green);padding:4px 10px;font-size:11px;cursor:pointer;border-radius:4px;transition:all .15s;font-weight:600;white-space:nowrap;}
 .hdr-save-btn:hover{background:rgba(34,197,94,.1);}
@@ -822,37 +1010,30 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 
 <!-- ══════ PROFILE SELECT ══════ -->
 <div id="profile-screen">
+  <div class="ps-lang-bar" id="ps-lang-bar"></div>
   <h1 class="ps-title">TRAIL <span class="orange">TYCOON</span></h1>
-  <p class="ps-sub">Select a save slot or start a new game</p>
+  <p class="ps-sub" id="ps-sub-text"></p>
   <div class="ps-slots" id="ps-slots"></div>
   <div class="ps-import-area">
-    <button class="ps-import-btn" onclick="importSave()">📂 Import save file</button>
+    <button class="ps-import-btn" onclick="importSave()" id="ps-import-btn"></button>
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImportFile(event)">
   </div>
 </div>
 
 <!-- ══════ INTRO ══════ -->
 <div id="intro" style="display:none">
-  <p class="intro-kicker">Simulation · Trail Running · Season 2024</p>
+  <p class="intro-kicker" id="intro-kicker"></p>
   <h1 class="intro-h">TRAIL <span class="trail">TYCOON</span></h1>
-  <p class="intro-sub">From 0 to UTMB</p>
-  <p class="intro-story">
-    You are 26 years old, passionate about sports.<br>
-    You just ran your first <strong>10K</strong> in 52 minutes.<br>
-    A friend finished the <strong>UTMB</strong> last year. It sparked something in you.<br><br>
-    Goal: <strong>finish the UTMB</strong> (171 km, 10,000 D+).<br>
-    Race the world — from <strong>Chamonix</strong> to <strong>Western States</strong> to the <strong>Sahara</strong>.<br>
-    Plan your week, run races, manage your body, buy gear.<br>
-    Every choice matters. No time limit — build your legacy.
-  </p>
+  <p class="intro-sub" id="intro-sub"></p>
+  <p class="intro-story" id="intro-story"></p>
   <div class="intro-grid">
-    <div class="ig"><div class="iv">∞</div><div class="il">Weeks</div></div>
-    <div class="ig"><div class="iv">36</div><div class="il">Races</div></div>
-    <div class="ig"><div class="iv">3</div><div class="il">Continents</div></div>
-    <div class="ig"><div class="iv">0</div><div class="il">Starting XP</div></div>
+    <div class="ig"><div class="iv">∞</div><div class="il" id="ig-weeks"></div></div>
+    <div class="ig"><div class="iv">36</div><div class="il" id="ig-races"></div></div>
+    <div class="ig"><div class="iv">3</div><div class="il" id="ig-cont"></div></div>
+    <div class="ig"><div class="iv">0</div><div class="il" id="ig-xp"></div></div>
   </div>
-  <button class="btn-start" onclick="showCharCreate(true)">Lace up your shoes</button>
-  <button class="btn-start" onclick="showCharCreate(false)" style="background:none;border:1px solid var(--line);color:var(--muted);box-shadow:none;margin-top:10px;padding:14px 40px;font-size:13px;animation:fadeInUp .8s ease 1.4s both;min-height:48px;">Skip tutorial & play</button>
+  <button class="btn-start" onclick="showCharCreate(true)" id="intro-btn-start"></button>
+  <button class="btn-start" onclick="showCharCreate(false)" style="background:none;border:1px solid var(--line);color:var(--muted);box-shadow:none;margin-top:10px;padding:14px 40px;font-size:13px;animation:fadeInUp .8s ease 1.4s both;min-height:48px;" id="intro-btn-skip"></button>
 </div>
 
 <!-- ══════ CHARACTER CREATION ══════ -->
@@ -1300,47 +1481,354 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
   loop();
 })();
 
+/* ════ i18n SYSTEM ════ */
+let currentLang = localStorage.getItem('tt_lang') || 'en';
+
+const TR = {
+  // ── UI ──
+  dashboard:{en:'Dashboard',fr:'Tableau de bord'},
+  races:{en:'Races',fr:'Courses'},
+  gear:{en:'Gear',fr:'Équipement'},
+  history:{en:'History',fr:'Historique'},
+  sponsors:{en:'Sponsors',fr:'Sponsors'},
+  skills:{en:'Skills',fr:'Compétences'},
+  rival:{en:'Rival',fr:'Rival'},
+  save_btn:{en:'💾 Save',fr:'💾 Sauver'},
+  support:{en:'⭐ Support',fr:'⭐ Soutenir'},
+  play_now:{en:'Play Now',fr:'Jouer'},
+
+  // ── Header stats ──
+  cash:{en:'Cash',fr:'Argent'},
+  energy:{en:'Energy',fr:'Énergie'},
+  health:{en:'Health',fr:'Santé'},
+  fitness_label:{en:'Fitness',fr:'Forme'},
+  races_label:{en:'Races',fr:'Courses'},
+  followers:{en:'Followers',fr:'Abonnés'},
+  skill_pts:{en:'Skill Pts',fr:'Pts Comp.'},
+  start_week:{en:'Start the week',fr:'Lancer la semaine'},
+
+  // ── Profile screen ──
+  ps_title:{en:'Select a save slot or start a new game',fr:'Choisissez un emplacement ou commencez une partie'},
+  ps_new_game:{en:'New Game',fr:'Nouvelle partie'},
+  ps_slot:{en:'Slot',fr:'Slot'},
+  ps_year:{en:'Year',fr:'Année'},
+  ps_races:{en:'races',fr:'courses'},
+  ps_fit:{en:'Fit',fr:'Forme'},
+  ps_delete_confirm:{en:'Delete this save? This cannot be undone.',fr:'Supprimer cette sauvegarde ? Cette action est irréversible.'},
+  ps_import:{en:'📂 Import save file',fr:'📂 Importer une sauvegarde'},
+  ps_back:{en:'Back to profiles',fr:'Retour aux profils'},
+  ps_lang:{en:'Language',fr:'Langue'},
+
+  // ── Intro ──
+  intro_kicker:{en:'Simulation · Trail Running · Season 2024',fr:'Simulation · Trail Running · Saison 2024'},
+  intro_sub:{en:'From 0 to UTMB',fr:'De 0 à l\'UTMB'},
+  intro_story:{en:'You are 26 years old, passionate about sports.<br>You just ran your first <strong>10K</strong> in 52 minutes.<br>A friend finished the <strong>UTMB</strong> last year. It sparked something in you.<br><br>Goal: <strong>finish the UTMB</strong> (171 km, 10,000 D+).<br>Race the world — from <strong>Chamonix</strong> to <strong>Western States</strong> to the <strong>Sahara</strong>.<br>Plan your week, run races, manage your body, buy gear.<br>Every choice matters. No time limit — build your legacy.',
+  fr:'Vous avez 26 ans, passionné de sport.<br>Vous venez de courir votre premier <strong>10K</strong> en 52 minutes.<br>Un ami a terminé l\'<strong>UTMB</strong> l\'an dernier. Ça a déclenché quelque chose en vous.<br><br>Objectif : <strong>terminer l\'UTMB</strong> (171 km, 10 000 D+).<br>Courez dans le monde entier — de <strong>Chamonix</strong> à <strong>Western States</strong> en passant par le <strong>Sahara</strong>.<br>Planifiez votre semaine, courez des courses, gérez votre corps, achetez du matériel.<br>Chaque choix compte. Pas de limite de temps — forgez votre légende.'},
+  intro_btn_start:{en:'Lace up your shoes',fr:'Lacez vos chaussures'},
+  intro_btn_skip:{en:'Skip tutorial & play',fr:'Passer le tutoriel'},
+  intro_weeks:{en:'Weeks',fr:'Semaines'},
+  intro_races:{en:'Races',fr:'Courses'},
+  intro_continents:{en:'Continents',fr:'Continents'},
+  intro_starting_xp:{en:'Starting XP',fr:'XP de départ'},
+
+  // ── Char creation ──
+  cc_title:{en:'Create your runner',fr:'Créez votre coureur'},
+  cc_subtitle:{en:'Your build affects your starting stats',fr:'Votre morphologie affecte vos stats de départ'},
+  cc_firstname:{en:'First name',fr:'Prénom'},
+  cc_name_placeholder:{en:'Enter your name...',fr:'Entrez votre nom...'},
+  cc_gender:{en:'Gender',fr:'Genre'},
+  cc_male:{en:'Male',fr:'Homme'},
+  cc_female:{en:'Female',fr:'Femme'},
+  cc_height:{en:'Height',fr:'Taille'},
+  cc_weight:{en:'Weight',fr:'Poids'},
+  cc_preview:{en:'Starting stats preview',fr:'Aperçu des stats de départ'},
+  cc_start:{en:'Start the adventure',fr:'Démarrer l\'aventure'},
+
+  // ── Seasons ──
+  spring:{en:'Spring',fr:'Printemps'},
+  summer:{en:'Summer',fr:'Été'},
+  autumn:{en:'Autumn',fr:'Automne'},
+  winter:{en:'Winter',fr:'Hiver'},
+
+  // ── Days ──
+  mon:{en:'Monday',fr:'Lundi'},tue:{en:'Tuesday',fr:'Mardi'},wed:{en:'Wednesday',fr:'Mercredi'},
+  thu:{en:'Thursday',fr:'Jeudi'},fri:{en:'Friday',fr:'Vendredi'},sat:{en:'Saturday',fr:'Samedi'},
+  sun:{en:'Sunday',fr:'Dimanche'},
+
+  // ── Difficulty ──
+  easy:{en:'Easy',fr:'Facile'},medium:{en:'Medium',fr:'Moyen'},hard:{en:'Hard',fr:'Difficile'},
+  extreme:{en:'Extreme',fr:'Extrême'},legendary:{en:'Legendary',fr:'Légendaire'},
+
+  // ── Training picker ──
+  choose_training:{en:'Choose a training',fr:'Choisir un entraînement'},
+  pick_all:{en:'All',fr:'Tous'},pick_running:{en:'Running',fr:'Course'},
+  pick_strength:{en:'Strength',fr:'Renforcement'},pick_recovery:{en:'Recovery',fr:'Récupération'},
+  pick_mental:{en:'Mental',fr:'Mental'},pick_elite:{en:'Elite',fr:'Élite'},
+
+  // ── Race filters ──
+  rf_all:{en:'All',fr:'Tous'},rf_eligible:{en:'Eligible',fr:'Éligible'},
+  rf_in_season:{en:'In Season',fr:'En saison'},rf_marathon:{en:'Marathon',fr:'Marathon'},
+  rf_ultra:{en:'Ultra 50+',fr:'Ultra 50+'},rf_mega:{en:'100mi+',fr:'100mi+'},
+
+  // ── Injury ──
+  injured_fresh:{en:'FRESH — REST ONLY',fr:'RÉCENTE — REPOS UNIQUEMENT'},
+  injured_light:{en:'LIGHT TRAINING OK',fr:'ENTRAÎNEMENT LÉGER OK'},
+  self_care:{en:'🧊 Self-care (free)',fr:'🧊 Auto-soins (gratuit)'},
+  physio:{en:'💆 Physio (80€)',fr:'💆 Kiné (80€)'},
+  doctor:{en:'🏥 Doctor (200€)',fr:'🏥 Médecin (200€)'},
+  rest_only:{en:'Rest only (fresh injury)',fr:'Repos uniquement (blessure récente)'},
+  too_intense:{en:'Too intense while injured',fr:'Trop intense en étant blessé'},
+  half_efficiency:{en:'50% efficiency (injured)',fr:'50% efficacité (blessé)'},
+
+  // ── Race UI ──
+  off_season:{en:'Off season',fr:'Hors saison'},
+  done_this_year:{en:'✓ Done this year',fr:'✓ Fait cette année'},
+  run_again:{en:'↻ Run again this year',fr:'↻ Recourir cette année'},
+  register:{en:'Register',fr:'S\'inscrire'},
+  already_registered:{en:'Already registered',fr:'Déjà inscrit'},
+  rank_too_low:{en:'🔒 Rank too low',fr:'🔒 Rang insuffisant'},
+  fitness_too_low:{en:'⚠️ Fitness too low',fr:'⚠️ Forme insuffisante'},
+  already_done_year:{en:'✓ Already done this year',fr:'✓ Déjà fait cette année'},
+  weather:{en:'Weather',fr:'Météo'},
+  injury_risk:{en:'Injury risk',fr:'Risque de blessure'},
+  required_fitness:{en:'Required fitness',fr:'Forme requise'},
+  required_rank:{en:'Required rank',fr:'Rang requis'},
+  prize:{en:'Prize',fr:'Prix'},
+  season:{en:'Season',fr:'Saison'},
+  region:{en:'Region',fr:'Région'},
+  all_seasons:{en:'All seasons',fr:'Toutes saisons'},
+  ranking:{en:'Ranking',fr:'Classement'},
+  position:{en:'Position',fr:'Position'},
+  time:{en:'Time',fr:'Temps'},
+  pace_km:{en:'Pace /km',fr:'Allure /km'},
+  participants:{en:'Participants',fr:'Participants'},
+
+  // ── Toasts ──
+  t_saved:{en:'💾 Game saved!',fr:'💾 Partie sauvegardée !'},
+  t_no_slot:{en:'No active save slot!',fr:'Pas de slot de sauvegarde actif !'},
+  t_exported:{en:'📤 Save exported!',fr:'📤 Sauvegarde exportée !'},
+  t_imported:{en:'📥 Save imported!',fr:'📥 Sauvegarde importée !'},
+  t_invalid_save:{en:'Invalid save file',fr:'Fichier de sauvegarde invalide'},
+  t_load_fail:{en:'Failed to load save',fr:'Échec du chargement'},
+  t_welcome_back:{en:'Welcome back,',fr:'Bon retour,'},
+  t_plan_one:{en:'Plan at least 1 training!',fr:'Planifiez au moins 1 entraînement !'},
+  t_race_day:{en:'Race day! Cannot plan a training.',fr:'Jour de course ! Impossible de planifier.'},
+  t_max_training:{en:'training(s)/day at your level!',fr:'entraînement(s)/jour à votre niveau !'},
+  t_not_enough_cash:{en:'Not enough cash',fr:'Pas assez d\'argent'},
+  t_already_owned:{en:'Already owned!',fr:'Déjà possédé !'},
+  t_rank_required:{en:'required',fr:'requis'},
+  t_registered:{en:'Registered for',fr:'Inscrit à'},
+  t_consecutive_rest:{en:'⚠️ Consecutive rest forbidden',fr:'⚠️ Repos consécutif interdit'},
+  t_fresh_injury:{en:'🤕 Fresh injury! Only rest and yoga this week.',fr:'🤕 Blessure récente ! Repos et yoga uniquement cette semaine.'},
+  t_injured_light:{en:'🤕 Injured! Only light training allowed (easy run, cross-training, strengthening, yoga, rest, visualization).',fr:'🤕 Blessé ! Seul l\'entraînement léger est autorisé (footing, cross-training, renforcement, yoga, repos, visualisation).'},
+  t_selfcare_done:{en:'Already used self-care on this injury',fr:'Auto-soins déjà utilisés pour cette blessure'},
+  t_selfcare_ok:{en:'🧊 Self-care: duration reduced by 1 week',fr:'🧊 Auto-soins : durée réduite d\'1 semaine'},
+  t_physio_ok:{en:'💆 Physio: -1 week, -5% malus',fr:'💆 Kiné : -1 semaine, -5% malus'},
+  t_doctor_ok:{en:'🏥 Doctor: -2 weeks, -10% malus',fr:'🏥 Médecin : -2 semaines, -10% malus'},
+  t_year_begins:{en:'New season of races ahead.',fr:'Nouvelle saison de courses en perspective.'},
+  t_utmb_done:{en:'The dream is real. But the mountains are calling for more...',fr:'Le rêve est devenu réalité. Mais les montagnes appellent encore...'},
+
+  // ── Game Over ──
+  go_title:{en:'🏆 Career Summary',fr:'🏆 Résumé de carrière'},
+  go_utmb_finisher:{en:'UTMB Finisher',fr:'Finisher UTMB'},
+  go_dream_lives:{en:'The UTMB dream lives on...',fr:'Le rêve UTMB continue...'},
+  go_podiums:{en:'Podiums',fr:'Podiums'},
+  go_distance:{en:'Distance',fr:'Distance'},
+  go_elevation:{en:'Elevation',fr:'Dénivelé'},
+  go_rank:{en:'Rank',fr:'Rang'},
+  go_reputation:{en:'Reputation',fr:'Réputation'},
+  go_years:{en:'Years',fr:'Années'},
+
+  // ── Tutorial ──
+  tut_welcome_title:{en:'Welcome to Trail Tycoon!',fr:'Bienvenue dans Trail Tycoon !'},
+  tut_welcome_text:{en:'Your goal is to go from a casual jogger to an <strong>UTMB finisher</strong>. No time limit — race across <strong>Europe, USA, and Africa</strong> and build your legacy.<br><br>This tutorial will walk you through all the game mechanics. You can skip it anytime or replay it later using the <strong class="tut-key">?</strong> button in the header.',
+  fr:'Votre objectif est de passer de jogger amateur à <strong>finisher de l\'UTMB</strong>. Pas de limite de temps — courez en <strong>Europe, aux USA et en Afrique</strong> et forgez votre légende.<br><br>Ce tutoriel vous guidera à travers toutes les mécaniques du jeu. Vous pouvez le passer à tout moment ou le relancer avec le bouton <strong class="tut-key">?</strong> dans le header.'},
+  tut_header_title:{en:'The Header — Your Vital Stats',fr:'Le Header — Vos stats vitales'},
+  tut_planner_title:{en:'Weekly Planner — Plan Your Training',fr:'Planificateur — Planifiez vos entraînements'},
+  tut_card_title:{en:'Your Player Card',fr:'Votre carte joueur'},
+  tut_races_title:{en:'Races — Test Your Limits',fr:'Courses — Testez vos limites'},
+  tut_gear_title:{en:'Gear Shop — Equip Yourself',fr:'Boutique — Équipez-vous'},
+  tut_skills_title:{en:'Skills — Unlock Abilities',fr:'Compétences — Débloquez des capacités'},
+  tut_rival_title:{en:'Your Rival — Ryder Cole',fr:'Votre rival — Ryder Cole'},
+  tut_sponsors_title:{en:'Sponsors & Economy',fr:'Sponsors & Économie'},
+  tut_events_title:{en:'Random Events & Choices',fr:'Événements aléatoires & Choix'},
+  tut_watchout_title:{en:'Watch Out For...',fr:'Attention à...'},
+  tut_skip:{en:'Skip',fr:'Passer'},tut_next:{en:'Next',fr:'Suivant'},tut_finish:{en:'Finish',fr:'Terminer'},
+
+  // ── Dashboard ──
+  detailed_stats:{en:'Detailed Statistics',fr:'Statistiques détaillées'},
+  progress_utmb:{en:'Progress towards UTMB',fr:'Progression vers l\'UTMB'},
+  goal:{en:'Goal',fr:'Objectif'},
+  fatigue:{en:'Fatigue',fr:'Fatigue'},
+
+  // ── Misc ──
+  no_races_match:{en:'No races match this filter.',fr:'Aucune course ne correspond à ce filtre.'},
+  err_reading_file:{en:'Error reading file',fr:'Erreur de lecture du fichier'},
+  low:{en:'Low',fr:'Faible'},moderate:{en:'Moderate',fr:'Modéré'},high:{en:'High',fr:'Élevé'},
+  current:{en:'current',fr:'actuel'},
+
+  // Dashboard fitness messages
+  fit_ready:{en:"You're ready. Register for the UTMB!",fr:"Vous êtes prêt. Inscrivez-vous à l'UTMB !"},
+  fit_excellent:{en:'Excellent fitness! The ultras await you.',fr:'Excellente forme ! Les ultras vous attendent.'},
+  fit_good:{en:'Good progress. Trail marathons are within reach.',fr:'Bons progrès. Les trail marathons sont à portée.'},
+  fit_progressing:{en:"You're progressing! First trails are accessible.",fr:'Vous progressez ! Les premiers trails sont accessibles.'},
+  fit_starting:{en:"You're just starting. Keep training.",fr:'Vous débutez. Continuez à vous entraîner.'},
+
+  // Planner
+  race_continuation:{en:'Race continuation',fr:'Suite de la course'},
+  recovery_label:{en:'Recovery',fr:'Récupération'},
+  no_activity:{en:'No activity.',fr:'Aucune activité.'},
+  plan:{en:'Plan',fr:'Planifier'},
+  add_more:{en:'+ add',fr:'+ ajouter'},
+
+  // Race results
+  you:{en:'(You)',fr:'(Vous)'},
+
+  // UTMB completion
+  utmb_completed_title:{en:'UTMB COMPLETED!',fr:'UTMB TERMINÉ !'},
+  utmb_completed_text:{en:'finished the UTMB in Year',fr:"a terminé l'UTMB en Année"},
+
+  // Misc toasts
+  t_flow_state:{en:'🧠 Flow State! XP doubled this week!',fr:'🧠 Flow State ! XP doublés cette semaine !'},
+  t_already_registered:{en:'You already have a registered race!',fr:'Vous avez déjà une course inscrite !'},
+  t_saturday_planned:{en:'Saturday is already planned! Free it for the race.',fr:'Samedi est déjà planifié ! Libérez-le pour la course.'},
+  t_sunday_planned:{en:'Sunday is already planned! Free it for this long race.',fr:'Dimanche est déjà planifié ! Libérez-le pour cette course longue.'},
+
+  // History
+  no_completed_races:{en:'No completed races.',fr:'Aucune course terminée.'},
+  no_events:{en:'No events yet.',fr:'Aucun événement pour le moment.'},
+  week_label:{en:'Week',fr:'Semaine'},
+
+  // Gear
+  owned_label:{en:'✓ Owned',fr:'✓ Possédé'},
+  loot_only:{en:'🎁 Loot Box only',fr:'🎁 Loot Box uniquement'},
+  energy_during_race:{en:'energy during race',fr:"d'énergie en course"},
+
+  // Sponsors
+  trail_followers:{en:'TRAIL FOLLOWERS',fr:'ABONNÉS TRAIL'},
+  sponsor_wk:{en:'Sponsor/wk',fr:'Sponsor/sem'},
+  weeks_left:{en:'WEEKS LEFT',fr:'SEMAINES RESTANTES'},
+  bonus_label:{en:'bonus',fr:'bonus'},
+  penalty_label:{en:'penalty',fr:'pénalité'},
+  objective:{en:'Objective',fr:'Objectif'},
+
+  // Skills
+  skill_points:{en:'SKILL POINTS',fr:'POINTS DE COMPÉTENCE'},
+  skills_earn_sp:{en:'Earn +2 SP each time your rank increases',fr:'Gagnez +2 PC à chaque rang supérieur'},
+  skills_unlocked:{en:'skills unlocked',fr:'compétences débloquées'},
+  active:{en:'✓ Active',fr:'✓ Actif'},
+  unlock:{en:'Unlock',fr:'Débloquer'},
+  prev_skill_req:{en:'🔒 Previous skill required',fr:'🔒 Compétence précédente requise'},
+  not_enough_sp:{en:'Not enough SP',fr:'Pas assez de PC'},
+
+  // Rival
+  rival_ahead:{en:'AHEAD',fr:'EN TÊTE'},
+  rival_behind:{en:'BEHIND',fr:'EN RETARD'},
+  rival_tied:{en:'NECK & NECK',fr:'AU COUDE À COUDE'},
+  head_to_head:{en:'Head to Head',fr:'Face à face'},
+  messages:{en:'Messages',fr:'Messages'},
+  race_confrontations:{en:'Race Confrontations',fr:'Confrontations de course'},
+  in_training:{en:'In training',fr:'À l\'entraînement'},
+  last_race_beat_you:{en:'Last race: beat you',fr:'Dernière course : vous a battu'},
+  last_race_you_beat:{en:'Last race: you beat him',fr:'Dernière course : vous l\'avez battu'},
+
+  // Coach tips FR
+  endurance_stat:{en:'Endurance',fr:'Endurance'},
+  speed_stat:{en:'Speed',fr:'Vitesse'},
+  technique_stat:{en:'Technique',fr:'Technique'},
+  mental_stat:{en:'Mental',fr:'Mental'},
+
+  // Week completed
+  week_completed:{en:'Week',fr:'Semaine'},
+  completed:{en:'completed!',fr:'terminée !'},
+};
+
+function t(key){
+  const entry = TR[key];
+  if(!entry) return key;
+  return entry[currentLang] || entry.en || key;
+}
+function tDiff(diff){ return t(diff); }
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('tt_lang', lang);
+  // Update static HTML
+  updateStaticText();
+  if(document.getElementById('game').style.display==='block') renderAll();
+  renderProfileScreen();
+}
+
+function updateStaticText(){
+  // Header labels
+  document.querySelectorAll('.hs .l').forEach((el,i)=>{
+    const keys=['cash','energy','health','fitness_label','races_label','followers','skill_pts'];
+    if(keys[i]) el.textContent=t(keys[i]);
+  });
+  // Tabs
+  const tabKeys=['dashboard','races','gear','history','sponsors','skills','rival'];
+  document.querySelectorAll('.tab-nav button').forEach((btn,i)=>{
+    if(tabKeys[i]){
+      const icons=['','','','','','','🔥 '];
+      btn.innerHTML=(icons[i]||'')+t(tabKeys[i]);
+    }
+  });
+  // Save btn
+  const saveBtn=document.getElementById('hdr-save-btn');
+  if(saveBtn) saveBtn.textContent=t('save_btn');
+  // Advance btn
+  const advBtn=document.querySelector('.btn-advance');
+  if(advBtn) advBtn.textContent=t('start_week');
+}
+
 /* ════ DATA ════ */
 const RANKS=[
-  {name:'Beginner',icon:'🥾',sub:'First steps on the trails',xp:0},
-  {name:'Jogger',icon:'🏃',sub:'You run regularly',xp:250},
-  {name:'Trailer',icon:'⛰️',sub:'The mountain calls',xp:800},
-  {name:'Competitor',icon:'🏅',sub:'Aiming for the podium',xp:1800},
-  {name:'Ultra-Trailer',icon:'🦅',sub:'Ultras don\'t scare you anymore',xp:3500},
-  {name:'Elite',icon:'👑',sub:'You inspire others',xp:5500},
-  {name:'Legend',icon:'🏆',sub:'The UTMB awaits',xp:8000},
+  {name:'Beginner',name_fr:'Débutant',icon:'🥾',sub:'First steps on the trails',sub_fr:'Premiers pas sur les sentiers',xp:0},
+  {name:'Jogger',name_fr:'Joggeur',icon:'🏃',sub:'You run regularly',sub_fr:'Vous courez régulièrement',xp:250},
+  {name:'Trailer',name_fr:'Traileur',icon:'⛰️',sub:'The mountain calls',sub_fr:'La montagne vous appelle',xp:800},
+  {name:'Competitor',name_fr:'Compétiteur',icon:'🏅',sub:'Aiming for the podium',sub_fr:'Viser le podium',xp:1800},
+  {name:'Ultra-Trailer',name_fr:'Ultra-Traileur',icon:'🦅',sub:'Ultras don\'t scare you anymore',sub_fr:'Les ultras ne vous font plus peur',xp:3500},
+  {name:'Elite',name_fr:'Élite',icon:'👑',sub:'You inspire others',sub_fr:'Vous inspirez les autres',xp:5500},
+  {name:'Legend',name_fr:'Légende',icon:'🏆',sub:'The UTMB awaits',sub_fr:'L\'UTMB vous attend',xp:8000},
 ];
 
-const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DAYS_EN=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DAYS_FR=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+function getDays(){ return currentLang==='fr'?DAYS_FR:DAYS_EN; }
+const DAYS=DAYS_EN; // keep for backward compat
+
+function tRank(r){ return currentLang==='fr'&&r.name_fr?r.name_fr:r.name; }
+function tRankSub(r){ return currentLang==='fr'&&r.sub_fr?r.sub_fr:r.sub; }
+function tD(obj,field){ const fr=obj[field+'_fr']; return currentLang==='fr'&&fr?fr:obj[field]; }
 
 const TRAININGS=[
-  {id:'easy_run',name:'Easy run',icon:'🏃',desc:'Base endurance',
+  {id:'easy_run',name:'Easy run',name_fr:'Footing',icon:'🏃',desc:'Base endurance',desc_fr:'Endurance de base',
    effect:'END +1.5',stats:{endurance:1.5},energyCost:10,xp:4},
-  {id:'long_run',name:'Long run',icon:'🛤️',desc:'2h+ run, prolonged effort',
+  {id:'long_run',name:'Long run',name_fr:'Sortie longue',icon:'🛤️',desc:'2h+ run, prolonged effort',desc_fr:'Sortie de 2h+, effort prolongé',
    effect:'END +3, TEC +1',stats:{endurance:3,technique:1},energyCost:30,xp:10},
-  {id:'interval',name:'Intervals',icon:'⚡',desc:'VO2max, develops speed',
+  {id:'interval',name:'Intervals',name_fr:'Fractionné',icon:'⚡',desc:'VO2max, develops speed',desc_fr:'VO2max, développe la vitesse',
    effect:'SPD +2.5',stats:{speed:2.5},energyCost:25,xp:8},
-  {id:'hill_repeats',name:'Hill repeats',icon:'📈',desc:'Explosive climbs',
+  {id:'hill_repeats',name:'Hill repeats',name_fr:'Côtes',icon:'📈',desc:'Explosive climbs',desc_fr:'Montées explosives',
    effect:'SPD +1.5, TEC +1.5',stats:{speed:1.5,technique:1.5},energyCost:25,xp:9},
-  {id:'trail_run',name:'Trail run',icon:'🏔️',desc:'Technical trails with elevation',
+  {id:'trail_run',name:'Trail run',name_fr:'Sortie trail',icon:'🏔️',desc:'Technical trails with elevation',desc_fr:'Sentiers techniques avec dénivelé',
    effect:'TEC +2.5, END +1',stats:{technique:2.5,endurance:1},energyCost:25,xp:11},
-  {id:'rest',name:'Rest',icon:'😴',desc:'Full recovery',
+  {id:'rest',name:'Rest',name_fr:'Repos',icon:'😴',desc:'Full recovery',desc_fr:'Récupération complète',
    effect:'Energy +40, Health +10',stats:{},energyCost:-40,healthGain:10,xp:1},
-  {id:'yoga',name:'Yoga / Stretching',icon:'🧘',desc:'Flexibility, injury prevention',
+  {id:'yoga',name:'Yoga / Stretching',name_fr:'Yoga / Étirements',icon:'🧘',desc:'Flexibility, injury prevention',desc_fr:'Souplesse, prévention des blessures',
    effect:'MEN +2, Health +8',stats:{mental:2},energyCost:-10,healthGain:8,xp:3},
-  {id:'mental_training',name:'Visualization',icon:'🧠',desc:'Mental training',
+  {id:'mental_training',name:'Visualization',name_fr:'Visualisation',icon:'🧠',desc:'Mental training',desc_fr:'Entraînement mental',
    effect:'MEN +3',stats:{mental:3},energyCost:5,xp:6},
-  {id:'cross_training',name:'Cross-training',icon:'🚴',desc:'Cycling, swimming, low-impact cardio',
+  {id:'cross_training',name:'Cross-training',name_fr:'Cross-training',icon:'🚴',desc:'Cycling, swimming, low-impact cardio',desc_fr:'Vélo, natation, cardio faible impact',
    effect:'END +1, SPD +1',stats:{endurance:1,speed:1},energyCost:15,xp:5},
-  {id:'muscu',name:'Strength training',icon:'💪',desc:'Squats, lunges, core. Pure strength.',
+  {id:'muscu',name:'Strength training',name_fr:'Musculation',icon:'💪',desc:'Squats, lunges, core. Pure strength.',desc_fr:'Squats, fentes, gainage. Force pure.',
    effect:'SPD +1.5, END +1, Health +3',stats:{speed:1.5,endurance:1},energyCost:20,healthGain:3,xp:6},
-  {id:'renforcement',name:'Muscle strengthening',icon:'🏋️',desc:'Proprioception, core, stability. Injury prevention.',
+  {id:'renforcement',name:'Muscle strengthening',name_fr:'Renforcement musculaire',icon:'🏋️',desc:'Proprioception, core, stability. Injury prevention.',desc_fr:'Proprioception, gainage, stabilité. Prévention des blessures.',
    effect:'TEC +1.5, MEN +1, Health +5',stats:{technique:1.5,mental:1},energyCost:12,healthGain:5,xp:5},
-  {id:'night_run',name:'Night run',icon:'🌙',desc:'Running at night. Essential for ultras.',
+  {id:'night_run',name:'Night run',name_fr:'Sortie nocturne',icon:'🌙',desc:'Running at night. Essential for ultras.',desc_fr:'Courir de nuit. Essentiel pour les ultras.',
    effect:'TEC +2, MEN +1.5',stats:{technique:2,mental:1.5},energyCost:20,xp:9,reqRank:2},
-  {id:'back_to_back',name:'Back-to-back',icon:'🔥',desc:'2 big consecutive runs',
+  {id:'back_to_back',name:'Back-to-back',name_fr:'Back-to-back',icon:'🔥',desc:'2 big consecutive runs',desc_fr:'2 grosses sorties consécutives',
    effect:'END +4, MEN +2',stats:{endurance:4,mental:2},energyCost:50,xp:18,reqRank:3},
-  {id:'altitude_camp',name:'Altitude camp',icon:'🏔️',desc:'VO2max boost — costs 300€',
+  {id:'altitude_camp',name:'Altitude camp',name_fr:'Stage en altitude',icon:'🏔️',desc:'VO2max boost — costs 300€',desc_fr:'Boost VO2max — coûte 300€',
    effect:'END +5, SPD +2.5',stats:{endurance:5,speed:2.5},energyCost:40,cashCost:300,xp:25,reqRank:4},
 ];
 
@@ -1449,38 +1937,38 @@ const SPONSORS=[
 ];
 
 const COACH_TIPS=[
-  "Don't forget rest. Overtraining is enemy number one.",
-  "Vary your training: endurance, speed, technique.",
-  "Stay hydrated! During a race, drink before you're thirsty.",
-  "Mental strength accounts for 50% of ultra-trail performance.",
-  "Invest in good shoes before any other gear.",
-  "Run intermediate races before aiming for the ultra.",
-  "Race nutrition is just as important as training.",
-  "Listen to your body. An ignored pain = guaranteed injury.",
-  "Poles save 15% energy on climbs.",
-  "Run in nature whenever possible. Pavement wears out your joints.",
-  "Sleep is your best recovery tool.",
-  "In a race, start slow. You'll pass everyone at the end.",
-  "Plan your weeks ahead for optimal progression.",
+  {en:"Don't forget rest. Overtraining is enemy number one.",fr:"N'oubliez pas le repos. Le surentraînement est l'ennemi numéro un."},
+  {en:"Vary your training: endurance, speed, technique.",fr:"Variez vos entraînements : endurance, vitesse, technique."},
+  {en:"Stay hydrated! During a race, drink before you're thirsty.",fr:"Restez hydraté ! En course, buvez avant d'avoir soif."},
+  {en:"Mental strength accounts for 50% of ultra-trail performance.",fr:"Le mental compte pour 50% de la performance en ultra-trail."},
+  {en:"Invest in good shoes before any other gear.",fr:"Investissez dans de bonnes chaussures avant tout autre équipement."},
+  {en:"Run intermediate races before aiming for the ultra.",fr:"Courez des courses intermédiaires avant de viser l'ultra."},
+  {en:"Race nutrition is just as important as training.",fr:"La nutrition en course est aussi importante que l'entraînement."},
+  {en:"Listen to your body. An ignored pain = guaranteed injury.",fr:"Écoutez votre corps. Une douleur ignorée = blessure garantie."},
+  {en:"Poles save 15% energy on climbs.",fr:"Les bâtons économisent 15% d'énergie en montée."},
+  {en:"Run in nature whenever possible. Pavement wears out your joints.",fr:"Courez dans la nature autant que possible. Le bitume use vos articulations."},
+  {en:"Sleep is your best recovery tool.",fr:"Le sommeil est votre meilleur outil de récupération."},
+  {en:"In a race, start slow. You'll pass everyone at the end.",fr:"En course, partez doucement. Vous doublerez tout le monde à la fin."},
+  {en:"Plan your weeks ahead for optimal progression.",fr:"Planifiez vos semaines à l'avance pour une progression optimale."},
 ];
 
 /* ════ INJURIES ════ */
 const INJURIES = [
-  {id:'itband', name:"IT Band Syndrome", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
-  {id:'achilles', name:"Achilles Tendinitis", minDur:2, maxDur:3, perfMalus:15, icon:'🦶', weight:4, context:'overload'},
-  {id:'stress_fracture', name:"Stress Fracture", minDur:3, maxDur:5, perfMalus:25, icon:'🦴', weight:1, context:'overload'},
-  {id:'ankle_sprain', name:"Ankle Sprain", minDur:1, maxDur:3, perfMalus:15, icon:'🩹', weight:6, context:'technical'},
-  {id:'shin_splints', name:"Shin Splints", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
-  {id:'plantar', name:"Plantar Fasciitis", minDur:2, maxDur:3, perfMalus:12, icon:'🦶', weight:4, context:'overload'},
+  {id:'itband', name:"IT Band Syndrome", name_fr:"Syndrome de la bandelette", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
+  {id:'achilles', name:"Achilles Tendinitis", name_fr:"Tendinite d'Achille", minDur:2, maxDur:3, perfMalus:15, icon:'🦶', weight:4, context:'overload'},
+  {id:'stress_fracture', name:"Stress Fracture", name_fr:"Fracture de fatigue", minDur:3, maxDur:5, perfMalus:25, icon:'🦴', weight:1, context:'overload'},
+  {id:'ankle_sprain', name:"Ankle Sprain", name_fr:"Entorse de cheville", minDur:1, maxDur:3, perfMalus:15, icon:'🩹', weight:6, context:'technical'},
+  {id:'shin_splints', name:"Shin Splints", name_fr:"Périostite tibiale", minDur:1, maxDur:2, perfMalus:10, icon:'🦵', weight:5, context:'overload'},
+  {id:'plantar', name:"Plantar Fasciitis", name_fr:"Fasciite plantaire", minDur:2, maxDur:3, perfMalus:12, icon:'🦶', weight:4, context:'overload'},
 ];
 const LIGHT_TRAININGS = ['easy_run','yoga','rest','cross_training','renforcement','mental_training'];
 
 /* ════ CREW ════ */
 const CREW = [
-  {id:'nobody', name:'Nobody', icon:'❌', desc:'You handle aid stations alone.', bonus:{timeLoss:120, energyBonus:0}, price:0, reqRank:0},
-  {id:'friend', name:'A friend', icon:'🧑', desc:'Basic help. Prepares your flasks.', bonus:{timeLoss:60, energyBonus:5}, price:50, reqRank:1},
-  {id:'coach_crew', name:'Personal coach', icon:'🏋️', desc:'Strategy + motivation at aid stations.', bonus:{timeLoss:30, energyBonus:10, mentalBonus:5}, price:200, reqRank:3},
-  {id:'pro_crew', name:'Pro team', icon:'👨‍👩‍👦', desc:'Ultra-fast resupply. Zero stress.', bonus:{timeLoss:10, energyBonus:15, mentalBonus:10}, price:500, reqRank:5},
+  {id:'nobody', name:'Nobody', name_fr:'Personne', icon:'❌', desc:'You handle aid stations alone.', desc_fr:'Vous gérez les ravitaillements seul.', bonus:{timeLoss:120, energyBonus:0}, price:0, reqRank:0},
+  {id:'friend', name:'A friend', name_fr:'Un ami', icon:'🧑', desc:'Basic help. Prepares your flasks.', desc_fr:'Aide basique. Prépare vos bidons.', bonus:{timeLoss:60, energyBonus:5}, price:50, reqRank:1},
+  {id:'coach_crew', name:'Personal coach', name_fr:'Coach personnel', icon:'🏋️', desc:'Strategy + motivation at aid stations.', desc_fr:'Stratégie + motivation aux ravitaillements.', bonus:{timeLoss:30, energyBonus:10, mentalBonus:5}, price:200, reqRank:3},
+  {id:'pro_crew', name:'Pro team', name_fr:'Équipe pro', icon:'👨‍👩‍👦', desc:'Ultra-fast resupply. Zero stress.', desc_fr:'Ravitaillement ultra-rapide. Zéro stress.', bonus:{timeLoss:10, energyBonus:15, mentalBonus:10}, price:500, reqRank:5},
 ];
 
 /* ════ LOOT BOXES ════ */
@@ -1737,6 +2225,18 @@ function handleImportFile(event){
 }
 
 function renderProfileScreen(){
+  // Language bar
+  const langBar = document.getElementById('ps-lang-bar');
+  if(langBar) langBar.innerHTML=`
+    <button class="ps-lang-btn${currentLang==='en'?' active':''}" onclick="setLang('en')">🇬🇧 English</button>
+    <button class="ps-lang-btn${currentLang==='fr'?' active':''}" onclick="setLang('fr')">🇫🇷 Français</button>
+  `;
+  // Sub text
+  const subEl = document.getElementById('ps-sub-text');
+  if(subEl) subEl.textContent = t('ps_title');
+  const impBtn = document.getElementById('ps-import-btn');
+  if(impBtn) impBtn.textContent = t('ps_import');
+
   const container = document.getElementById('ps-slots');
   container.innerHTML = '';
   for(let i=0;i<MAX_SLOTS;i++){
@@ -1745,15 +2245,15 @@ function renderProfileScreen(){
     if(info){
       const date = new Date(info.timestamp);
       const dateStr = info.timestamp ? date.toLocaleDateString()+' '+date.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
-      const rankInfo = typeof RANKS!=='undefined' && RANKS[info.rank] ? RANKS[info.rank] : {icon:'🌱',name:'Rookie'};
+      const rankInfo = typeof RANKS!=='undefined' && RANKS[info.rank] ? RANKS[info.rank] : {icon:'🌱',name:'Rookie',name_fr:'Débutant'};
       div.className = 'ps-slot';
       div.innerHTML = `
-        <div class="ps-slot-name">${info.name} ${info.utmb?'🏆':''}<span class="ps-auto-tag">Slot ${i+1}</span></div>
+        <div class="ps-slot-name">${info.name} ${info.utmb?'🏆':''}<span class="ps-auto-tag">${t('ps_slot')} ${i+1}</span></div>
         <div class="ps-slot-info">
-          <span>📅 Year ${info.year} · Wk ${((info.week-1)%52)+1}</span>
-          <span>💪 Fit ${info.fitness}</span>
-          <span>🏁 ${info.races} races</span>
-          <span>${rankInfo.icon} ${rankInfo.name}</span>
+          <span>📅 ${t('ps_year')} ${info.year} · Wk ${((info.week-1)%52)+1}</span>
+          <span>💪 ${t('ps_fit')} ${info.fitness}</span>
+          <span>🏁 ${info.races} ${t('ps_races')}</span>
+          <span>${rankInfo.icon} ${tRank(rankInfo)}</span>
         </div>
         <div style="font-size:10px;color:var(--faint);margin-top:4px">${dateStr}</div>
         <div class="ps-slot-actions">
@@ -1764,7 +2264,7 @@ function renderProfileScreen(){
       div.onclick = () => loadSlotAndPlay(i);
     } else {
       div.className = 'ps-slot empty';
-      div.innerHTML = `<div style="padding:8px 0">➕ New Game — Slot ${i+1}</div>`;
+      div.innerHTML = `<div style="padding:8px 0">➕ ${t('ps_new_game')} — ${t('ps_slot')} ${i+1}</div>`;
       div.onclick = () => newGameSlot(i);
     }
     container.appendChild(div);
@@ -1796,6 +2296,16 @@ function loadSlotAndPlay(slot){
 function newGameSlot(slot){
   activeSlot = slot;
   document.getElementById('profile-screen').classList.add('hidden');
+  // Render intro text in current language
+  document.getElementById('intro-kicker').textContent=t('intro_kicker');
+  document.getElementById('intro-sub').textContent=t('intro_sub');
+  document.getElementById('intro-story').innerHTML=t('intro_story');
+  document.getElementById('ig-weeks').textContent=t('intro_weeks');
+  document.getElementById('ig-races').textContent=t('intro_races');
+  document.getElementById('ig-cont').textContent=t('intro_continents');
+  document.getElementById('ig-xp').textContent=t('intro_starting_xp');
+  document.getElementById('intro-btn-start').textContent=t('intro_btn_start');
+  document.getElementById('intro-btn-skip').textContent=t('intro_btn_skip');
   document.getElementById('intro').style.display='flex';
 }
 
@@ -2023,10 +2533,10 @@ function findGear(id){
 
 function getSeason(week){
   const w = ((week-1) % 52) + 1; // cycle every 52 weeks
-  if(w<=13) return {name:'Spring',cls:'spring',idx:0};
-  if(w<=26) return {name:'Summer',cls:'summer',idx:1};
-  if(w<=39) return {name:'Autumn',cls:'autumn',idx:2};
-  return {name:'Winter',cls:'winter',idx:3};
+  if(w<=13) return {name:t('spring'),cls:'spring',idx:0};
+  if(w<=26) return {name:t('summer'),cls:'summer',idx:1};
+  if(w<=39) return {name:t('autumn'),cls:'autumn',idx:2};
+  return {name:t('winter'),cls:'winter',idx:3};
 }
 function getYear(week){ return Math.floor((week-1)/52)+1; }
 
@@ -2077,10 +2587,10 @@ function calcInjuryRisk(race) {
 }
 
 function calcInjuryRiskLabel(risk) {
-  if(risk <= 20) return {label:'Low', cls:'low'};
-  if(risk <= 45) return {label:'Moderate', cls:'medium'};
-  if(risk <= 70) return {label:'High', cls:'high'};
-  return {label:'Extreme', cls:'extreme'};
+  if(risk <= 20) return {label:t('low'), cls:'low'};
+  if(risk <= 45) return {label:t('moderate'), cls:'medium'};
+  if(risk <= 70) return {label:t('high'), cls:'high'};
+  return {label:t('extreme'), cls:'extreme'};
 }
 
 function rollInjury(riskPercent, context) {
@@ -2203,27 +2713,27 @@ function renderPickerGrid(){
   const grid=document.getElementById('picker-grid');grid.innerHTML='';
   const prevDayHasRest = pickerDayIdx > 0 && weekPlan[pickerDayIdx - 1].some(id => id === 'rest');
   const activeCat = TRAINING_CATEGORIES.find(c=>c.id===activePickerTab);
-  const filtered = activeCat.ids ? TRAININGS.filter(t=>activeCat.ids.includes(t.id)) : TRAININGS;
+  const filtered = activeCat.ids ? TRAININGS.filter(x=>activeCat.ids.includes(x.id)) : TRAININGS;
 
-  filtered.forEach(t=>{
-    const locked=t.reqRank&&G.rank<t.reqRank;
-    const isRestType = (t.id === 'rest');
+  filtered.forEach(tr=>{
+    const locked=tr.reqRank&&G.rank<tr.reqRank;
+    const isRestType = (tr.id === 'rest');
     const restBlocked = isRestType && prevDayHasRest;
     const hasInjury = G.injuries.length > 0;
     const freshInjury = hasInjury && G.injuries.some(inj => inj.duration >= inj.maxDuration);
-    const injuryBlocked = hasInjury && (freshInjury ? (t.id !== 'rest' && t.id !== 'yoga') : !LIGHT_TRAININGS.includes(t.id));
+    const injuryBlocked = hasInjury && (freshInjury ? (tr.id !== 'rest' && tr.id !== 'yoga') : !LIGHT_TRAININGS.includes(tr.id));
 
     const card=document.createElement('div');
     card.className='pick-card'+((locked||restBlocked||injuryBlocked)?' disabled':'');
-    card.innerHTML=`<div class="pc-icon">${t.icon}</div>
-      <div class="pc-name">${t.name}</div>
-      <div class="pc-effect">${t.effect}</div>
-      <div class="pc-cost">⚡ ${t.energyCost>0?'-'+t.energyCost:'+'+Math.abs(t.energyCost)} energy${t.cashCost?' · '+t.cashCost+'€':''}</div>
-      ${locked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🔒 '+RANKS[t.reqRank].name+'</div>':''}
-      ${restBlocked?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ Consecutive rest forbidden</div>':''}
-      ${injuryBlocked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🤕 '+(freshInjury?'Rest only (fresh injury)':'Too intense while injured')+'</div>':''}
-      ${hasInjury&&!injuryBlocked&&t.id!=='rest'&&t.id!=='yoga'?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ 50% efficiency (injured)</div>':''}`;
-    if(!locked&&!restBlocked&&!injuryBlocked) card.onclick=()=>{weekPlan[pickerDayIdx].push(t.id);closePicker();renderPlanner();};
+    card.innerHTML=`<div class="pc-icon">${tr.icon}</div>
+      <div class="pc-name">${tD(tr,'name')}</div>
+      <div class="pc-effect">${tr.effect}</div>
+      <div class="pc-cost">⚡ ${tr.energyCost>0?'-'+tr.energyCost:'+'+Math.abs(tr.energyCost)} ${t('energy')}${tr.cashCost?' · '+tr.cashCost+'€':''}</div>
+      ${locked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🔒 '+tRank(RANKS[tr.reqRank])+'</div>':''}
+      ${restBlocked?'<div style="font-size:10px;color:var(--amber);margin-top:4px">'+t('t_consecutive_rest')+'</div>':''}
+      ${injuryBlocked?'<div style="font-size:10px;color:var(--red);margin-top:4px">🤕 '+(freshInjury?t('rest_only'):t('too_intense'))+'</div>':''}
+      ${hasInjury&&!injuryBlocked&&tr.id!=='rest'&&tr.id!=='yoga'?'<div style="font-size:10px;color:var(--amber);margin-top:4px">⚠️ '+t('half_efficiency')+'</div>':''}`;
+    if(!locked&&!restBlocked&&!injuryBlocked) card.onclick=()=>{weekPlan[pickerDayIdx].push(tr.id);closePicker();renderPlanner();};
     grid.appendChild(card);
   });
 }
@@ -2246,8 +2756,8 @@ function calcPlanEnergyCost(){
   weekPlan.forEach(day=>{
     day.forEach(id=>{
       if(id.startsWith('race:') || id.startsWith('race_day2:')) return; // skip race slots
-      const t=TRAININGS.find(x=>x.id===id);
-      if(t) cost+=t.energyCost;
+      const tr=TRAININGS.find(x=>x.id===id);
+      if(tr) cost+=tr.energyCost;
     });
   });
   return cost;
@@ -2261,7 +2771,7 @@ function totalPlannedSessions(){
 
 function executeWeek(){
   const totalSessions=totalPlannedSessions();
-  if(totalSessions===0){toast('Plan at least 1 training!','err');return;}
+  if(totalSessions===0){toast(t('t_plan_one'),'err');return;}
   // No week limit — the game continues across years
 
   // Check if there's a race in the planner
@@ -2282,7 +2792,7 @@ function executeWeek(){
       });
     });
     if(hasBlockedTraining) {
-      toast(freshInjury ? '🤕 Fresh injury! Only rest and yoga this week.' : '🤕 Injured! Only light training allowed (easy run, cross-training, strengthening, yoga, rest, visualization).','err');
+      toast(freshInjury ? t('t_fresh_injury') : t('t_injured_light'),'err');
       return;
     }
   }
@@ -2296,24 +2806,24 @@ function executeWeek(){
     dayTrainings.forEach(id=>{
       // Skip race slots - they are handled separately
       if(id.startsWith('race:') || id.startsWith('race_day2:')) return;
-      const t=TRAININGS.find(x=>x.id===id);
-      if(!t) return;
-      if(t.cashCost&&t.cashCost>G.cash){addLog(`❌ Not enough cash for ${t.name}`,'err');return;}
-      if(t.energyCost>0&&G.energy<t.energyCost){addLog(`❌ Insufficient energy: ${t.name} (${DAYS[dayIdx]})`,'err');return;}
+      const tr=TRAININGS.find(x=>x.id===id);
+      if(!tr) return;
+      if(tr.cashCost&&tr.cashCost>G.cash){addLog(`❌ ${tD(tr,'name')} — ${t('t_not_enough_cash')}`,'err');return;}
+      if(tr.energyCost>0&&G.energy<tr.energyCost){addLog(`❌ ${tD(tr,'name')} (${getDays()[dayIdx]}) — ${t('energy')} ⚠️`,'err');return;}
 
-      if(t.cashCost) G.cash-=t.cashCost;
-      G.energy=Math.max(0,Math.min(G.maxEnergy,G.energy-(t.energyCost||0)));
-      if(t.healthGain) G.health=Math.min(100,G.health+t.healthGain);
+      if(tr.cashCost) G.cash-=tr.cashCost;
+      G.energy=Math.max(0,Math.min(G.maxEnergy,G.energy-(tr.energyCost||0)));
+      if(tr.healthGain) G.health=Math.min(100,G.health+tr.healthGain);
 
       // Fatigue management
-      if(t.id === 'rest') {
+      if(tr.id === 'rest') {
         G.fatigue = Math.max(0, G.fatigue - 25);
-      } else if(t.id === 'yoga') {
+      } else if(tr.id === 'yoga') {
         G.fatigue = Math.max(0, G.fatigue - 15);
       } else {
-        let fatInc = t.energyCost > 0 ? t.energyCost * 0.3 : 0;
+        let fatInc = tr.energyCost > 0 ? tr.energyCost * 0.3 : 0;
         // Iron Lungs: -10% fatigue on endurance trainings
-        const isEndurance = ['easy_run','long_run','cross_training'].includes(t.id);
+        const isEndurance = ['easy_run','long_run','cross_training'].includes(tr.id);
         if(isEndurance && hasSkill('iron_lungs')) fatInc *= 0.9;
         G.fatigue = Math.min(100, G.fatigue + fatInc);
       }
@@ -2321,13 +2831,13 @@ function executeWeek(){
       // Effectiveness multiplier
       let effMult = G.health<50 ? 0.5 : G.energy<20 ? 0.6 : 1;
       // Injured: light training at 50% efficiency
-      if(G.injuries.length > 0 && t.id !== 'rest' && t.id !== 'yoga') effMult *= 0.5;
+      if(G.injuries.length > 0 && tr.id !== 'rest' && tr.id !== 'yoga') effMult *= 0.5;
       // Fatigue penalty
       if(G.fatigue > 90) effMult *= 0.5;
       else if(G.fatigue > 70) effMult *= 0.5;
 
       // Apply stat gains with diminishing returns
-      Object.entries(t.stats||{}).forEach(([stat,baseVal])=>{
+      Object.entries(tr.stats||{}).forEach(([stat,baseVal])=>{
         const gain = calcTrainGain(G.stats[stat], baseVal);
         const actualGain = Math.round(gain * effMult * 10) / 10;
         G.stats[stat] = Math.min(99, G.stats[stat] + actualGain);
@@ -2345,20 +2855,20 @@ function executeWeek(){
       // Focus skill: -15% injury chance
       if(hasSkill('focus')) injuryBaseRisk = Math.round(injuryBaseRisk * 0.85);
 
-      if(injuryBaseRisk > 0 && t.id !== 'rest' && t.id !== 'yoga') {
-        const ctx = ['trail_run','hill_repeats','night_run'].includes(t.id) ? 'technical' : 'overload';
+      if(injuryBaseRisk > 0 && tr.id !== 'rest' && tr.id !== 'yoga') {
+        const ctx = ['trail_run','hill_repeats','night_run'].includes(tr.id) ? 'technical' : 'overload';
         rollInjury(injuryBaseRisk, ctx);
       }
 
-      totalXP+=t.xp;
-      addLog(`${DAYS[dayIdx]} : ${t.icon} ${t.name}`,'training');
+      totalXP+=tr.xp;
+      addLog(`${getDays()[dayIdx]} : ${tr.icon} ${tD(tr,'name')}`,'training');
     });
   });
 
   // Flow State: 20% chance to double XP
   if(hasSkill('flow_state') && Math.random()<0.2 && totalXP>0){
     totalXP*=2;
-    toast('🧠 Flow State! XP doubled this week!','ach');
+    toast(t('t_flow_state'),'ach');
   }
 
   // Fat Burner: +3 fitness bonus on endurance training weeks
@@ -2404,7 +2914,7 @@ function executeWeek(){
   weekPlan=[[],[],[],[],[],[],[]];
   renderAll();
   showWeekRecap();
-  toast(`Week ${G.week-1} completed!`,'ok');
+  toast(`${t('week_completed')} ${G.week-1} ${t('completed')}`,'ok');
 
   // If there was a race in the plan, trigger bag preparation
   if(hasRaceInPlan && G.nextRace) {
@@ -2541,8 +3051,7 @@ function openRaceDetail(raceId) {
   document.getElementById('rd-loc').textContent = '📍 ' + race.loc;
   document.getElementById('rd-dist').textContent = race.dist + ' km';
   document.getElementById('rd-elev').textContent = race.elev + ' D+';
-  const diffLabels = {easy:'Easy',medium:'Medium',hard:'Hard',extreme:'Extreme',legendary:'Legendary'};
-  document.getElementById('rd-diff').textContent = diffLabels[race.diff] || race.diff;
+  document.getElementById('rd-diff').textContent = tDiff(race.diff);
 
   const risk = calcInjuryRisk(race);
   const riskInfo = calcInjuryRiskLabel(risk);
@@ -2553,27 +3062,27 @@ function openRaceDetail(raceId) {
   const seasonOk = race.season === 'any' || race.season === season.cls;
 
   let rows = '';
-  rows += `<div class="rd-info-row"><span class="rd-key">Weather</span><span class="rd-value">${G.weather.icon} ${G.weather.name} (${G.weather.effect >= 0 ? '+' : ''}${G.weather.effect}%)</span></div>`;
-  rows += `<div class="rd-info-row"><span class="rd-key">Injury risk</span><span class="rd-value"><span class="rc-injury-risk ${riskInfo.cls}">${riskInfo.label} (${risk}%)</span></span></div>`;
-  rows += `<div class="rd-info-row"><span class="rd-key">Required fitness</span><span class="rd-value">${race.reqFitness} (current: ${fitness()})</span></div>`;
-  rows += `<div class="rd-info-row"><span class="rd-key">Required rank</span><span class="rd-value">${RANKS[race.reqRank].icon} ${RANKS[race.reqRank].name}</span></div>`;
-  rows += `<div class="rd-info-row"><span class="rd-key">Prize</span><span class="rd-value" style="color:var(--green)">🏆 ${race.prize}€</span></div>`;
-  rows += `<div class="rd-info-row"><span class="rd-key">Season</span><span class="rd-value">${race.season === 'any' ? 'All seasons' : race.season} ${seasonOk ? '✓' : '(off season)'}</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('weather')}</span><span class="rd-value">${G.weather.icon} ${G.weather.name} (${G.weather.effect >= 0 ? '+' : ''}${G.weather.effect}%)</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('injury_risk')}</span><span class="rd-value"><span class="rc-injury-risk ${riskInfo.cls}">${riskInfo.label} (${risk}%)</span></span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('required_fitness')}</span><span class="rd-value">${race.reqFitness} (${t('current')}: ${fitness()})</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('required_rank')}</span><span class="rd-value">${RANKS[race.reqRank].icon} ${tRank(RANKS[race.reqRank])}</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('prize')}</span><span class="rd-value" style="color:var(--green)">🏆 ${race.prize}€</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('season')}</span><span class="rd-value">${race.season === 'any' ? t('all_seasons') : t(race.season)} ${seasonOk ? '✓' : '('+t('off_season')+')'}</span></div>`;
 
-  rows += `<div class="rd-info-row"><span class="rd-key">Region</span><span class="rd-value">${REGION_FLAGS[race.region]||''} ${REGION_LABELS[race.region]||race.region}</span></div>`;
+  rows += `<div class="rd-info-row"><span class="rd-key">${t('region')}</span><span class="rd-value">${REGION_FLAGS[race.region]||''} ${REGION_LABELS[race.region]||race.region}</span></div>`;
   const completedThisYear = G.racesCompleted.some(x=>x.raceId===race.id && getYear(x.week)===getYear(G.week));
-  if(completedThisYear) rows += `<div class="rd-info-row"><span class="rd-key">Status</span><span class="rd-value" style="color:var(--green)">✓ Done this year</span></div>`;
+  if(completedThisYear) rows += `<div class="rd-info-row"><span class="rd-key">Status</span><span class="rd-value" style="color:var(--green)">${t('done_this_year')}</span></div>`;
 
   document.getElementById('rd-info-rows').innerHTML = rows;
 
   const btn = document.getElementById('rd-inscribe-btn');
   btn.disabled = locked || lowFit || !seasonOk || !!G.nextRace || completedThisYear;
-  if(completedThisYear) btn.textContent = '✓ Already done this year';
-  else if(G.nextRace) btn.textContent = 'Already registered';
-  else if(locked) btn.textContent = '🔒 Rank too low';
-  else if(lowFit) btn.textContent = '⚠️ Fitness too low';
-  else if(!seasonOk) btn.textContent = 'Off season';
-  else btn.textContent = "Register";
+  if(completedThisYear) btn.textContent = t('already_done_year');
+  else if(G.nextRace) btn.textContent = t('already_registered');
+  else if(locked) btn.textContent = t('rank_too_low');
+  else if(lowFit) btn.textContent = t('fitness_too_low');
+  else if(!seasonOk) btn.textContent = t('off_season');
+  else btn.textContent = t('register');
 
   document.getElementById('race-detail-modal').classList.add('show');
 }
@@ -2607,18 +3116,18 @@ function isRaceLong(race){
 
 function inscribeRace(id){
   const race=RACES.find(x=>x.id===id);if(!race)return;
-  if(race.reqRank>G.rank){toast(`Rank ${RANKS[race.reqRank].name} required`,'err');return;}
-  if(fitness()<race.reqFitness){toast(`Fitness ${race.reqFitness} required (you have ${fitness()})`,'err');return;}
-  if(G.nextRace){toast('You already have a registered race!','err');return;}
+  if(race.reqRank>G.rank){toast(`${tRank(RANKS[race.reqRank])} ${t('t_rank_required')}`,'err');return;}
+  if(fitness()<race.reqFitness){toast(`${t('fitness_label')} ${race.reqFitness} ${t('t_rank_required')} (${fitness()})`,'err');return;}
+  if(G.nextRace){toast(t('t_already_registered'),'err');return;}
 
   // Check samedi (index 5) is free
   if(weekPlan[5].length > 0 && !weekPlan[5].some(x=>x.startsWith('race:'))){
-    toast('Saturday is already planned! Free it for the race.','err');return;
+    toast(t('t_saturday_planned'),'err');return;
   }
   // If long race, check dimanche (index 6) too
   const long = isRaceLong(race);
   if(long && weekPlan[6].length > 0 && !weekPlan[6].some(x=>x.startsWith('race:'))){
-    toast('Sunday is already planned! Free it for this long race.','err');return;
+    toast(t('t_sunday_planned'),'err');return;
   }
 
   G.nextRace={raceId:id,week:G.week};
@@ -2917,15 +3426,15 @@ function showRaceResultsModal(race, results, playerTime) {
   const playerResult = results.find(r => r.isPlayer);
   const winnerTime = results[0].time;
 
-  document.getElementById('rr-title').textContent = race.name + ' — Ranking';
+  document.getElementById('rr-title').textContent = race.name + ' — ' + t('ranking');
 
   // Summary
   const summaryEl = document.getElementById('rr-summary');
   summaryEl.innerHTML = `
-    <div class="rr-sum-stat"><div class="rr-sv">${playerResult ? playerResult.pos : '-'}e</div><div class="rr-sl">Position</div></div>
-    <div class="rr-sum-stat"><div class="rr-sv">${formatTime(playerTime)}</div><div class="rr-sl">Time</div></div>
-    <div class="rr-sum-stat"><div class="rr-sv">${formatPace(playerTime / race.dist)}</div><div class="rr-sl">Pace /km</div></div>
-    <div class="rr-sum-stat"><div class="rr-sv">${results.length}</div><div class="rr-sl">Participants</div></div>
+    <div class="rr-sum-stat"><div class="rr-sv">${playerResult ? playerResult.pos : '-'}e</div><div class="rr-sl">${t('position')}</div></div>
+    <div class="rr-sum-stat"><div class="rr-sv">${formatTime(playerTime)}</div><div class="rr-sl">${t('time')}</div></div>
+    <div class="rr-sum-stat"><div class="rr-sv">${formatPace(playerTime / race.dist)}</div><div class="rr-sl">${t('pace_km')}</div></div>
+    <div class="rr-sum-stat"><div class="rr-sv">${results.length}</div><div class="rr-sl">${t('participants')}</div></div>
   `;
 
   // Classement
@@ -2938,7 +3447,7 @@ function showRaceResultsModal(race, results, playerTime) {
     row.className = 'rr-row' + (r.isPlayer ? ' player' : '') + (r.isRival ? ' rival' : '');
     row.innerHTML = `
       <div class="rr-pos ${posClass}">${r.pos}</div>
-      <div class="rr-runner-name">${r.name}${r.isPlayer ? ' (You)' : ''}${r.isRival ? ' 🔥' : ''}</div>
+      <div class="rr-runner-name">${r.name}${r.isPlayer ? ' '+t('you') : ''}${r.isRival ? ' 🔥' : ''}</div>
       <div class="rr-runner-time">${formatTime(r.time)}</div>
       <div class="rr-runner-gap">${r.pos === 1 ? '—' : '+' + formatTime(gap)}</div>
     `;
@@ -3063,7 +3572,7 @@ function finishRace(race,kmDone,elapsed,isDNF){
       G.utmbCompleted=true;
       G.utmbCompletedWeek=G.week;
       setTimeout(()=>{
-        showNotif('🏆','UTMB COMPLETED!',`${PLAYER.name} finished the UTMB in Year ${getYear(G.week)}!<br><strong>171 km, 10,000 D+</strong>.<br>The dream is real. But the mountains are calling for more...<br><br>The game continues — new races, new challenges await!`);
+        showNotif('🏆',t('utmb_completed_title'),`${PLAYER.name} ${t('utmb_completed_text')} ${getYear(G.week)}!<br><strong>171 km, 10,000 D+</strong>.<br>${t('t_utmb_done')}<br><br>${currentLang==='fr'?'Le jeu continue — nouvelles courses, nouveaux défis !':'The game continues — new races, new challenges await!'}`);
       },2500);
     }
   }
@@ -3327,10 +3836,10 @@ function renderSkills(){
   banner.innerHTML=`<div style="display:flex;align-items:center;gap:14px">
     <div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.8rem;color:${hasPts?'var(--orange)':'var(--muted)'}">${G.skillPoints}</div>
     <div>
-      <div style="font-size:13px;font-weight:700;letter-spacing:1px">SKILL POINTS</div>
-      <div style="font-size:11px;color:var(--muted)">Earn +2 SP each time your rank increases</div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:1px">${t('skill_points')}</div>
+      <div style="font-size:11px;color:var(--muted)">${t('skills_earn_sp')}</div>
     </div>
-    <div style="margin-left:auto;font-size:11px;color:var(--muted)">${G.unlockedSkills.size}/${SKILL_TREE.reduce((a,b)=>a+b.skills.length,0)} skills unlocked</div>
+    <div style="margin-left:auto;font-size:11px;color:var(--muted)">${G.unlockedSkills.size}/${SKILL_TREE.reduce((a,b)=>a+b.skills.length,0)} ${t('skills_unlocked')}</div>
   </div>`;
 
   // SP notification badge
@@ -3369,10 +3878,10 @@ function renderSkills(){
         </div>
         <div class="sn-desc">${skill.desc}</div>
         <div class="sn-cost">
-          ${unlocked?'<span class="sn-badge">✓ Active</span>':''}
-          ${canDo?`<button class="btn-unlock" onclick="event.stopPropagation();unlockSkill('${skill.id}')">Unlock</button>`:''}
-          ${!unlocked&&prereqMissing?'<span style="font-size:10px;color:var(--red)">🔒 Previous skill required</span>':''}
-          ${!unlocked&&!prereqMissing&&noPoints?'<span style="font-size:10px;color:var(--amber)">Not enough SP</span>':''}
+          ${unlocked?`<span class="sn-badge">${t('active')}</span>`:''}
+          ${canDo?`<button class="btn-unlock" onclick="event.stopPropagation();unlockSkill('${skill.id}')">${t('unlock')}</button>`:''}
+          ${!unlocked&&prereqMissing?`<span style="font-size:10px;color:var(--red)">${t('prev_skill_req')}</span>`:''}
+          ${!unlocked&&!prereqMissing&&noPoints?`<span style="font-size:10px;color:var(--amber)">${t('not_enough_sp')}</span>`:''}
         </div>
       </div>`;
     });
@@ -3571,9 +4080,9 @@ function renderRivalTab(){
   const rRank=RANKS[rv.rank]||RANKS[0];
   const statusBadge=rv.injured
     ?'<span class="rival-badge injured">🤕 Injured ('+rv.injuryWeeksLeft+' wk)</span>'
-    :rv.fitness>pf+5?'<span class="rival-badge ahead">AHEAD</span>'
-    :pf>rv.fitness+5?'<span class="rival-badge behind">BEHIND</span>'
-    :'<span class="rival-badge tied">NECK & NECK</span>';
+    :rv.fitness>pf+5?`<span class="rival-badge ahead">${t('rival_ahead')}</span>`
+    :pf>rv.fitness+5?`<span class="rival-badge behind">${t('rival_behind')}</span>`
+    :`<span class="rival-badge tied">${t('rival_tied')}</span>`;
 
   const h2hPlayerWins=rv.losses;
   const h2hRivalWins=rv.wins;
@@ -3585,7 +4094,7 @@ function renderRivalTab(){
         <div class="rival-card-avatar">🏃</div>
         <div class="rival-card-info">
           <h3>RYDER COLE</h3>
-          <div class="rival-rank">${rRank.icon} ${rRank.name} ${statusBadge}</div>
+          <div class="rival-rank">${rRank.icon} ${tRank(rRank)} ${statusBadge}</div>
         </div>
       </div>
       <div class="rival-stats-grid">
@@ -3599,7 +4108,7 @@ function renderRivalTab(){
     </div>
 
     <div style="margin-top:24px">
-      <div class="section-title" style="font-size:13px">⚔️ Head to Head</div>
+      <div class="section-title" style="font-size:13px">⚔️ ${t('head_to_head')}</div>
       <div class="rival-h2h">
         <div><div class="h2h-score" style="color:var(--green)">${h2hPlayerWins}</div><div class="h2h-label">You</div></div>
         <div class="h2h-vs">VS</div>
@@ -3621,16 +4130,16 @@ function renderRivalTab(){
 
   // Messages
   if(rv.messageHistory.length){
-    html+=`<div style="margin-top:24px"><div class="section-title" style="font-size:13px">📱 Messages</div><div class="rival-messages-list">`;
+    html+=`<div style="margin-top:24px"><div class="section-title" style="font-size:13px">📱 ${t('messages')}</div><div class="rival-messages-list">`;
     rv.messageHistory.slice(-5).reverse().forEach(m=>{
-      html+=`<div class="rival-msg-item"><div class="rmw">WEEK ${m.week}</div>${m.text}</div>`;
+      html+=`<div class="rival-msg-item"><div class="rmw">${t('week_label').toUpperCase()} ${m.week}</div>${m.text}</div>`;
     });
     html+=`</div></div>`;
   }
 
   // Race history
   if(rv.raceHistory.length){
-    html+=`<div style="margin-top:24px"><div class="section-title" style="font-size:13px">🏁 Race Confrontations</div>`;
+    html+=`<div style="margin-top:24px"><div class="section-title" style="font-size:13px">🏁 ${t('race_confrontations')}</div>`;
     rv.raceHistory.slice(-8).reverse().forEach(rh=>{
       const icon=rh.dnf?'💥':rh.playerWon?'✅':rh.rivalWon?'❌':'➖';
       const resultText=rh.dnf?'Ryder DNF'
@@ -3655,9 +4164,9 @@ function renderRivalAside(){
   if(!el) return;
 
   const statusText=rv.injured?`🤕 Injured (${rv.injuryWeeksLeft} wk)`
-    :rv.lastResult==='win'?'😏 Last race: beat you'
-    :rv.lastResult==='loss'?'😤 Last race: you beat him'
-    :'💪 In training';
+    :rv.lastResult==='win'?`😏 ${t('last_race_beat_you')}`
+    :rv.lastResult==='loss'?`😤 ${t('last_race_you_beat')}`
+    :`💪 ${t('in_training')}`;
 
   const lastMsg=rv.messageHistory.length?rv.messageHistory[rv.messageHistory.length-1].text.replace(/\n/g,' '):'';
   const truncMsg=lastMsg.length>45?lastMsg.substring(0,42)+'...':lastMsg;
@@ -3972,7 +4481,7 @@ function renderDashboard(){
       <div class="fut-card-name">
         <h2>${PLAYER.name.toUpperCase()}</h2>
         ${loadSupporterStatus()?'<div class="sup-badge">⭐ SUPPORTER</div>':''}
-        <div class="fut-rank">${r.icon} ${r.name} · ${PLAYER.height}cm · ${PLAYER.weight}kg</div>
+        <div class="fut-rank">${r.icon} ${tRank(r)} · ${PLAYER.height}cm · ${PLAYER.weight}kg</div>
       </div>
       <div class="fut-stats">
         <div class="fut-stat"><span class="fut-stat-val ${sc(s.endurance)}">${s.endurance}</span><span class="fut-stat-label">END</span></div>
@@ -3990,28 +4499,28 @@ function renderDashboard(){
     <!-- RIGHT SIDE -->
     <div class="dash-right">
       <div class="dash-section">
-        <span class="dash-section-title">Detailed Statistics</span>
-        <div class="stat-row"><span class="stat-label">Endurance</span><div class="stat-bar"><div class="stat-fill end" style="width:${s.endurance}%"></div></div><span class="stat-val">${s.endurance}</span></div>
-        <div class="stat-row"><span class="stat-label">Speed</span><div class="stat-bar"><div class="stat-fill spd" style="width:${s.speed}%"></div></div><span class="stat-val">${s.speed}</span></div>
-        <div class="stat-row"><span class="stat-label">Technique</span><div class="stat-bar"><div class="stat-fill tech" style="width:${s.technique}%"></div></div><span class="stat-val">${s.technique}</span></div>
-        <div class="stat-row"><span class="stat-label">Mental</span><div class="stat-bar"><div class="stat-fill men" style="width:${s.mental}%"></div></div><span class="stat-val">${s.mental}</span></div>
-        <div class="stat-row"><span class="stat-label">Energy</span><div class="stat-bar"><div class="stat-fill energy" style="width:${G.energy}%"></div></div><span class="stat-val">${Math.round(G.energy)}%</span></div>
-        <div class="stat-row"><span class="stat-label">Health</span><div class="stat-bar"><div class="stat-fill health" style="width:${G.health}%"></div></div><span class="stat-val">${Math.round(G.health)}%</span></div>
-        <div class="stat-row"><span class="stat-label">Fatigue</span><div class="stat-bar"><div class="stat-fill fatigue" style="width:${G.fatigue}%"></div></div><span class="stat-val">${Math.round(G.fatigue)}%</span></div>
+        <span class="dash-section-title">${t('detailed_stats')}</span>
+        <div class="stat-row"><span class="stat-label">${t('endurance_stat')}</span><div class="stat-bar"><div class="stat-fill end" style="width:${s.endurance}%"></div></div><span class="stat-val">${s.endurance}</span></div>
+        <div class="stat-row"><span class="stat-label">${t('speed_stat')}</span><div class="stat-bar"><div class="stat-fill spd" style="width:${s.speed}%"></div></div><span class="stat-val">${s.speed}</span></div>
+        <div class="stat-row"><span class="stat-label">${t('technique_stat')}</span><div class="stat-bar"><div class="stat-fill tech" style="width:${s.technique}%"></div></div><span class="stat-val">${s.technique}</span></div>
+        <div class="stat-row"><span class="stat-label">${t('mental_stat')}</span><div class="stat-bar"><div class="stat-fill men" style="width:${s.mental}%"></div></div><span class="stat-val">${s.mental}</span></div>
+        <div class="stat-row"><span class="stat-label">${t('energy')}</span><div class="stat-bar"><div class="stat-fill energy" style="width:${G.energy}%"></div></div><span class="stat-val">${Math.round(G.energy)}%</span></div>
+        <div class="stat-row"><span class="stat-label">${t('health')}</span><div class="stat-bar"><div class="stat-fill health" style="width:${G.health}%"></div></div><span class="stat-val">${Math.round(G.health)}%</span></div>
+        <div class="stat-row"><span class="stat-label">${t('fatigue')}</span><div class="stat-bar"><div class="stat-fill fatigue" style="width:${G.fatigue}%"></div></div><span class="stat-val">${Math.round(G.fatigue)}%</span></div>
       </div>
       <div class="dash-section">
-        <span class="dash-section-title">Progress towards UTMB</span>
+        <span class="dash-section-title">${t('progress_utmb')}</span>
         <div class="stat-row">
-          <span class="stat-label">Goal</span>
+          <span class="stat-label">${t('goal')}</span>
           <div class="stat-bar"><div class="stat-fill end" style="width:${f}%"></div></div>
           <span class="stat-val">${f}%</span>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:4px">${
-          f>=95?'You\'re ready. Register for the UTMB!':
-          f>=75?'Excellent fitness! The ultras await you.':
-          f>=50?'Good progress. Trail marathons are within reach.':
-          f>=25?'You\'re progressing! First trails are accessible.':
-          'You\'re just starting. Keep training.'
+          f>=95?t('fit_ready'):
+          f>=75?t('fit_excellent'):
+          f>=50?t('fit_good'):
+          f>=25?t('fit_progressing'):
+          t('fit_starting')
         }</div>
       </div>
     </div>`;
@@ -4022,7 +4531,7 @@ function renderPlanner(){
   document.getElementById('plan-week-num').textContent=G.week;
   const maxSlots=slotsPerDay();
 
-  DAYS.forEach((day,i)=>{
+  getDays().forEach((day,i)=>{
     const dayTrainings=weekPlan[i];
     const slot=document.createElement('div');
 
@@ -4052,8 +4561,8 @@ function renderPlanner(){
       slot.className = 'day-slot race-day race-day-blocked';
       slot.innerHTML = `<div class="day-label">${day.substring(0,3)}</div>
         <div class="day-icon">🏔️</div>
-        <div class="race-day-name">Race continuation</div>
-        <div class="race-day-info">${race ? race.name : 'Recovery'}</div>`;
+        <div class="race-day-name">${t('race_continuation')}</div>
+        <div class="race-day-info">${race ? race.name : t('recovery_label')}</div>`;
       grid.appendChild(slot);
       return;
     }
@@ -4073,17 +4582,17 @@ function renderPlanner(){
     if(hasTrain){
       inner+='<div class="day-trainings">';
       dayTrainings.forEach((id,ti)=>{
-        const t=TRAININGS.find(x=>x.id===id);
-        if(!t) return;
-        inner+=`<div class="day-train-item">${t.icon} <span>${t.name}</span><button class="dti-rm" onclick="event.stopPropagation();removeDayTraining(${i},${ti})">✕</button></div>`;
+        const tr=TRAININGS.find(x=>x.id===id);
+        if(!tr) return;
+        inner+=`<div class="day-train-item">${tr.icon} <span>${tD(tr,'name')}</span><button class="dti-rm" onclick="event.stopPropagation();removeDayTraining(${i},${ti})">✕</button></div>`;
       });
       inner+='</div>';
       if(dayTrainings.length<maxSlots){
-        inner+=`<div class="day-add-more" onclick="event.stopPropagation();openPicker(${i})">+ add</div>`;
+        inner+=`<div class="day-add-more" onclick="event.stopPropagation();openPicker(${i})">${t('add_more')}</div>`;
       }
     } else {
       inner+=`<div class="day-add" style="margin-top:8px">+</div>
-        <div style="font-size:10px;color:var(--faint);margin-top:4px">Plan</div>`;
+        <div style="font-size:10px;color:var(--faint);margin-top:4px">${t('plan')}</div>`;
     }
 
     slot.innerHTML=inner;
@@ -4100,7 +4609,7 @@ function renderPlanner(){
   // Activity log
   const al=document.getElementById('activity-log');
   if(!al) return;
-  if(!G.activityLog.length){al.innerHTML='<p class="empty-msg">No activity.</p>';return;}
+  if(!G.activityLog.length){al.innerHTML=`<p class="empty-msg">${t('no_activity')}</p>`;return;}
   al.innerHTML=G.activityLog.slice(0,20).map(l=>`<div style="padding:5px 0;border-bottom:1px solid var(--line);font-size:12px;animation:fadeIn .3s ease">
     <span style="color:var(--muted);font-weight:500;font-family:'JetBrains Mono',monospace;font-size:11px">S${l.week}</span> ${l.text}
   </div>`).join('');
@@ -4134,7 +4643,8 @@ function renderRaces(){
   let filterHTML='<div class="race-filter-bar">';
   RACE_FILTERS.forEach(f=>{
     const count=RACES.filter(f.fn).length;
-    filterHTML+=`<button class="rf-btn${raceFilterId===f.id?' active':''}" onclick="raceFilterId='${f.id}';renderRaces()">${f.icon} ${f.label} <span class="rf-count">${count}</span></button>`;
+    const filterLabel=TR['rf_'+f.id]?t('rf_'+f.id):f.label;
+    filterHTML+=`<button class="rf-btn${raceFilterId===f.id?' active':''}" onclick="raceFilterId='${f.id}';renderRaces()">${f.icon} ${filterLabel} <span class="rf-count">${count}</span></button>`;
   });
   filterHTML+='</div>';
 
@@ -4146,7 +4656,7 @@ function renderRaces(){
   const filtered = RACES.filter(activeFilter.fn);
 
   if(filtered.length===0){
-    grid.innerHTML='<div style="padding:40px;text-align:center;color:var(--faint)">No races match this filter.</div>';
+    grid.innerHTML=`<div style="padding:40px;text-align:center;color:var(--faint)">${t('no_races_match')}</div>`;
     return;
   }
 
@@ -4165,15 +4675,15 @@ function renderRaces(){
     card.innerHTML=`<div class="rc-dist">${r.dist}</div><div class="rc-unit">KM · ${r.elev} D+</div>
       <div class="rc-name">${regionFlag} ${r.name}</div><div class="rc-loc">📍 ${r.loc}</div>
       <div class="rc-info">
-        <span class="rc-tag ${r.diff}">${r.diff==='easy'?'Easy':r.diff==='medium'?'Medium':r.diff==='hard'?'Hard':r.diff==='extreme'?'Extreme':'Legendary'}</span>
+        <span class="rc-tag ${r.diff}">${tDiff(r.diff)}</span>
         <span class="rc-injury-risk ${riskInfo.cls}">🩹 ${riskInfo.label}</span>
-        ${!seasonOk?'<span class="rc-tag" style="color:var(--muted);border-color:var(--muted)">Off season</span>':''}
+        ${!seasonOk?`<span class="rc-tag" style="color:var(--muted);border-color:var(--muted)">${t('off_season')}</span>`:''}
       </div>
       <div class="rc-prize">🏆 ${r.prize}€</div>
-      ${locked?`<div class="rc-req">🔒 Rank ${RANKS[r.reqRank].name}</div>`:''}
-      ${!locked&&lowFit?`<div class="rc-req">⚠️ Fitness ${r.reqFitness} required (${fitness()})</div>`:''}
-      ${completedThisYear?'<div class="rc-done">✓ Done this year</div>':''}
-      ${!completedThisYear&&completedEver?'<div class="rc-done" style="color:var(--muted)">↻ Run again this year</div>':''}`;
+      ${locked?`<div class="rc-req">🔒 ${tRank(RANKS[r.reqRank])}</div>`:''}
+      ${!locked&&lowFit?`<div class="rc-req">⚠️ ${t('fitness_label')} ${r.reqFitness} ${t('t_rank_required')} (${fitness()})</div>`:''}
+      ${completedThisYear?`<div class="rc-done">${t('done_this_year')}</div>`:''}
+      ${!completedThisYear&&completedEver?`<div class="rc-done" style="color:var(--muted)">${t('run_again')}</div>`:''}`;
     card.onclick=()=>openRaceDetail(r.id);
     grid.appendChild(card);
   });
@@ -4195,11 +4705,11 @@ function renderGear(){
         <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:600;letter-spacing:1px;text-transform:uppercase">${rarityLabel}</div>
         <div class="gc-desc">${item.desc}</div>
         ${bonusStr?`<div class="gc-bonus">${bonusStr}</div>`:''}
-        ${item.raceBonus?`<div class="gc-bonus">+${item.raceBonus}% energy during race</div>`:''}
-        ${item.healthBonus?`<div class="gc-bonus">+${item.healthBonus} health</div>`:''}
+        ${item.raceBonus?`<div class="gc-bonus">+${item.raceBonus}% ${t('energy_during_race')}</div>`:''}
+        ${item.healthBonus?`<div class="gc-bonus">+${item.healthBonus} ${t('health')}</div>`:''}
         ${item.weight?`<div style="font-size:10px;color:var(--faint)">Weight: ${item.weight} kg</div>`:''}
         <div class="gc-price" style="color:${owned?'var(--green)':locked?'var(--red)':isLootOnly?'var(--purple)':'var(--amber)'}">
-          ${owned?'✓ Owned':locked?`🔒 ${RANKS[item.reqRank].name}`:isLootOnly?'🎁 Loot Box only':item.price+'€'}</div>`;
+          ${owned?t('owned_label'):locked?`🔒 ${tRank(RANKS[item.reqRank])}`:isLootOnly?t('loot_only'):item.price+'€'}</div>`;
       if(!owned&&!locked&&!isLootOnly&&item.price>0) card.onclick=()=>buyGear(item.id);
       container.appendChild(card);
     });
@@ -4208,7 +4718,7 @@ function renderGear(){
 
 function renderHistory(){
   const list=document.getElementById('hist-list');
-  if(!G.racesCompleted.length){list.innerHTML='<p class="empty-msg" style="padding:20px 24px">No completed races.</p>';return;}
+  if(!G.racesCompleted.length){list.innerHTML=`<p class="empty-msg" style="padding:20px 24px">${t('no_completed_races')}</p>`;return;}
   list.innerHTML='';
   G.racesCompleted.slice().reverse().forEach(r=>{
     const el=document.createElement('div');el.className='hist-item';
@@ -4221,7 +4731,7 @@ function renderHistory(){
   // Event history (last 5)
   const evtList=document.getElementById('event-history-list');
   if(!G.eventHistory.length){
-    evtList.innerHTML='<p class="empty-msg" style="padding:20px 24px">No events yet.</p>';
+    evtList.innerHTML=`<p class="empty-msg" style="padding:20px 24px">${t('no_events')}</p>`;
   } else {
     evtList.innerHTML='';
     G.eventHistory.slice(-5).reverse().forEach(ev=>{
@@ -4230,7 +4740,7 @@ function renderHistory(){
       el.innerHTML=`<div style="display:flex;align-items:center">
         <span class="evt-hist-icon">${ev.icon}</span>
         <div><div class="evt-hist-name">${ev.name}</div>
-        <div class="evt-hist-meta">Week ${ev.week}</div>
+        <div class="evt-hist-meta">${t('week_label')} ${ev.week}</div>
         <div class="evt-hist-choice">➤ ${ev.choiceLabel} — <span style="color:var(--muted)">${ev.choiceEffect}</span></div></div></div>`;
       evtList.appendChild(el);
     });
@@ -4249,7 +4759,7 @@ function renderSponsors(){
       <div style="flex:1;min-width:200px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
           <span style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.2rem;color:var(--orange)">${G.reputation}</span>
-          <span style="font-size:11px;color:var(--muted);letter-spacing:1px">TRAIL FOLLOWERS</span>
+          <span style="font-size:11px;color:var(--muted);letter-spacing:1px">${t('trail_followers')}</span>
           <span class="rep-tier-badge ${tier.cls}">${tier.name}</span>
         </div>
         <div class="stat-bar"><div class="stat-fill end" style="width:${repPct}%"></div></div>
@@ -4257,7 +4767,7 @@ function renderSponsors(){
       </div>
       <div style="text-align:center;min-width:100px">
         <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.1rem;color:var(--green)">${weeklyIncome}€</div>
-        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase">Sponsor/wk</div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase">${t('sponsor_wk')}</div>
       </div>
     </div>`;
 
@@ -4283,20 +4793,20 @@ function renderSponsors(){
         </div>
         <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
           <div style="flex:1;min-width:150px">
-            <div style="font-size:10px;color:var(--muted);margin-bottom:3px">Objective: ${prog.current}/${prog.target} ${G.activeSponsor.objectiveMet?'✅':''}</div>
+            <div style="font-size:10px;color:var(--muted);margin-bottom:3px">${t('objective')}: ${prog.current}/${prog.target} ${G.activeSponsor.objectiveMet?'✅':''}</div>
             <div class="objective-bar"><div class="objective-fill" style="width:${progPct}%"></div></div>
           </div>
           <div style="text-align:center">
             <div style="font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;color:var(--amber)">${G.activeSponsor.weeksLeft}</div>
-            <div style="font-size:9px;color:var(--muted);letter-spacing:1px">WEEKS LEFT</div>
+            <div style="font-size:9px;color:var(--muted);letter-spacing:1px">${t('weeks_left')}</div>
           </div>
           <div style="text-align:center">
             <div style="font-size:12px;color:var(--green);font-weight:600">+${sp.bonus}€</div>
-            <div style="font-size:9px;color:var(--muted)">bonus</div>
+            <div style="font-size:9px;color:var(--muted)">${t('bonus_label')}</div>
           </div>
           <div style="text-align:center">
             <div style="font-size:12px;color:var(--red);font-weight:600">-${sp.penalty}€</div>
-            <div style="font-size:9px;color:var(--muted)">penalty</div>
+            <div style="font-size:9px;color:var(--muted)">${t('penalty_label')}</div>
           </div>
         </div>`;
     }
@@ -4451,13 +4961,13 @@ function renderAside(){
   if(G.injuries.length) {
     tipHTML += '<div style="margin-bottom:10px">';
     G.injuries.forEach((inj, idx) => {
-      const freshTag = inj.duration >= inj.maxDuration ? ' <span style="color:var(--amber);font-size:9px;letter-spacing:1px">FRESH — REST ONLY</span>' : ' <span style="color:var(--green);font-size:9px;letter-spacing:1px">LIGHT TRAINING OK</span>';
+      const freshTag = inj.duration >= inj.maxDuration ? ` <span style="color:var(--amber);font-size:9px;letter-spacing:1px">${t('injured_fresh')}</span>` : ` <span style="color:var(--green);font-size:9px;letter-spacing:1px">${t('injured_light')}</span>`;
       tipHTML += `<div style="color:var(--red);font-weight:600;margin-bottom:8px">
-        ${inj.icon} ${inj.name} (${inj.duration} wk.) — -${inj.perfMalus}% perf${freshTag}
+        ${inj.icon} ${tD(inj,'name')} (${inj.duration} wk.) — -${inj.perfMalus}% perf${freshTag}
         <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">
-          <button class="btn-kine" onclick="useSelfCare(${idx})" ${inj.selfCareUsed?'disabled style="opacity:.4"':''}>🧊 Self-care (free)</button>
-          <button class="btn-kine" onclick="useKine(${idx})">💆 Physio (80€)</button>
-          <button class="btn-kine" onclick="useDoctor(${idx})">🏥 Doctor (200€)</button>
+          <button class="btn-kine" onclick="useSelfCare(${idx})" ${inj.selfCareUsed?'disabled style="opacity:.4"':''}>${t('self_care')}</button>
+          <button class="btn-kine" onclick="useKine(${idx})">${t('physio')}</button>
+          <button class="btn-kine" onclick="useDoctor(${idx})">${t('doctor')}</button>
         </div>
       </div>`;
     });
@@ -4480,7 +4990,7 @@ function renderAside(){
   if(activeCrew && activeCrew.id !== 'nobody') {
     tipHTML += `<div style="color:var(--cyan);font-size:11px;margin-bottom:6px">${activeCrew.icon} Support: ${activeCrew.name}</div>`;
   }
-  tipHTML+=COACH_TIPS[G.week%COACH_TIPS.length];
+  const tip=COACH_TIPS[G.week%COACH_TIPS.length];tipHTML+=tip[currentLang]||tip.en;
   document.getElementById('coach-tip').innerHTML=tipHTML;
 }
 

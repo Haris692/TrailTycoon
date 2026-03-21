@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-R6SY3ZB5C6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -321,25 +321,61 @@ footer {
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 768px) {
   nav { padding: 0 16px; }
-  .nav-links { gap: 16px; }
+  .nav-links { gap: 12px; }
   .nav-links a:not(.nav-cta) { display: none; }
+  .nav-cta { padding: 10px 16px; font-size: .8rem; min-height: 44px; display: inline-flex; align-items: center; }
 
   .hero { padding: 80px 20px 50px; min-height: auto; min-height: 100svh; }
   .hero-stats { gap: 12px; }
   .hero-stat { font-size: .72rem; }
+  .hero-desc { font-size: .95rem; }
 
+  section { padding: 60px 16px; }
   .features-grid { grid-template-columns: 1fr; max-width: 420px; }
+  .feature-card { padding: 24px 20px; }
 
-  .preview-frame { height: 350px; }
+  .preview-frame { height: 300px; }
 
-  .stats-row { gap: 28px; }
+  .stats-row { gap: 24px; }
   .stat-num { font-size: 2rem; }
+
+  .community-btn { padding: 14px 20px; font-size: .85rem; min-height: 48px; }
 }
 
 @media (max-width: 480px) {
+  nav { padding: 0 12px; height: 56px; }
+  .nav-logo { font-size: .95rem; }
+
+  .hero { padding: 70px 16px 40px; }
+  .hero-title { letter-spacing: -1px; }
+  .hero-desc { font-size: .9rem; padding: 0 8px; }
+
   .hero-buttons { flex-direction: column; align-items: center; }
-  .btn-play { width: 100%; justify-content: center; }
-  .btn-secondary { width: 100%; justify-content: center; }
+  .btn-play { width: 100%; justify-content: center; padding: 16px 24px; min-height: 52px; }
+  .btn-secondary { width: 100%; justify-content: center; min-height: 48px; }
+
+  .section-title { font-size: 1.3rem; margin-bottom: 32px; }
+  .feature-card h3 { font-size: .85rem; }
+
+  .preview-frame { height: 250px; border-radius: 8px; }
+
+  .stats-row { gap: 20px; }
+  .stat-block { min-width: 80px; }
+  .stat-label { font-size: .7rem; letter-spacing: 1px; }
+
+  footer { padding: 32px 16px; }
+  .footer-sub { font-size: .7rem; }
+}
+
+/* Touch targets */
+@media (pointer: coarse) {
+  .nav-cta, .btn-play, .btn-secondary, .community-btn { min-height: 44px; }
+  .nav-links a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+
+/* Safe areas */
+@supports (padding: max(0px)) {
+  nav { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
 }
 </style>
 </head>
