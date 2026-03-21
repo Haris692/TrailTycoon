@@ -246,48 +246,43 @@ CREATE TRIGGER on_auth_user_created
 -- ============================================================
 -- 5. CRON JOBS (pg_cron + pg_net)
 -- ============================================================
--- Enable the extensions if not already enabled:
---   CREATE EXTENSION IF NOT EXISTS pg_cron;
---   CREATE EXTENSION IF NOT EXISTS pg_net;
+-- Run these SEPARATELY after enabling the extensions in Supabase Dashboard:
+--   Database → Extensions → enable pg_cron and pg_net
 --
--- Daily decay — runs every day at midnight UTC
--- Resets trainings_today, applies energy/fatigue recovery, checks injuries
-SELECT cron.schedule(
-    'daily-decay',
-    '0 0 * * *',
-    $$
-    SELECT net.http_post(
-        url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/daily-decay',
-        headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
-        body  := '{}'::JSONB
-    );
-    $$
-);
-
--- Create weekly race — runs every Monday at midnight UTC
--- Picks the next race and creates a new lb_race_weeks row
-SELECT cron.schedule(
-    'create-weekly-race',
-    '0 0 * * 1',
-    $$
-    SELECT net.http_post(
-        url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/create-weekly-race',
-        headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
-        body  := '{}'::JSONB
-    );
-    $$
-);
-
--- Simulate race — runs every Saturday at 18:00 UTC
--- Simulates the race for all registered participants and writes results
-SELECT cron.schedule(
-    'simulate-race',
-    '0 18 * * 6',
-    $$
-    SELECT net.http_post(
-        url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/simulate-race',
-        headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
-        body  := '{}'::JSONB
-    );
-    $$
-);
+-- Then run each of these individually in the SQL Editor:
+--
+-- SELECT cron.schedule(
+--     'daily-decay',
+--     '0 0 * * *',
+--     $$
+--     SELECT net.http_post(
+--         url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/daily-decay',
+--         headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
+--         body  := '{}'::JSONB
+--     );
+--     $$
+-- );
+--
+-- SELECT cron.schedule(
+--     'create-weekly-race',
+--     '0 0 * * 1',
+--     $$
+--     SELECT net.http_post(
+--         url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/create-weekly-race',
+--         headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
+--         body  := '{}'::JSONB
+--     );
+--     $$
+-- );
+--
+-- SELECT cron.schedule(
+--     'simulate-race',
+--     '0 18 * * 6',
+--     $$
+--     SELECT net.http_post(
+--         url   := 'https://yobmyrjccsxkuvafqiri.supabase.co/functions/v1/simulate-race',
+--         headers := '{"Authorization": "Bearer YOUR_SUPABASE_SERVICE_ROLE_KEY"}'::JSONB,
+--         body  := '{}'::JSONB
+--     );
+--     $$
+-- );
