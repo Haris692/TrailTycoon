@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R6SY3ZB5C6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-R6SY3ZB5C6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trail Tycoon — Leaderboard</title>
+<meta name="description" content="Compete in weekly trail races with real weather. Train your runner, climb the leaderboard.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0b1a0f;--bg2:#122218;--bg3:#1a3322;--bg4:#22442e;
+  --text:#e8f5e9;--muted:#7cb386;--faint:#4a7a56;--line:#1e3a28;
+  --green:#22c55e;--red:#ef4444;--amber:#f59e0b;--blue:#38bdf8;--purple:#c084fc;
+  --orange:#f97316;--cyan:#06b6d4;
+  --glow-green:0 0 12px rgba(34,197,94,.3);--glow-orange:0 0 12px rgba(249,115,22,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+::selection{background:var(--green);color:var(--bg);}
+button,input,select{font-family:'Inter',sans-serif;color:var(--text);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--faint);border-radius:3px;}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{box-shadow:0 0 12px rgba(249,115,22,.3)}50%{box-shadow:0 0 30px rgba(249,115,22,.6)}}
+@keyframes statPop{0%{transform:scale(1)}30%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+/* ═══ NAV ═══ */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:58px;background:rgba(11,26,15,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.1rem;color:var(--orange);letter-spacing:2px;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:24px;}
+.nav-links a{font-size:.85rem;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:.5px;text-decoration:none;}
+.nav-links a:hover{color:var(--text);}
+.nav-links a.active{color:var(--green);}
+
+/* ═══ AUTH SCREEN ═══ */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 58px);padding:40px;}
+.auth-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:40px;max-width:420px;width:100%;animation:fadeInUp .5s ease;}
+.auth-card h1{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:800;text-align:center;margin-bottom:8px;}
+.auth-card h1 .orange{color:var(--orange);}
+.auth-card .subtitle{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:28px;}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+.auth-tab{flex:1;padding:10px;text-align:center;font-size:.85rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:var(--bg);border:none;color:var(--muted);transition:all .2s;}
+.auth-tab.active{background:var(--bg3);color:var(--green);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500;}
+.form-group input{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font-size:.95rem;color:var(--text);transition:border-color .2s;outline:none;}
+.form-group input:focus{border-color:var(--green);}
+.auth-btn{width:100%;padding:14px;background:var(--orange);color:#0b1a0f;border:none;border-radius:8px;font-size:1rem;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;margin-top:8px;}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:var(--glow-orange);}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-error{color:var(--red);font-size:.85rem;text-align:center;margin-top:12px;min-height:20px;}
+.auth-success{color:var(--green);font-size:.85rem;text-align:center;margin-top:12px;}
+
+/* ═══ APP LAYOUT ═══ */
+#app{display:none;}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--line);background:var(--bg2);}
+.app-user{display:flex;align-items:center;gap:12px;}
+.app-user .avatar{width:40px;height:40px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:2px solid var(--orange);}
+.app-user .username{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;}
+.app-user .user-points{font-size:.8rem;color:var(--amber);}
+.btn-logout{background:none;border:1px solid var(--line);padding:8px 16px;font-size:.8rem;color:var(--muted);cursor:pointer;border-radius:6px;transition:all .2s;}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* ═══ TABS ═══ */
+.tab-nav{display:flex;border-bottom:1px solid var(--line);background:var(--bg2);overflow-x:auto;}
+.tab-nav button{padding:12px 20px;border:none;background:none;font-size:.8rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;font-weight:600;}
+.tab-nav button.active{color:var(--green);border-bottom-color:var(--green);}
+.tab-nav button:hover{color:var(--text);}
+.tab-panel{display:none;padding:24px;animation:fadeIn .3s ease;}
+.tab-panel.active{display:block;}
+
+/* ═══ DASHBOARD ═══ */
+.dash-grid{display:grid;grid-template-columns:280px 1fr;gap:24px;}
+.player-card{background:linear-gradient(145deg,#1a3a22,#0d2614,#1a3a22);border:2px solid var(--orange);border-radius:16px;padding:24px;position:relative;overflow:hidden;}
+.player-card .shine{position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);animation:shimmer 4s ease infinite;}
+.pc-rating{font-family:'Orbitron',sans-serif;font-weight:900;font-size:3rem;color:var(--orange);text-align:center;line-height:1;}
+.pc-rating-label{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--amber);text-align:center;font-weight:600;}
+.pc-avatar{text-align:center;font-size:4rem;margin:12px 0;}
+.pc-name{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.1rem;text-align:center;letter-spacing:1px;}
+.pc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;}
+.pc-stat{display:flex;align-items:center;gap:6px;}
+.pc-stat-val{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.1rem;min-width:28px;}
+.pc-stat-val.high{color:var(--green);}
+.pc-stat-val.mid{color:var(--amber);}
+.pc-stat-val.low{color:var(--red);}
+.pc-stat-label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.pc-bars{margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+.bar-row{display:flex;align-items:center;gap:8px;}
+.bar-label{font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);min-width:60px;font-weight:500;}
+.bar-track{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s;}
+.bar-fill.energy{background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);}
+.bar-fill.health{background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e);}
+.bar-fill.fatigue{background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);}
+.bar-val{font-size:.8rem;font-weight:600;min-width:35px;text-align:right;font-family:'JetBrains Mono',monospace;}
+
+/* ═══ TRAINING SECTION ═══ */
+.dash-right{display:flex;flex-direction:column;gap:20px;}
+.section-box{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:20px;}
+.section-box h3{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-box h3 .orange{color:var(--orange);}
+.training-count{font-size:.85rem;color:var(--muted);margin-bottom:12px;}
+.training-count strong{color:var(--amber);font-family:'JetBrains Mono',monospace;}
+.train-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.train-btn{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;cursor:pointer;transition:all .2s;text-align:center;}
+.train-btn:hover{border-color:var(--green);background:var(--bg3);transform:translateY(-2px);}
+.train-btn.disabled{opacity:.4;cursor:not-allowed;transform:none !important;}
+.train-btn .t-icon{font-size:1.5rem;margin-bottom:4px;}
+.train-btn .t-name{font-size:.75rem;font-weight:600;line-height:1.2;}
+.train-btn .t-effect{font-size:.65rem;color:var(--muted);margin-top:2px;}
+.train-btn .t-cost{font-size:.65rem;color:var(--amber);margin-top:2px;}
+.train-result{background:rgba(34,197,94,.08);border:1px solid var(--green);border-radius:8px;padding:12px;margin-top:12px;animation:fadeInUp .3s ease;}
+.train-result .tr-title{font-weight:700;color:var(--green);margin-bottom:6px;font-size:.9rem;}
+.train-result .tr-gains{display:flex;gap:12px;flex-wrap:wrap;}
+.train-result .tr-gain{font-size:.8rem;font-weight:600;}
+.train-result .tr-gain.pos{color:var(--green);}
+.train-result .tr-gain.neg{color:var(--red);}
+
+/* ═══ RACE WIDGET ═══ */
+.race-widget{background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--orange);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
+.race-widget h3{color:var(--orange);}
+.rw-name{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:4px;}
+.rw-meta{font-size:.8rem;color:var(--muted);margin-bottom:12px;}
+.rw-countdown{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--green);margin-bottom:12px;}
+.rw-status{display:inline-block;padding:4px 12px;border-radius:4px;font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.rw-status.registration{background:rgba(34,197,94,.15);color:var(--green);border:1px solid var(--green);}
+.rw-status.completed{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid var(--orange);}
+.rw-status.racing{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid var(--amber);}
+.btn-register{background:var(--green);color:#0b1a0f;border:none;padding:10px 24px;border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:1px;}
+.btn-register:hover{transform:translateY(-2px);box-shadow:var(--glow-green);}
+.btn-register:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.rw-registered{color:var(--green);font-weight:600;font-size:.9rem;}
+.rw-weather{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:.85rem;color:var(--muted);}
+.rw-weather .w-icon{font-size:1.5rem;}
+.rw-participants{font-size:.8rem;color:var(--faint);margin-top:8px;}
+
+/* ═══ LEADERBOARD TABLE ═══ */
+.lb-table{width:100%;border-collapse:collapse;}
+.lb-table th{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);}
+.lb-table td{padding:10px 12px;font-size:.85rem;border-bottom:1px solid rgba(30,58,40,.5);}
+.lb-table tr:hover td{background:var(--bg3);}
+.lb-table .rank{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1rem;min-width:40px;}
+.lb-table .rank.gold{color:#ffd700;}
+.lb-table .rank.silver{color:#c0c0c0;}
+.lb-table .rank.bronze{color:#cd7f32;}
+.lb-table .player-name{font-weight:600;}
+.lb-table .points{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--amber);}
+.lb-table .medals{display:flex;gap:4px;font-size:.9rem;}
+.lb-table .fitness{font-family:'JetBrains Mono',monospace;color:var(--green);}
+.lb-table .highlight td{background:rgba(34,197,94,.08);}
+.lb-empty{text-align:center;padding:40px;color:var(--faint);font-size:.9rem;}
+
+/* ═══ RESULTS ═══ */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.results-race-name{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;}
+.results-meta{font-size:.85rem;color:var(--muted);}
+.results-weather{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted);margin-bottom:16px;}
+.results-weather .w-icon{font-size:1.5rem;}
+
+/* ═══ PROFILE ═══ */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.profile-section{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:20px;}
+.profile-section h3{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:1px;margin-bottom:14px;color:var(--orange);}
+.badge-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;font-size:.8rem;font-weight:600;border:1px solid var(--line);background:var(--bg);}
+.badge.gold{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,.08);}
+.badge.silver{border-color:#c0c0c0;color:#c0c0c0;background:rgba(192,192,192,.08);}
+.badge.bronze{border-color:#cd7f32;color:#cd7f32;background:rgba(205,127,50,.08);}
+.history-list{display:flex;flex-direction:column;gap:8px;}
+.history-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg);border-radius:8px;font-size:.85rem;}
+.history-item .h-race{font-weight:600;}
+.history-item .h-pos{font-family:'JetBrains Mono',monospace;font-weight:700;}
+.history-item .h-pos.top3{color:var(--green);}
+.history-item .h-time{font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:.8rem;}
+
+/* ═══ TOAST ═══ */
+.toast-wrap{position:fixed;top:70px;right:20px;z-index:500;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 20px;background:var(--bg3);border:1px solid var(--line);border-radius:8px;font-size:.85rem;animation:fadeInUp .3s ease;max-width:350px;}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.success{border-color:var(--green);color:var(--green);}
+
+/* ═══ LOADING ═══ */
+.spinner{width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
+.loading-state{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:var(--muted);}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  nav{padding:0 16px;}
+  .nav-links{gap:12px;}
+  .tab-panel{padding:16px;}
+  .dash-grid{grid-template-columns:1fr;}
+  .profile-grid{grid-template-columns:1fr;}
+  .train-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
+  .rw-countdown{font-size:1.3rem;}
+  .auth-card{padding:24px;}
+}
+@media(max-width:480px){
+  nav{padding:0 12px;height:50px;}
+  .nav-logo{font-size:.9rem;}
+  .nav-links a{font-size:.75rem;}
+  .tab-nav button{padding:10px 12px;font-size:.7rem;}
+  .player-card{padding:16px;}
+  .pc-rating{font-size:2.2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="/" class="nav-logo">TRAIL TYCOON</a>
+  <div class="nav-links">
+    <a href="/play">Solo Game</a>
+    <a href="/leaderboard" class="active">Leaderboard</a>
+  </div>
+</nav>
+
+<!-- ═══ AUTH SCREEN ═══ -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <h1>TRAIL <span class="orange">TYCOON</span></h1>
+    <p class="subtitle">Competitive Leaderboard</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
+      <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Your password">
+      </div>
+      <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
+    </div>
+    <div id="signup-form" style="display:none">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="signup-username" placeholder="TrailRunner42" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Min 6 characters" minlength="6">
+      </div>
+      <button class="auth-btn" id="signup-btn" onclick="doSignup()">Create Account</button>
+    </div>
+    <div id="auth-msg" class="auth-error"></div>
+  </div>
+</div>
+
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="app-header">
+    <div class="app-user">
+      <div class="avatar" id="user-avatar">🏃</div>
+      <div>
+        <div class="username" id="user-name">—</div>
+        <div class="user-points" id="user-points">0 pts</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">Logout</button>
+  </div>
+
+  <div class="tab-nav">
+    <button class="active" onclick="switchTab('dashboard')">Dashboard</button>
+    <button onclick="switchTab('leaderboard')">Leaderboard</button>
+    <button onclick="switchTab('results')">Results</button>
+    <button onclick="switchTab('profile')">Profile</button>
+  </div>
+
+  <div id="tab-dashboard" class="tab-panel active"></div>
+  <div id="tab-leaderboard" class="tab-panel"></div>
+  <div id="tab-results" class="tab-panel"></div>
+  <div id="tab-profile" class="tab-panel"></div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   TRAIL TYCOON — LEADERBOARD CLIENT
+   ════════════════════════════════════════════════════════════════ */
+
+const SUPABASE_URL = 'https://yobmyrjccsxkuvafqiri.supabase.co';
+const SUPABASE_ANON = 'sb_publishable__-EizijNbJC3bLPi67Xtag_6UROlaCk';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* ═══ TRAINING DATA ═══ */
+const TRAININGS = [
+  {id:'easy_run',name:'Easy Run',icon:'🏃',effect:'END +1.5',stats:{endurance:1.5},energyCost:10},
+  {id:'long_run',name:'Long Run',icon:'🛤️',effect:'END +3, TEC +1',stats:{endurance:3,technique:1},energyCost:30},
+  {id:'interval',name:'Intervals',icon:'⚡',effect:'SPD +2.5',stats:{speed:2.5},energyCost:25},
+  {id:'hill_repeats',name:'Hill Repeats',icon:'📈',effect:'SPD +1.5, TEC +1.5',stats:{speed:1.5,technique:1.5},energyCost:25},
+  {id:'trail_run',name:'Trail Run',icon:'🏔️',effect:'TEC +2.5, END +1',stats:{technique:2.5,endurance:1},energyCost:25},
+  {id:'rest',name:'Rest',icon:'😴',effect:'Energy +40, Health +10',stats:{},energyCost:-40},
+  {id:'yoga',name:'Yoga',icon:'🧘',effect:'MEN +2, Health +8',stats:{mental:2},energyCost:-10},
+  {id:'mental_training',name:'Visualization',icon:'🧠',effect:'MEN +3',stats:{mental:3},energyCost:5},
+  {id:'cross_training',name:'Cross-training',icon:'🚴',effect:'END +1, SPD +1',stats:{endurance:1,speed:1},energyCost:15},
+  {id:'muscu',name:'Strength',icon:'💪',effect:'SPD +1.5, END +1',stats:{speed:1.5,endurance:1},energyCost:20},
+  {id:'renforcement',name:'Core Work',icon:'🏋️',effect:'TEC +1.5, MEN +1',stats:{technique:1.5,mental:1},energyCost:12},
+  {id:'night_run',name:'Night Run',icon:'🌙',effect:'TEC +2, MEN +1.5',stats:{technique:2,mental:1.5},energyCost:20},
+  {id:'back_to_back',name:'Back-to-back',icon:'🔥',effect:'END +4, MEN +2',stats:{endurance:4,mental:2},energyCost:50},
+  {id:'altitude_camp',name:'Altitude Camp',icon:'🏔️',effect:'END +5, SPD +2.5',stats:{endurance:5,speed:2.5},energyCost:40},
+];
+
+/* ═══ STATE ═══ */
+let currentUser = null;
+let userProfile = null;
+let userLeaderboard = null;
+let currentRaceWeek = null;
+let isRegistered = false;
+let countdownInterval = null;
+
+/* ═══ AUTH ═══ */
+function showAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'login') {
+    document.querySelectorAll('.auth-tab')[0].classList.add('active');
+    document.getElementById('login-form').style.display = 'block';
+    document.getElementById('signup-form').style.display = 'none';
+  } else {
+    document.querySelectorAll('.auth-tab')[1].classList.add('active');
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('signup-form').style.display = 'block';
+  }
+  document.getElementById('auth-msg').textContent = '';
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('login-btn');
+  if (!email || !password) { msg.textContent = 'Please fill all fields'; msg.className = 'auth-error'; return; }
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  btn.disabled = false; btn.textContent = 'Login';
+  if (error) { msg.textContent = error.message; msg.className = 'auth-error'; return; }
+  msg.textContent = '';
+  onAuthSuccess(data.user);
+}
+
+async function doSignup() {
+  const username = document.getElementById('signup-username').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const msg = document.getElementById('auth-msg');
+  const btn = document.getElementById('signup-btn');
+  if (!username || !email || !password) { msg.textContent = 'Please fill all fields'; msg.className = 'auth-error'; return; }
+  if (username.length < 3) { msg.textContent = 'Username must be at least 3 characters'; msg.className = 'auth-error'; return; }
+  if (password.length < 6) { msg.textContent = 'Password must be at least 6 characters'; msg.className = 'auth-error'; return; }
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  const { data, error } = await sb.auth.signUp({
+    email, password,
+    options: { data: { username } }
+  });
+  btn.disabled = false; btn.textContent = 'Create Account';
+  if (error) { msg.textContent = error.message; msg.className = 'auth-error'; return; }
+  if (data.user && !data.user.confirmed_at && !data.session) {
+    msg.textContent = 'Check your email to confirm your account!';
+    msg.className = 'auth-success';
+    return;
+  }
+  msg.textContent = '';
+  onAuthSuccess(data.user);
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  currentUser = null; userProfile = null; userLeaderboard = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-screen').style.display = 'flex';
+  if (countdownInterval) clearInterval(countdownInterval);
+}
+
+async function onAuthSuccess(user) {
+  currentUser = user;
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  await loadAllData();
+}
+
+/* ═══ DATA LOADING ═══ */
+async function loadAllData() {
+  await Promise.all([loadProfile(), loadLeaderboard(), loadCurrentRace()]);
+  renderDashboard();
+  renderLeaderboard();
+  renderResults();
+  renderProfile();
+
+  // Realtime subscription for race results
+  sb.channel('race-results')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'lb_race_results' }, () => {
+      loadCurrentRace().then(() => { renderResults(); renderLeaderboard(); });
+    })
+    .subscribe();
+}
+
+async function loadProfile() {
+  const { data, error } = await sb.from('lb_profiles').select('*').eq('id', currentUser.id).single();
+  if (error) { console.error('Profile load error:', error); return; }
+  userProfile = data;
+
+  const { data: lb } = await sb.from('lb_global_leaderboard').select('*').eq('user_id', currentUser.id).single();
+  userLeaderboard = lb;
+
+  const displayName = userProfile?.username || currentUser.user_metadata?.username || 'Runner';
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-points').textContent = (userLeaderboard?.total_points || 0) + ' pts';
+}
+
+async function loadLeaderboard() {
+  // Loaded in renderLeaderboard
+}
+
+async function loadCurrentRace() {
+  const { data } = await sb.from('lb_race_weeks').select('*').order('created_at', { ascending: false }).limit(1);
+  currentRaceWeek = data && data.length > 0 ? data[0] : null;
+
+  if (currentRaceWeek) {
+    const { data: reg } = await sb.from('lb_race_registrations')
+      .select('id')
+      .eq('race_week_id', currentRaceWeek.id)
+      .eq('user_id', currentUser.id)
+      .maybeSingle();
+    isRegistered = !!reg;
+  }
+}
+
+/* ═══ TABS ═══ */
+function switchTab(tab) {
+  document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const btns = document.querySelectorAll('.tab-nav button');
+  const tabs = ['dashboard','leaderboard','results','profile'];
+  const idx = tabs.indexOf(tab);
+  if (idx >= 0) btns[idx].classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+
+  if (tab === 'leaderboard') renderLeaderboard();
+  if (tab === 'results') renderResults();
+  if (tab === 'profile') renderProfile();
+}
+
+/* ═══ RENDER: DASHBOARD ═══ */
+function renderDashboard() {
+  if (!userProfile) {
+    document.getElementById('tab-dashboard').innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading profile...</div>';
+    return;
+  }
+  const s = userProfile.stats || {endurance:5,speed:5,technique:5,mental:5};
+  const fitness = Math.round((s.endurance + s.speed + s.technique + s.mental) / 4);
+  const energy = Math.round(userProfile.energy || 0);
+  const health = Math.round(userProfile.health || 0);
+  const fatigue = Math.round(userProfile.fatigue || 0);
+  const trainingsToday = userProfile.trainings_today || 0;
+
+  function statClass(v) { return v >= 60 ? 'high' : v >= 30 ? 'mid' : 'low'; }
+
+  let html = `<div class="dash-grid">
+    <div>
+      <div class="player-card">
+        <div class="shine"></div>
+        <div class="pc-rating">${fitness}</div>
+        <div class="pc-rating-label">FITNESS</div>
+        <div class="pc-avatar">🏃</div>
+        <div class="pc-name">${userProfile.username || 'Runner'}</div>
+        <div class="pc-stats">
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.endurance))}">${Math.round(s.endurance)}</span><span class="pc-stat-label">END</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.speed))}">${Math.round(s.speed)}</span><span class="pc-stat-label">SPD</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.technique))}">${Math.round(s.technique)}</span><span class="pc-stat-label">TEC</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.mental))}">${Math.round(s.mental)}</span><span class="pc-stat-label">MEN</span></div>
+        </div>
+        <div class="pc-bars">
+          <div class="bar-row"><span class="bar-label">Energy</span><div class="bar-track"><div class="bar-fill energy" style="width:${energy}%"></div></div><span class="bar-val">${energy}%</span></div>
+          <div class="bar-row"><span class="bar-label">Health</span><div class="bar-track"><div class="bar-fill health" style="width:${health}%"></div></div><span class="bar-val">${health}%</span></div>
+          <div class="bar-row"><span class="bar-label">Fatigue</span><div class="bar-track"><div class="bar-fill fatigue" style="width:${fatigue}%"></div></div><span class="bar-val">${fatigue}%</span></div>
+        </div>
+        ${userProfile.is_injured ? `<div style="margin-top:12px;padding:8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:6px;font-size:.8rem;color:var(--red);">🤕 Injured: ${userProfile.injury_name || 'Unknown'}</div>` : ''}
+      </div>
+    </div>
+    <div class="dash-right">`;
+
+  // Race widget
+  html += renderRaceWidget();
+
+  // Training section
+  html += `<div class="section-box">
+    <h3>🏋️ <span class="orange">Training</span></h3>
+    <div class="training-count">Today: <strong>${trainingsToday}/2</strong> sessions used</div>
+    <div class="train-grid">`;
+
+  const canTrain = trainingsToday < 2 && !userProfile.is_injured;
+  TRAININGS.forEach(t => {
+    const hasEnergy = t.energyCost <= 0 || energy >= t.energyCost;
+    const isRest = t.id === 'rest' || t.id === 'yoga';
+    const disabled = !canTrain && !isRest || (!hasEnergy && !isRest) || (userProfile.is_injured && !isRest);
+    html += `<button class="train-btn${disabled ? ' disabled' : ''}" onclick="${disabled ? '' : `doTrain('${t.id}')`}" ${disabled ? 'disabled' : ''}>
+      <div class="t-icon">${t.icon}</div>
+      <div class="t-name">${t.name}</div>
+      <div class="t-effect">${t.effect}</div>
+      <div class="t-cost">${t.energyCost > 0 ? '-' + t.energyCost : '+' + Math.abs(t.energyCost)} energy</div>
+    </button>`;
+  });
+
+  html += `</div><div id="train-result"></div></div>`;
+  html += `</div></div>`;
+
+  document.getElementById('tab-dashboard').innerHTML = html;
+  startCountdown();
+}
+
+function renderRaceWidget() {
+  if (!currentRaceWeek) {
+    return `<div class="section-box"><h3>🏁 <span class="orange">Weekly Race</span></h3><p style="color:var(--faint)">No race scheduled this week. Check back Monday!</p></div>`;
+  }
+  const r = currentRaceWeek;
+  const raceDate = new Date(r.race_date);
+  const isCompleted = r.status === 'completed';
+  const isRacing = r.status === 'racing';
+
+  let weatherHtml = '';
+  if (r.weather_desc) {
+    weatherHtml = `<div class="rw-weather"><span class="w-icon">${getWeatherIcon(r.weather_code)}</span>${r.weather_desc}${r.temperature != null ? `, ${Math.round(r.temperature)}°C` : ''} (${r.weather_effect || 0}% effect)</div>`;
+  }
+
+  let actionHtml = '';
+  if (isCompleted) {
+    actionHtml = `<span class="rw-status completed">Completed</span>`;
+  } else if (isRacing) {
+    actionHtml = `<span class="rw-status racing">Racing...</span>`;
+  } else if (isRegistered) {
+    actionHtml = `<div class="rw-registered">✅ You are registered!</div>`;
+  } else {
+    actionHtml = `<button class="btn-register" onclick="doRegister()">Register for Race</button>`;
+  }
+
+  return `<div class="race-widget">
+    <h3>🏁 Weekly Race</h3>
+    <div class="rw-name">${r.race_name}</div>
+    <div class="rw-meta">${r.race_loc} — ${r.race_dist}km, ${r.race_elev}m D+ (${r.race_diff})</div>
+    <div class="rw-countdown" id="race-countdown"></div>
+    ${weatherHtml}
+    ${actionHtml}
+    <div class="rw-participants" id="race-participants"></div>
+  </div>`;
+}
+
+function getWeatherIcon(code) {
+  if (code == null) return '🌤️';
+  if (code <= 3) return '☀️';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '🌨️';
+  if (code <= 82) return '🌧️';
+  if (code <= 86) return '🌨️';
+  return '⛈️';
+}
+
+function startCountdown() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  const el = document.getElementById('race-countdown');
+  if (!el || !currentRaceWeek || currentRaceWeek.status === 'completed') return;
+
+  function update() {
+    const now = new Date();
+    const target = new Date(currentRaceWeek.race_date);
+    const diff = target - now;
+    if (diff <= 0) { el.textContent = 'RACE STARTED!'; return; }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    el.textContent = `${d}d ${h}h ${m}m ${s}s`;
+  }
+  update();
+  countdownInterval = setInterval(update, 1000);
+
+  // Load participant count
+  loadParticipantCount();
+}
+
+async function loadParticipantCount() {
+  if (!currentRaceWeek) return;
+  const { count } = await sb.from('lb_race_registrations')
+    .select('id', { count: 'exact', head: true })
+    .eq('race_week_id', currentRaceWeek.id);
+  const el = document.getElementById('race-participants');
+  if (el) el.textContent = `${count || 0} runners registered`;
+}
+
+/* ═══ TRAIN ═══ */
+async function doTrain(trainingId) {
+  const resultEl = document.getElementById('train-result');
+  resultEl.innerHTML = '<div class="spinner" style="margin:12px auto"></div>';
+
+  const { data, error } = await sb.functions.invoke('train', {
+    body: { training_id: trainingId }
+  });
+
+  if (error) {
+    toast(error.message || 'Training failed', 'error');
+    resultEl.innerHTML = '';
+    return;
+  }
+
+  if (data.error) {
+    toast(data.error, 'error');
+    resultEl.innerHTML = '';
+    return;
+  }
+
+  // Update profile
+  userProfile = data.profile;
+  const gains = data.gains || {};
+
+  let gainsHtml = '';
+  Object.entries(gains).forEach(([stat, val]) => {
+    if (val !== 0) {
+      gainsHtml += `<span class="tr-gain ${val > 0 ? 'pos' : 'neg'}">${stat.toUpperCase()} ${val > 0 ? '+' : ''}${val.toFixed(1)}</span>`;
+    }
+  });
+
+  const training = TRAININGS.find(t => t.id === trainingId);
+  resultEl.innerHTML = `<div class="train-result">
+    <div class="tr-title">${training?.icon || ''} ${training?.name || trainingId} completed!</div>
+    <div class="tr-gains">${gainsHtml || '<span style="color:var(--muted)">Recovery session</span>'}</div>
+  </div>`;
+
+  toast('Training completed!', 'success');
+  renderDashboard();
+}
+
+/* ═══ REGISTER FOR RACE ═══ */
+async function doRegister() {
+  if (!currentRaceWeek || !userProfile) return;
+
+  const { error } = await sb.from('lb_race_registrations').insert({
+    race_week_id: currentRaceWeek.id,
+    user_id: currentUser.id,
+    stats_snapshot: userProfile.stats,
+    energy_snapshot: userProfile.energy,
+    health_snapshot: userProfile.health,
+    fatigue_snapshot: userProfile.fatigue
+  });
+
+  if (error) {
+    if (error.code === '23505') toast('Already registered!', 'error');
+    else toast(error.message || 'Registration failed', 'error');
+    return;
+  }
+
+  isRegistered = true;
+  toast('Registered for the race!', 'success');
+  renderDashboard();
+}
+
+/* ═══ RENDER: LEADERBOARD ═══ */
+async function renderLeaderboard() {
+  const panel = document.getElementById('tab-leaderboard');
+  panel.innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading leaderboard...</div>';
+
+  const { data, error } = await sb.from('lb_global_leaderboard')
+    .select('*')
+    .order('total_points', { ascending: false })
+    .limit(100);
+
+  if (error || !data) {
+    panel.innerHTML = '<div class="lb-empty">Could not load leaderboard.</div>';
+    return;
+  }
+
+  if (data.length === 0) {
+    panel.innerHTML = '<div class="lb-empty">No players yet. Be the first to compete!</div>';
+    return;
+  }
+
+  let html = `<h2 style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:20px;">Global <span style="color:var(--orange)">Leaderboard</span></h2>
+  <table class="lb-table">
+    <thead><tr>
+      <th>Rank</th><th>Player</th><th>Points</th><th>Races</th><th>Medals</th><th>Best</th>
+    </tr></thead><tbody>`;
+
+  data.forEach((row, i) => {
+    const rank = i + 1;
+    const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+    const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    const isMe = row.user_id === currentUser?.id;
+
+    html += `<tr class="${isMe ? 'highlight' : ''}">
+      <td class="rank ${rankClass}">${rankIcon}</td>
+      <td class="player-name">${escHtml(row.username)}${isMe ? ' <span style="color:var(--green);font-size:.7rem">(you)</span>' : ''}</td>
+      <td class="points">${row.total_points}</td>
+      <td>${row.races_completed || 0}</td>
+      <td class="medals">
+        ${row.gold_medals ? '🥇' + row.gold_medals : ''}
+        ${row.silver_medals ? '🥈' + row.silver_medals : ''}
+        ${row.bronze_medals ? '🥉' + row.bronze_medals : ''}
+        ${!row.gold_medals && !row.silver_medals && !row.bronze_medals ? '—' : ''}
+      </td>
+      <td>${row.best_position ? '#' + row.best_position : '—'}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  panel.innerHTML = html;
+}
+
+/* ═══ RENDER: RESULTS ═══ */
+async function renderResults() {
+  const panel = document.getElementById('tab-results');
+
+  // Get latest completed race
+  const { data: races } = await sb.from('lb_race_weeks')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (!races || races.length === 0) {
+    panel.innerHTML = '<div class="lb-empty">No races yet.</div>';
+    return;
+  }
+
+  // Find the latest completed race, or the current one
+  const completedRace = races.find(r => r.status === 'completed') || races[0];
+
+  const { data: results } = await sb.from('lb_race_results')
+    .select('*')
+    .eq('race_week_id', completedRace.id)
+    .order('position', { ascending: true });
+
+  let html = `<div class="results-header">
+    <div>
+      <div class="results-race-name">${completedRace.race_name}</div>
+      <div class="results-meta">${completedRace.race_loc} — ${completedRace.race_dist}km, ${completedRace.race_elev}m D+</div>
+    </div>
+    <span class="rw-status ${completedRace.status}">${completedRace.status}</span>
+  </div>`;
+
+  if (completedRace.weather_desc) {
+    html += `<div class="results-weather">
+      <span class="w-icon">${getWeatherIcon(completedRace.weather_code)}</span>
+      ${completedRace.weather_desc}${completedRace.temperature != null ? `, ${Math.round(completedRace.temperature)}°C` : ''}
+      (${completedRace.weather_effect || 0}% effect)
+    </div>`;
+  }
+
+  if (!results || results.length === 0) {
+    html += '<div class="lb-empty">No results yet. Race hasn\'t been simulated.</div>';
+    panel.innerHTML = html;
+    return;
+  }
+
+  html += `<table class="lb-table">
+    <thead><tr><th>Pos</th><th>Runner</th><th>Time</th><th>Points</th><th>Badge</th></tr></thead><tbody>`;
+
+  results.forEach(r => {
+    const isMe = r.user_id === currentUser?.id;
+    const posIcon = r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : r.position;
+    const badgeHtml = r.badge ? `<span class="badge ${r.badge}">${r.badge === 'gold' ? '🥇' : r.badge === 'silver' ? '🥈' : '🥉'} ${r.badge}</span>` : '—';
+
+    html += `<tr class="${isMe ? 'highlight' : ''}">
+      <td class="rank ${r.position <= 3 ? ['','gold','silver','bronze'][r.position] : ''}">${r.dnf ? 'DNF' : posIcon}</td>
+      <td class="player-name">${escHtml(r.username)}${isMe ? ' <span style="color:var(--green);font-size:.7rem">(you)</span>' : ''}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${r.dnf ? 'DNF' : formatTime(r.finish_time)}</td>
+      <td class="points">${r.points}</td>
+      <td>${badgeHtml}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  panel.innerHTML = html;
+}
+
+/* ═══ RENDER: PROFILE ═══ */
+async function renderProfile() {
+  const panel = document.getElementById('tab-profile');
+  if (!userProfile || !userLeaderboard) {
+    panel.innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading...</div>';
+    return;
+  }
+
+  const badges = userProfile.badges || [];
+  const { data: raceHistory } = await sb.from('lb_race_results')
+    .select('*, lb_race_weeks(race_name, race_loc, race_date)')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  let html = `<div class="profile-grid">
+    <div class="profile-section">
+      <h3>Stats Overview</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Total Points</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--amber)">${userLeaderboard.total_points}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Races Run</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green)">${userLeaderboard.races_completed}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Best Position</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--orange)">${userLeaderboard.best_position ? '#' + userLeaderboard.best_position : '—'}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Wins</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:#ffd700">${userLeaderboard.races_won}</div></div>
+      </div>
+    </div>
+    <div class="profile-section">
+      <h3>Badges Collection</h3>
+      <div class="badge-grid">`;
+
+  if (badges.length === 0) {
+    html += '<span style="color:var(--faint);font-size:.85rem">No badges yet. Compete in races to earn medals!</span>';
+  } else {
+    badges.forEach(b => {
+      html += `<div class="badge ${b.type || ''}">${b.type === 'gold' ? '🥇' : b.type === 'silver' ? '🥈' : '🥉'} ${b.race || ''}</div>`;
+    });
+  }
+
+  html += `</div></div>`;
+
+  // Race history
+  html += `<div class="profile-section" style="grid-column:1/span 2">
+    <h3>Race History</h3>
+    <div class="history-list">`;
+
+  if (!raceHistory || raceHistory.length === 0) {
+    html += '<span style="color:var(--faint);font-size:.85rem">No races completed yet.</span>';
+  } else {
+    raceHistory.forEach(r => {
+      const raceName = r.lb_race_weeks?.race_name || 'Unknown Race';
+      const raceDate = r.lb_race_weeks?.race_date ? new Date(r.lb_race_weeks.race_date).toLocaleDateString() : '';
+      html += `<div class="history-item">
+        <span class="h-race">${r.dnf ? '❌' : r.position <= 3 ? ['','🥇','🥈','🥉'][r.position] : ''} ${raceName}</span>
+        <span class="h-pos ${r.position <= 3 ? 'top3' : ''}">${r.dnf ? 'DNF' : '#' + r.position}</span>
+        <span class="h-time">${r.dnf ? '—' : formatTime(r.finish_time)}</span>
+        <span style="font-size:.75rem;color:var(--faint)">${raceDate}</span>
+        <span class="points">${r.points} pts</span>
+      </div>`;
+    });
+  }
+
+  html += '</div></div></div>';
+  panel.innerHTML = html;
+}
+
+/* ═══ HELPERS ═══ */
+function formatTime(seconds) {
+  if (!seconds) return '—';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  if (h > 0) return `${h}h${String(m).padStart(2,'0')}m${String(s).padStart(2,'0')}s`;
+  return `${m}m${String(s).padStart(2,'0')}s`;
+}
+
+function escHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function toast(msg, type = '') {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+/* ═══ INIT ═══ */
+(async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) {
+    onAuthSuccess(session.user);
+  }
+
+  // Listen for auth changes
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      onAuthSuccess(session.user);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
