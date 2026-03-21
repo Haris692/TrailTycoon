@@ -1002,11 +1002,37 @@ header{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid va
 .evt-hist-name{font-weight:600;font-size:13px;color:var(--text);}
 .evt-hist-meta{font-size:10px;color:var(--muted);margin-top:2px;}
 .evt-hist-choice{font-size:11px;color:var(--orange);margin-top:3px;}
+
+/* ═══ LANGUAGE POPUP ═══ */
+#lang-popup{display:none;position:fixed;inset:0;z-index:2000;background:rgba(11,26,15,.95);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;}
+#lang-popup.show{display:flex;}
+.lang-popup-box{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:400px;width:100%;padding:40px 32px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.7);animation:fadeInUp .5s ease;}
+.lang-popup-icon{font-size:3rem;margin-bottom:16px;}
+.lang-popup-title{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:8px;color:var(--text);}
+.lang-popup-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6;}
+.lang-popup-buttons{display:flex;flex-direction:column;gap:10px;}
+.lang-popup-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 24px;border:2px solid var(--line);background:var(--bg3);color:var(--text);font-size:15px;font-weight:700;cursor:pointer;border-radius:10px;transition:all .25s;letter-spacing:.5px;min-height:52px;}
+.lang-popup-btn:hover{border-color:var(--orange);background:rgba(249,115,22,.08);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.lang-popup-btn .lang-flag{font-size:1.6rem;}
+@media(max-width:480px){.lang-popup-box{padding:28px 20px;}.lang-popup-btn{padding:14px 18px;font-size:14px;}}
 </style>
 </head>
 <body>
 
 <canvas id="particles"></canvas>
+
+<!-- ══════ LANGUAGE POPUP ══════ -->
+<div id="lang-popup">
+  <div class="lang-popup-box">
+    <div class="lang-popup-icon">🌍</div>
+    <div class="lang-popup-title">Choose your language</div>
+    <div class="lang-popup-sub">Choisissez votre langue</div>
+    <div class="lang-popup-buttons">
+      <button class="lang-popup-btn" onclick="chooseLang('en')"><span class="lang-flag">🇬🇧</span> English</button>
+      <button class="lang-popup-btn" onclick="chooseLang('fr')"><span class="lang-flag">🇫🇷</span> Français</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════ PROFILE SELECT ══════ -->
 <div id="profile-screen">
@@ -1753,10 +1779,13 @@ function tDiff(diff){ return t(diff); }
 function setLang(lang){
   currentLang = lang;
   localStorage.setItem('tt_lang', lang);
-  // Update static HTML
   updateStaticText();
   if(document.getElementById('game').style.display==='block') renderAll();
   renderProfileScreen();
+}
+function chooseLang(lang){
+  setLang(lang);
+  document.getElementById('lang-popup').classList.remove('show');
 }
 
 function updateStaticText(){
@@ -2225,11 +2254,10 @@ function handleImportFile(event){
 }
 
 function renderProfileScreen(){
-  // Language bar
+  // Language button — small toggle to reopen popup
   const langBar = document.getElementById('ps-lang-bar');
   if(langBar) langBar.innerHTML=`
-    <button class="ps-lang-btn${currentLang==='en'?' active':''}" onclick="setLang('en')">🇬🇧 English</button>
-    <button class="ps-lang-btn${currentLang==='fr'?' active':''}" onclick="setLang('fr')">🇫🇷 Français</button>
+    <button class="ps-lang-btn active" onclick="document.getElementById('lang-popup').classList.add('show')">${currentLang==='fr'?'🇫🇷 Français':'🇬🇧 English'} ▾</button>
   `;
   // Sub text
   const subEl = document.getElementById('ps-sub-text');
@@ -2318,6 +2346,9 @@ function backToProfiles(){
 
 // Boot: show profile screen
 document.addEventListener('DOMContentLoaded', () => {
+  if(!localStorage.getItem('tt_lang')){
+    document.getElementById('lang-popup').classList.add('show');
+  }
   renderProfileScreen();
 });
 
