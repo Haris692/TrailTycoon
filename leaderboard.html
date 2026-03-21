@@ -196,6 +196,66 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .spinner{width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
 .loading-state{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:var(--muted);}
 
+/* ═══ TUTORIAL ═══ */
+#tut-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(11,26,15,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
+#tut-overlay.show{display:flex;}
+.tut-card{background:var(--bg2);border:1px solid var(--orange);border-radius:16px;padding:32px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeInUp .4s ease;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 20px rgba(249,115,22,.15);}
+.tut-step-label{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:6px;}
+.tut-icon{font-size:2.5rem;margin-bottom:8px;}
+.tut-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:12px;}
+.tut-text{font-size:.9rem;color:#94b89e;line-height:1.9;margin-bottom:20px;}
+.tut-text strong{color:var(--text);font-weight:600;}
+.tut-dots{display:flex;gap:6px;margin-bottom:16px;justify-content:center;}
+.tut-dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+.tut-dot.active{background:var(--orange);}
+.tut-dot.done{background:var(--green);}
+.tut-btns{display:flex;gap:10px;justify-content:flex-end;}
+.tut-btn{padding:10px 20px;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;}
+.tut-btn.primary{background:var(--orange);color:#0b1a0f;}
+.tut-btn.primary:hover{transform:translateY(-1px);box-shadow:var(--glow-orange);}
+.tut-btn.secondary{background:none;border:1px solid var(--line);color:var(--muted);}
+.tut-btn.secondary:hover{border-color:var(--faint);color:var(--text);}
+
+/* ═══ RACE DETAIL MODAL ═══ */
+#race-detail{display:none;position:fixed;inset:0;z-index:800;background:rgba(11,26,15,.92);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;}
+#race-detail.show{display:flex;}
+.rd-card{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:800px;width:100%;margin-top:20px;animation:fadeInUp .4s ease;overflow:hidden;}
+.rd-hero{position:relative;padding:32px 28px 20px;background:linear-gradient(135deg,var(--bg3),var(--bg2));border-bottom:1px solid var(--line);}
+.rd-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;transition:color .2s;padding:4px 8px;}
+.rd-close:hover{color:var(--text);}
+.rd-name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.6rem;margin-bottom:4px;}
+.rd-loc{font-size:.9rem;color:var(--muted);margin-bottom:12px;}
+.rd-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.rd-tag{padding:4px 12px;border-radius:4px;font-size:.75rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
+.rd-tag.dist{color:var(--green);border-color:var(--green);background:rgba(34,197,94,.08);}
+.rd-tag.elev{color:var(--amber);border-color:var(--amber);background:rgba(245,158,11,.08);}
+.rd-tag.diff{color:var(--orange);border-color:var(--orange);background:rgba(249,115,22,.08);}
+.rd-body{padding:24px 28px;}
+.rd-section{margin-bottom:24px;}
+.rd-section h4{font-family:'Orbitron',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:1px;color:var(--orange);margin-bottom:10px;text-transform:uppercase;}
+.rd-elev-chart{width:100%;height:180px;background:var(--bg);border:1px solid var(--line);border-radius:8px;overflow:hidden;position:relative;}
+.rd-elev-chart svg{width:100%;height:100%;}
+.rd-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.rd-stat{text-align:center;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--line);}
+.rd-stat .val{font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;color:var(--green);}
+.rd-stat .label{font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.rd-history{font-size:.9rem;color:#94b89e;line-height:1.8;}
+.rd-history strong{color:var(--text);}
+.rd-anecdotes{display:flex;flex-direction:column;gap:10px;}
+.rd-anecdote{padding:12px 16px;background:var(--bg);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;font-size:.85rem;color:#94b89e;line-height:1.6;}
+.rd-anecdote strong{color:var(--amber);}
+.rd-records{display:flex;flex-direction:column;gap:8px;}
+.rd-record{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:6px;font-size:.85rem;}
+.rd-record .rr-name{font-weight:600;}
+.rd-record .rr-time{font-family:'JetBrains Mono',monospace;color:var(--green);}
+.rd-record .rr-year{font-size:.75rem;color:var(--faint);}
+
+@media(max-width:768px){
+  .rd-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .rd-name{font-size:1.2rem;}
+  .tut-card{padding:20px;}
+}
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:768px){
   nav{padding:0 16px;}
@@ -277,7 +337,10 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div class="user-points" id="user-points">0 pts</div>
       </div>
     </div>
-    <button class="btn-logout" onclick="doLogout()">Logout</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn-logout" onclick="localStorage.removeItem('lb_tut_done');startTutorial()" style="border-color:var(--orange);color:var(--orange)">?</button>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
   </div>
 
   <div class="tab-nav">
@@ -292,6 +355,25 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
   <div id="tab-results" class="tab-panel"></div>
   <div id="tab-profile" class="tab-panel"></div>
 </div>
+
+<!-- ═══ TUTORIAL ═══ -->
+<div id="tut-overlay">
+  <div class="tut-card">
+    <div class="tut-step-label" id="tut-step-label">STEP 1 / 6</div>
+    <div class="tut-icon" id="tut-icon"></div>
+    <div class="tut-title" id="tut-title"></div>
+    <div class="tut-text" id="tut-text"></div>
+    <div class="tut-dots" id="tut-dots"></div>
+    <div class="tut-btns">
+      <button class="tut-btn secondary" id="tut-skip" onclick="tutSkip()">Skip</button>
+      <button class="tut-btn secondary" id="tut-prev" onclick="tutPrev()" style="display:none">Back</button>
+      <button class="tut-btn primary" id="tut-next" onclick="tutNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RACE DETAIL MODAL ═══ -->
+<div id="race-detail"></div>
 
 <!-- ═══ TOAST ═══ -->
 <div class="toast-wrap" id="toast-wrap"></div>
@@ -398,6 +480,7 @@ async function onAuthSuccess(user) {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   await loadAllData();
+  if (!localStorage.getItem('lb_tut_done')) startTutorial();
 }
 
 /* ═══ DATA LOADING ═══ */
@@ -557,7 +640,7 @@ function renderRaceWidget() {
 
   return `<div class="race-widget">
     <h3>🏁 Weekly Race</h3>
-    <div class="rw-name">${r.race_name}</div>
+    <div class="rw-name" style="cursor:pointer;transition:color .2s" onclick="openRaceDetail('${r.race_id}')" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color=''">${r.race_name} <span style="font-size:.7rem;color:var(--faint)">ℹ️</span></div>
     <div class="rw-meta">${r.race_loc} — ${r.race_dist}km, ${r.race_elev}m D+ (${r.race_diff})</div>
     <div class="rw-countdown" id="race-countdown"></div>
     ${weatherHtml}
@@ -751,7 +834,7 @@ async function renderResults() {
 
   let html = `<div class="results-header">
     <div>
-      <div class="results-race-name">${completedRace.race_name}</div>
+      <div class="results-race-name" style="cursor:pointer" onclick="openRaceDetail('${completedRace.race_id}')">${completedRace.race_name} <span style="font-size:.8rem;color:var(--faint)">ℹ️</span></div>
       <div class="results-meta">${completedRace.race_loc} — ${completedRace.race_dist}km, ${completedRace.race_elev}m D+</div>
     </div>
     <span class="rw-status ${completedRace.status}">${completedRace.status}</span>
@@ -879,6 +962,286 @@ function toast(msg, type = '') {
   el.textContent = msg;
   wrap.appendChild(el);
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TUTORIAL SYSTEM
+   ═══════════════════════════════════════════════════════════════ */
+const TUT_STEPS = [
+  { icon:'🏔️', title:'Welcome to the Leaderboard!',
+    text:'This is the <strong>competitive multiplayer mode</strong> of Trail Tycoon.<br><br>Here, your runner is <strong>persistent</strong> — stats are saved on the server, and you train every day to compete in <strong>weekly races against other players</strong>.<br><br>Unlike Solo mode, there are no shortcuts. Every stat point must be earned, and anti-cheat protection ensures fair play.' },
+  { icon:'🏋️', title:'Daily Training — 2 Sessions/Day',
+    text:'You can perform <strong>2 training sessions per day</strong>. Choose wisely!<br><br>• <strong>14 training types</strong> available: running, intervals, yoga, strength...<br>• Each training costs <strong>energy</strong> and increases <strong>fatigue</strong><br>• Stats use <strong>diminishing returns</strong> — the higher your stats, the smaller the gains<br>• <strong>Rest</strong> and <strong>Yoga</strong> are always available, even when injured<br><br>Your training counter resets every day at midnight UTC.' },
+  { icon:'📊', title:'Your Player Card',
+    text:'Your card shows 4 core stats:<br><br>• <strong>END</strong> (Endurance) — stamina, energy drain in races<br>• <strong>SPD</strong> (Speed) — base pace, how fast you run<br>• <strong>TEC</strong> (Technique) — terrain efficiency, elevation handling<br>• <strong>MEN</strong> (Mental) — willpower, prevents DNF when exhausted<br><br>Below: <strong>Energy</strong> (training fuel), <strong>Health</strong> (injury prevention), <strong>Fatigue</strong> (reduces effectiveness).<br><br>Stay active! If you don\'t train for 3+ days, your stats will <strong>decay</strong>.' },
+  { icon:'🏁', title:'Weekly Races — Every Saturday 18h UTC',
+    text:'A new race is announced <strong>every Monday</strong>. You have until Saturday to register.<br><br>• Races rotate through <strong>10 iconic real-world courses</strong><br>• Click the race name to see <strong>elevation profile, history, and anecdotes</strong><br>• When you register, your <strong>current stats are snapshotted</strong> — keep training until then!<br>• At Saturday 18:00 UTC, the race is <strong>simulated automatically</strong> with <strong>real weather</strong> from the race location<br><br>Weather affects performance: rain (-5%), snow (-10%), storms (-10%).' },
+  { icon:'🏆', title:'Points, Medals & Leaderboard',
+    text:'After each race, points are awarded:<br><br>• 🥇 1st — <strong>100 pts</strong><br>• 🥈 2nd — <strong>80 pts</strong><br>• 🥉 3rd — <strong>60 pts</strong><br>• 4th-10th — 50 to 20 pts<br>• Finisher — <strong>10 pts</strong><br>• DNF — <strong>5 pts</strong><br><br>Top 3 earn <strong>medals</strong> that appear on your profile. Points accumulate in the <strong>global leaderboard</strong> — climb the ranks!' },
+  { icon:'🚀', title:'You\'re Ready!',
+    text:'Quick recap:<br><br>1. <strong>Train</strong> 2x/day to build your stats<br>2. <strong>Register</strong> for the weekly race before Saturday<br>3. <strong>Race</strong> is simulated with real weather<br>4. <strong>Earn points</strong> and climb the leaderboard<br>5. <strong>Collect medals</strong> and badges<br><br>Click on any race name to discover its <strong>real history, elevation profile, and records</strong>.<br><br>Good luck, runner! 🏔️' },
+];
+
+let tutStep = 0;
+function startTutorial() {
+  tutStep = 0;
+  document.getElementById('tut-overlay').classList.add('show');
+  renderTutStep();
+}
+function tutSkip() { document.getElementById('tut-overlay').classList.remove('show'); localStorage.setItem('lb_tut_done','1'); }
+function tutNext() { if (tutStep < TUT_STEPS.length - 1) { tutStep++; renderTutStep(); } else { tutSkip(); } }
+function tutPrev() { if (tutStep > 0) { tutStep--; renderTutStep(); } }
+function renderTutStep() {
+  const s = TUT_STEPS[tutStep];
+  document.getElementById('tut-step-label').textContent = `STEP ${tutStep+1} / ${TUT_STEPS.length}`;
+  document.getElementById('tut-icon').textContent = s.icon;
+  document.getElementById('tut-title').textContent = s.title;
+  document.getElementById('tut-text').innerHTML = s.text;
+  document.getElementById('tut-prev').style.display = tutStep > 0 ? 'inline-block' : 'none';
+  document.getElementById('tut-next').textContent = tutStep === TUT_STEPS.length - 1 ? 'Start Playing!' : 'Next';
+  const dots = document.getElementById('tut-dots'); dots.innerHTML = '';
+  for (let i = 0; i < TUT_STEPS.length; i++) {
+    const d = document.createElement('div');
+    d.className = 'tut-dot' + (i === tutStep ? ' active' : i < tutStep ? ' done' : '');
+    dots.appendChild(d);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RACE DETAIL DATA — Real history, anecdotes, elevation profiles
+   ═══════════════════════════════════════════════════════════════ */
+const RACE_DETAILS = {
+  trail_15: {
+    name: 'Trail des Collines', loc: 'Chartreuse, France', dist: 15, elev: 600, diff: 'medium',
+    altMin: 250, altMax: 850,
+    elevProfile: [250,380,520,680,850,780,650,720,850,700,550,420,350,300,250],
+    history: 'Le massif de la <strong>Chartreuse</strong>, aux portes de Grenoble, est un paradis pour les traileurs. Ce trail de 15 km serpente entre forêts de hêtres et prairies d\'altitude, offrant des vues spectaculaires sur la vallée de l\'Isère et le Mont Blanc par temps clair.',
+    records: [{name:'Marie Dohin', time:'1h12\'34"', year:'2023'}, {name:'Thomas Cardin', time:'1h05\'18"', year:'2022'}],
+    anecdotes: [
+      {text:'Le massif de la Chartreuse tire son nom du monastère de la <strong>Grande Chartreuse</strong>, fondé en 1084 par Saint Bruno. Les moines y fabriquent encore la célèbre liqueur verte.'},
+      {text:'La Chartreuse abrite l\'<strong>ours brun</strong> dans ses légendes locales. En 1937, le dernier ours des Alpes françaises y a été aperçu avant sa disparition de la région.'},
+      {text:'Le <strong>chamois de Chartreuse</strong> est visible sur le parcours. On en compte plus de 2 000 dans le massif, souvent aperçus au petit matin sur les crêtes.'},
+    ]
+  },
+  trail_25: {
+    name: 'Trail du Vercors', loc: 'Vercors, France', dist: 25, elev: 1200, diff: 'medium',
+    altMin: 800, altMax: 2000,
+    elevProfile: [800,950,1100,1350,1600,1850,2000,1900,1700,1500,1800,2000,1650,1300,1050,800],
+    history: 'Le <strong>Vercors</strong> est un massif-forteresse naturel, surnommé "la citadelle". Ce trail traverse les hauts plateaux calcaires, les gorges profondes et les forêts de pins noirs. Le terrain technique et les variations d\'altitude en font un défi complet.',
+    records: [{name:'Nicolas Martin', time:'2h28\'42"', year:'2023'}, {name:'Camille Bruyas', time:'2h45\'11"', year:'2022'}],
+    anecdotes: [
+      {text:'Le Vercors fut un haut lieu de la <strong>Résistance française</strong> pendant la Seconde Guerre mondiale. Le "maquis du Vercors" regroupait plus de 4 000 résistants en 1944.'},
+      {text:'Les <strong>Grandes Traversées du Vercors</strong> (GTV) parcourent 400 km à travers le massif. Le trail emprunte une section de ce mythique itinéraire.'},
+      {text:'Le calcaire du Vercors forme des <strong>lapiaz</strong> (champs de pierres sculptées par l\'eau) qui rendent le terrain particulièrement technique. Un faux pas peut coûter une cheville !'},
+    ]
+  },
+  semi_trail: {
+    name: 'Semi-Marathon Trail', loc: 'Belledonne, France', dist: 21, elev: 900, diff: 'medium',
+    altMin: 400, altMax: 1300,
+    elevProfile: [400,550,700,900,1100,1300,1200,1050,1300,1150,950,800,650,500,400],
+    history: 'La chaîne de <strong>Belledonne</strong> est le massif le plus sauvage près de Grenoble. Ce semi-marathon trail combine sentiers forestiers et crêtes alpines avec un panorama à 360° sur les Alpes.',
+    records: [{name:'Ludovic Pommeret', time:'1h42\'05"', year:'2023'}, {name:'Adeline Roche', time:'1h58\'33"', year:'2022'}],
+    anecdotes: [
+      {text:'La chaîne de Belledonne compte <strong>7 lacs d\'altitude</strong> sur le parcours ou à proximité. Le lac du Crozet, à 1 974 m, est l\'un des plus photographiés des Alpes.'},
+      {text:'<strong>Ludovic Pommeret</strong>, vainqueur de l\'UTMB 2016, s\'entraîne quotidiennement sur ces sentiers de Belledonne qu\'il connaît par cœur.'},
+      {text:'En hiver, ces mêmes sentiers deviennent des itinéraires de <strong>ski de randonnée</strong>. La neige peut persister jusqu\'en juin sur les crêtes les plus hautes.'},
+    ]
+  },
+  marathon_trail: {
+    name: 'Marathon des Cimes', loc: 'Alpes, France', dist: 42, elev: 2500, diff: 'hard',
+    altMin: 1000, altMax: 2800,
+    elevProfile: [1000,1200,1500,1800,2200,2600,2800,2500,2100,2400,2800,2600,2200,1800,1500,1200,1000],
+    history: 'Le <strong>Marathon des Cimes</strong> parcourt les sentiers d\'altitude des Alpes françaises, entre Savoie et Haute-Savoie. Avec 2 500 m de dénivelé positif, c\'est un véritable test d\'endurance en montagne.',
+    records: [{name:'François D\'Haene', time:'3h52\'28"', year:'2022'}, {name:'Caroline Chaverot', time:'4h15\'44"', year:'2023'}],
+    anecdotes: [
+      {text:'<strong>François D\'Haene</strong>, quadruple vainqueur de l\'UTMB, détient le record de ce marathon. Il a déclaré : "C\'est le terrain qui m\'a fait devenir ultra-traileur."'},
+      {text:'À 2 800 m d\'altitude, les coureurs peuvent ressentir les premiers effets de l\'<strong>hypoxie</strong> : essoufflement accru, fatigue musculaire prématurée.'},
+      {text:'Le parcours traverse des <strong>alpages</strong> où paissent les vaches Tarines et Abondances, dont le lait sert à fabriquer le Beaufort et le Reblochon.'},
+    ]
+  },
+  trail_50: {
+    name: 'Ultra Trail 50K', loc: 'Mont-Blanc, France', dist: 50, elev: 3200, diff: 'hard',
+    altMin: 1035, altMax: 2500,
+    elevProfile: [1035,1300,1600,1900,2200,2500,2300,1900,2100,2500,2200,1800,1500,1800,2000,1600,1300,1035],
+    history: 'Autour du <strong>Mont-Blanc</strong>, ce 50 km traverse trois vallées entre Chamonix et les alpages de Haute-Savoie. Le terrain est exigeant : pierriers, passages câblés et sentiers techniques à flanc de montagne.',
+    records: [{name:'Kilian Jornet', time:'4h28\'51"', year:'2021'}, {name:'Courtney Dauwalter', time:'5h02\'17"', year:'2022'}],
+    anecdotes: [
+      {text:'<strong>Kilian Jornet</strong> a gravi le Mont-Blanc en 4h57 aller-retour depuis Chamonix en 2013. Il considère cette région comme "le berceau du trail mondial".'},
+      {text:'Le <strong>Tour du Mont-Blanc</strong> (TMB), dont ce trail emprunte des sections, accueille plus de 10 000 randonneurs chaque été sur ses 170 km.'},
+      {text:'La vallée de Chamonix a accueilli les <strong>premiers Jeux Olympiques d\'hiver</strong> en 1924. L\'esprit olympique imprègne encore les compétitions locales.'},
+    ]
+  },
+  boston: {
+    name: 'Boston Marathon', loc: 'Boston, Massachusetts', dist: 42, elev: 150, diff: 'medium',
+    altMin: 5, altMax: 90,
+    elevProfile: [150,130,110,90,70,50,40,30,20,10,15,25,50,75,90,80,60,40,20,10,5],
+    history: 'Le <strong>Boston Marathon</strong>, fondé en 1897, est le plus ancien marathon annuel au monde. Il se court le "Patriots\' Day" (3e lundi d\'avril) de Hopkinton à Copley Square. C\'est le seul marathon majeur qui exige un <strong>temps de qualification</strong>.',
+    records: [{name:'Geoffrey Mutai', time:'2h03\'02"', year:'2011'}, {name:'Buzunesh Deba', time:'2h19\'59"', year:'2014'}],
+    anecdotes: [
+      {text:'La <strong>"Heartbreak Hill"</strong> (km 32) est la dernière des Newton Hills. Son nom vient de 1936 quand Ellison "Tarzan" Brown fut dépassé à cet endroit après avoir mené toute la course.'},
+      {text:'En 1967, <strong>Kathrine Switzer</strong> devint la première femme à courir Boston avec un dossard officiel. Un officiel tenta de l\'arrêter en pleine course — la photo est devenue iconique.'},
+      {text:'Le marathon de Boston est le seul des 6 World Marathon Majors à exiger une <strong>qualification</strong>. Pour un homme de 18-34 ans : 3h00. Environ 40 000 places pour 100 000+ candidats.'},
+      {text:'En 2013, deux bombes explosèrent près de la ligne d\'arrivée. L\'année suivante, 36 000 coureurs participèrent sous le slogan <strong>"Boston Strong"</strong>.'},
+    ]
+  },
+  pikes_peak: {
+    name: 'Pikes Peak Ascent', loc: 'Colorado Springs, Colorado', dist: 21, elev: 2380, diff: 'hard',
+    altMin: 2003, altMax: 4302,
+    elevProfile: [2003,2200,2500,2800,3100,3400,3600,3800,4000,4100,4200,4302],
+    history: 'Le <strong>Pikes Peak</strong> culmine à 4 302 m dans les Rocheuses du Colorado. L\'Ascent (montée seule) fait 21 km avec 2 380 m de D+. C\'est la course de montagne la plus ancienne d\'Amérique (depuis 1956).',
+    records: [{name:'Joseph Gray', time:'2h05\'04"', year:'2019'}, {name:'Kim Dobson', time:'2h24\'58"', year:'2012'}],
+    anecdotes: [
+      {text:'Au sommet du Pikes Peak, la pression atmosphérique est de seulement <strong>60% du niveau de la mer</strong>. Les coureurs inhalent 40% moins d\'oxygène à chaque respiration.'},
+      {text:'En 1893, <strong>Katharine Lee Bates</strong> composa le poème "America the Beautiful" après avoir contemplé la vue depuis le sommet du Pikes Peak.'},
+      {text:'<strong>Matt Carpenter</strong>, légende du Pikes Peak, détint le record pendant 25 ans (2h01\'06" en 1993). Son record n\'incluait que la montée, sans la descente.'},
+    ]
+  },
+  comrades: {
+    name: 'Comrades Marathon', loc: 'KwaZulu-Natal, South Africa', dist: 89, elev: 1700, diff: 'hard',
+    altMin: 30, altMax: 870,
+    elevProfile: [30,120,280,450,620,780,870,800,700,780,870,750,600,450,350,250,150,80,30],
+    history: 'Le <strong>Comrades Marathon</strong> (89 km) est le plus grand et le plus ancien ultra-marathon au monde, couru depuis 1921 entre Durban et Pietermaritzburg en Afrique du Sud. Chaque année, la direction alterne ("up run" et "down run").',
+    records: [{name:'David Gatebe', time:'5h18\'19"', year:'2016'}, {name:'Frith van der Merwe', time:'5h54\'43"', year:'1989'}],
+    anecdotes: [
+      {text:'Fondé par <strong>Vic Clapham</strong> en 1921 en hommage aux soldats tombés pendant la Première Guerre mondiale. Seulement 34 coureurs au départ de la première édition.'},
+      {text:'Le Comrades a un <strong>cut-off impitoyable de 12 heures</strong>. À la douzième heure exacte, un officiel tire au pistolet et la route est fermée. Des coureurs ont été arrêtés à quelques mètres de la ligne.'},
+      {text:'<strong>Bruce Fordyce</strong> a remporté le Comrades 9 fois entre 1981 et 1990. Il est considéré comme le plus grand ultra-marathonien de l\'histoire sud-africaine.'},
+      {text:'Environ <strong>20 000 coureurs</strong> participent chaque année, ce qui en fait la plus grande course d\'ultra au monde. L\'ambiance est comparable à celle du Tour de France cycliste.'},
+    ]
+  },
+  kilimanjaro: {
+    name: 'Kilimanjaro Marathon', loc: 'Moshi, Tanzania', dist: 42, elev: 400, diff: 'medium',
+    altMin: 800, altMax: 1200,
+    elevProfile: [800,850,900,950,1000,1050,1100,1150,1200,1150,1100,1050,1000,950,900,850,800],
+    history: 'Le <strong>Kilimanjaro Marathon</strong> se court au pied du plus haut sommet d\'Afrique (5 895 m). Le parcours traverse Moshi et les plantations de café tanzaniennes, avec le Kilimanjaro en toile de fond.',
+    records: [{name:'Ismail Juma', time:'2h18\'42"', year:'2022'}, {name:'Failuna Matanga', time:'2h38\'15"', year:'2023'}],
+    anecdotes: [
+      {text:'Le <strong>Kilimanjaro</strong> perd ses glaciers à un rythme alarmant. Les scientifiques estiment qu\'ils auront complètement disparu d\'ici <strong>2040</strong>.'},
+      {text:'Le marathon se déroule à environ <strong>800 m d\'altitude</strong>, mais le Kili lui-même culmine à 5 895 m. La différence de température entre le départ et le sommet peut atteindre 40°C.'},
+      {text:'Les coureurs locaux dominent cette course. La plupart s\'entraînent pieds nus sur les pistes de terre, puis courent la course en <strong>chaussures offertes par les sponsors</strong>.'},
+    ]
+  },
+  big_sur: {
+    name: 'Big Sur Marathon', loc: 'California Coast', dist: 42, elev: 600, diff: 'medium',
+    altMin: 10, altMax: 170,
+    elevProfile: [40,60,90,120,150,170,140,100,130,160,120,80,60,90,50,30,20,10],
+    history: 'Le <strong>Big Sur International Marathon</strong> longe la côte californienne sur la Highway 1, considérée comme la plus belle route du monde. Depuis 1986, les coureurs traversent le célèbre Bixby Bridge suspendu au-dessus de l\'océan Pacifique.',
+    records: [{name:'Adam Roach', time:'2h16\'49"', year:'2019'}, {name:'Magdalena Boulet', time:'2h37\'57"', year:'2014'}],
+    anecdotes: [
+      {text:'Au km 20, un pianiste joue du <strong>piano à queue</strong> installé sur un promontoire surplombant l\'océan. Cette tradition existe depuis la première édition en 1986.'},
+      {text:'La course est limitée à <strong>4 500 participants</strong> et se remplit en quelques minutes. Le tirage au sort est devenu nécessaire face à la demande.'},
+      {text:'La <strong>Hurricane Point</strong> (km 16-18) est une montée de 2 km face aux vents du Pacifique pouvant souffler à 60 km/h. C\'est le passage le plus redouté du parcours.'},
+      {text:'La Highway 1 a été construite par des <strong>prisonniers et des ouvriers</strong> entre 1919 et 1937. Certains tronçons traversés par les coureurs n\'ont qu\'une voie.'},
+    ]
+  },
+};
+
+function openRaceDetail(raceId) {
+  const race = RACE_DETAILS[raceId];
+  if (!race) return;
+
+  const modal = document.getElementById('race-detail');
+  const ep = race.elevProfile;
+  const maxAlt = race.altMax;
+  const minAlt = race.altMin;
+  const range = maxAlt - minAlt || 1;
+
+  // Build SVG elevation profile
+  const w = 760; const h = 160; const pad = 10;
+  const usableW = w - pad * 2;
+  const usableH = h - pad * 2;
+  const points = ep.map((alt, i) => {
+    const x = pad + (i / (ep.length - 1)) * usableW;
+    const y = pad + usableH - ((alt - minAlt) / range) * usableH;
+    return `${x},${y}`;
+  }).join(' ');
+  const fillPoints = `${pad},${h - pad} ${points} ${pad + usableW},${h - pad}`;
+
+  // Altitude labels
+  const labels = [];
+  const labelCount = 5;
+  for (let i = 0; i <= labelCount; i++) {
+    const alt = Math.round(minAlt + (range * i / labelCount));
+    const y = pad + usableH - (i / labelCount) * usableH;
+    labels.push(`<text x="4" y="${y + 3}" fill="#4a7a56" font-size="9" font-family="JetBrains Mono">${alt}m</text>`);
+    labels.push(`<line x1="${pad}" y1="${y}" x2="${w - pad}" y2="${y}" stroke="#1e3a28" stroke-width="0.5" stroke-dasharray="4"/>`);
+  }
+
+  // Km markers
+  const kmLabels = [];
+  const totalDist = race.dist;
+  const kmStep = totalDist <= 25 ? 5 : totalDist <= 50 ? 10 : 20;
+  for (let km = 0; km <= totalDist; km += kmStep) {
+    const x = pad + (km / totalDist) * usableW;
+    kmLabels.push(`<text x="${x}" y="${h - 1}" fill="#4a7a56" font-size="9" font-family="JetBrains Mono" text-anchor="middle">${km}km</text>`);
+  }
+
+  const svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    ${labels.join('')}
+    ${kmLabels.join('')}
+    <polygon points="${fillPoints}" fill="url(#elevGrad)" opacity="0.4"/>
+    <polyline points="${points}" fill="none" stroke="#f97316" stroke-width="2.5" stroke-linejoin="round"/>
+    <defs><linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#f97316" stop-opacity="0.05"/>
+    </linearGradient></defs>
+  </svg>`;
+
+  const diffColor = race.diff === 'medium' ? 'var(--amber)' : race.diff === 'hard' ? 'var(--orange)' : 'var(--red)';
+
+  let html = `<div class="rd-card">
+    <div class="rd-hero">
+      <button class="rd-close" onclick="closeRaceDetail()">&times;</button>
+      <div class="rd-name">${race.name}</div>
+      <div class="rd-loc">📍 ${race.loc}</div>
+      <div class="rd-tags">
+        <span class="rd-tag dist">${race.dist} km</span>
+        <span class="rd-tag elev">${race.elev} m D+</span>
+        <span class="rd-tag diff">${race.diff}</span>
+      </div>
+    </div>
+    <div class="rd-body">
+      <div class="rd-section">
+        <h4>📈 Elevation Profile</h4>
+        <div class="rd-elev-chart">${svg}</div>
+      </div>
+      <div class="rd-section">
+        <h4>📊 Key Stats</h4>
+        <div class="rd-stats-grid">
+          <div class="rd-stat"><div class="val">${race.dist}<span style="font-size:.7rem;color:var(--muted)">km</span></div><div class="label">Distance</div></div>
+          <div class="rd-stat"><div class="val">${race.elev}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Elevation D+</div></div>
+          <div class="rd-stat"><div class="val">${race.altMin}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Min Altitude</div></div>
+          <div class="rd-stat"><div class="val" style="color:var(--orange)">${race.altMax}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Max Altitude</div></div>
+        </div>
+      </div>
+      <div class="rd-section">
+        <h4>📜 History</h4>
+        <div class="rd-history">${race.history}</div>
+      </div>`;
+
+  if (race.records && race.records.length > 0) {
+    html += `<div class="rd-section"><h4>🏅 Records</h4><div class="rd-records">`;
+    race.records.forEach(r => {
+      html += `<div class="rd-record"><span class="rr-name">${r.name}</span><span class="rr-time">${r.time}</span><span class="rr-year">${r.year}</span></div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (race.anecdotes && race.anecdotes.length > 0) {
+    html += `<div class="rd-section"><h4>💡 Anecdotes</h4><div class="rd-anecdotes">`;
+    race.anecdotes.forEach(a => {
+      html += `<div class="rd-anecdote">${a.text}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `</div></div>`;
+  modal.innerHTML = html;
+  modal.classList.add('show');
+}
+
+function closeRaceDetail() {
+  document.getElementById('race-detail').classList.remove('show');
 }
 
 /* ═══ INIT ═══ */
