@@ -439,7 +439,8 @@ async function doLogin() {
   btn.disabled = false; btn.textContent = 'Login';
   if (error) { msg.textContent = error.message; msg.className = 'auth-error'; return; }
   msg.textContent = '';
-  onAuthSuccess(data.user);
+  await onAuthSuccess(data.user);
+  showTutIfFirstTime();
 }
 
 async function doSignup() {
@@ -464,7 +465,8 @@ async function doSignup() {
     return;
   }
   msg.textContent = '';
-  onAuthSuccess(data.user);
+  await onAuthSuccess(data.user);
+  showTutIfFirstTime();
 }
 
 async function doLogout() {
@@ -480,6 +482,9 @@ async function onAuthSuccess(user) {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   await loadAllData();
+}
+
+function showTutIfFirstTime() {
   if (!localStorage.getItem('lb_tut_done')) startTutorial();
 }
 
