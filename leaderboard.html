@@ -196,25 +196,32 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .spinner{width:24px;height:24px;border:3px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
 .loading-state{display:flex;flex-direction:column;align-items:center;gap:12px;padding:40px;color:var(--muted);}
 
-/* ═══ TUTORIAL ═══ */
-#tut-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(11,26,15,.88);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
-#tut-overlay.show{display:flex;}
-.tut-card{background:var(--bg2);border:1px solid var(--orange);border-radius:16px;padding:32px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;animation:fadeInUp .4s ease;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 20px rgba(249,115,22,.15);}
-.tut-step-label{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:6px;}
-.tut-icon{font-size:2.5rem;margin-bottom:8px;}
-.tut-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:12px;}
-.tut-text{font-size:.9rem;color:#94b89e;line-height:1.9;margin-bottom:20px;}
+/* ═══ INLINE TUTORIAL ═══ */
+.tut-inline{background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--orange);border-radius:16px;margin:20px 24px 0;padding:28px;animation:fadeInUp .4s ease;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.3),0 0 12px rgba(249,115,22,.1);}
+.tut-inline::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.02),transparent);animation:shimmer 5s ease infinite;}
+.tut-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.tut-step-label{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--orange);font-weight:700;}
+.tut-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:4px 8px;transition:color .2s;}
+.tut-close:hover{color:var(--text);}
+.tut-body{display:flex;gap:20px;align-items:flex-start;}
+.tut-icon{font-size:2.5rem;flex-shrink:0;}
+.tut-content{flex:1;min-width:0;}
+.tut-title{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px;}
+.tut-text{font-size:.88rem;color:#94b89e;line-height:1.8;}
 .tut-text strong{color:var(--text);font-weight:600;}
-.tut-dots{display:flex;gap:6px;margin-bottom:16px;justify-content:center;}
-.tut-dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+.tut-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:12px;}
+.tut-dots{display:flex;gap:6px;}
+.tut-dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:all .2s;}
+.tut-dot:hover{background:var(--faint);}
 .tut-dot.active{background:var(--orange);}
 .tut-dot.done{background:var(--green);}
-.tut-btns{display:flex;gap:10px;justify-content:flex-end;}
-.tut-btn{padding:10px 20px;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;}
+.tut-btns{display:flex;gap:8px;}
+.tut-btn{padding:8px 18px;border-radius:6px;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;}
 .tut-btn.primary{background:var(--orange);color:#0b1a0f;}
 .tut-btn.primary:hover{transform:translateY(-1px);box-shadow:var(--glow-orange);}
 .tut-btn.secondary{background:none;border:1px solid var(--line);color:var(--muted);}
 .tut-btn.secondary:hover{border-color:var(--faint);color:var(--text);}
+@media(max-width:768px){.tut-inline{margin:12px 16px 0;padding:20px;}.tut-body{flex-direction:column;gap:10px;}.tut-footer{flex-direction:column;align-items:stretch;}}
 
 /* ═══ RACE DETAIL MODAL ═══ */
 #race-detail{display:none;position:fixed;inset:0;z-index:800;background:rgba(11,26,15,.92);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto;}
@@ -253,7 +260,6 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 @media(max-width:768px){
   .rd-stats-grid{grid-template-columns:repeat(2,1fr);}
   .rd-name{font-size:1.2rem;}
-  .tut-card{padding:20px;}
 }
 
 /* ═══ RESPONSIVE ═══ */
@@ -283,8 +289,8 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 <nav>
   <a href="/" class="nav-logo">TRAIL TYCOON</a>
   <div class="nav-links">
-    <a href="/play">Solo Game</a>
-    <a href="/leaderboard" class="active">Leaderboard</a>
+    <a href="/play" id="nav-solo">Solo Game</a>
+    <a href="/leaderboard" class="active" id="nav-lb">Leaderboard</a>
   </div>
 </nav>
 
@@ -292,33 +298,33 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 <div id="auth-screen">
   <div class="auth-card">
     <h1>TRAIL <span class="orange">TYCOON</span></h1>
-    <p class="subtitle">Competitive Leaderboard</p>
+    <p class="subtitle" id="auth-subtitle">Competitive Leaderboard</p>
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="showAuthTab('login')">Login</button>
-      <button class="auth-tab" onclick="showAuthTab('signup')">Sign Up</button>
+      <button class="auth-tab active" onclick="showAuthTab('login')" id="auth-tab-login">Login</button>
+      <button class="auth-tab" onclick="showAuthTab('signup')" id="auth-tab-signup">Sign Up</button>
     </div>
     <div id="login-form">
       <div class="form-group">
-        <label>Email</label>
+        <label id="lbl-login-email">Email</label>
         <input type="email" id="login-email" placeholder="you@email.com">
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label id="lbl-login-password">Password</label>
         <input type="password" id="login-password" placeholder="Your password">
       </div>
       <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
     </div>
     <div id="signup-form" style="display:none">
       <div class="form-group">
-        <label>Username</label>
+        <label id="lbl-signup-username">Username</label>
         <input type="text" id="signup-username" placeholder="TrailRunner42" maxlength="20">
       </div>
       <div class="form-group">
-        <label>Email</label>
+        <label id="lbl-signup-email">Email</label>
         <input type="email" id="signup-email" placeholder="you@email.com">
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label id="lbl-signup-password">Password</label>
         <input type="password" id="signup-password" placeholder="Min 6 characters" minlength="6">
       </div>
       <button class="auth-btn" id="signup-btn" onclick="doSignup()">Create Account</button>
@@ -338,16 +344,16 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
       </div>
     </div>
     <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn-logout" onclick="localStorage.removeItem('lb_tut_done');startTutorial()" style="border-color:var(--orange);color:var(--orange)">?</button>
-      <button class="btn-logout" onclick="doLogout()">Logout</button>
+      <button class="btn-logout" onclick="localStorage.removeItem('lb_tut_done');startTutorial();window.scrollTo({top:0,behavior:'smooth'})" style="border-color:var(--orange);color:var(--orange)">?</button>
+      <button class="btn-logout" id="btn-logout" onclick="doLogout()">Logout</button>
     </div>
   </div>
 
   <div class="tab-nav">
-    <button class="active" onclick="switchTab('dashboard')">Dashboard</button>
-    <button onclick="switchTab('leaderboard')">Leaderboard</button>
-    <button onclick="switchTab('results')">Results</button>
-    <button onclick="switchTab('profile')">Profile</button>
+    <button class="active" onclick="switchTab('dashboard')" id="tab-btn-dashboard">Dashboard</button>
+    <button onclick="switchTab('leaderboard')" id="tab-btn-leaderboard">Leaderboard</button>
+    <button onclick="switchTab('results')" id="tab-btn-results">Results</button>
+    <button onclick="switchTab('profile')" id="tab-btn-profile">Profile</button>
   </div>
 
   <div id="tab-dashboard" class="tab-panel active"></div>
@@ -356,21 +362,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
   <div id="tab-profile" class="tab-panel"></div>
 </div>
 
-<!-- ═══ TUTORIAL ═══ -->
-<div id="tut-overlay">
-  <div class="tut-card">
-    <div class="tut-step-label" id="tut-step-label">STEP 1 / 6</div>
-    <div class="tut-icon" id="tut-icon"></div>
-    <div class="tut-title" id="tut-title"></div>
-    <div class="tut-text" id="tut-text"></div>
-    <div class="tut-dots" id="tut-dots"></div>
-    <div class="tut-btns">
-      <button class="tut-btn secondary" id="tut-skip" onclick="tutSkip()">Skip</button>
-      <button class="tut-btn secondary" id="tut-prev" onclick="tutPrev()" style="display:none">Back</button>
-      <button class="tut-btn primary" id="tut-next" onclick="tutNext()">Next</button>
-    </div>
-  </div>
-</div>
+<!-- ═══ INLINE TUTORIAL (inserted dynamically) ═══ -->
 
 <!-- ═══ RACE DETAIL MODAL ═══ -->
 <div id="race-detail"></div>
@@ -387,22 +379,184 @@ const SUPABASE_URL = 'https://yobmyrjccsxkuvafqiri.supabase.co';
 const SUPABASE_ANON = 'sb_publishable__-EizijNbJC3bLPi67Xtag_6UROlaCk';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+/* ═══ i18n ═══ */
+let currentLang = localStorage.getItem('tt_lang') || (navigator.language.startsWith('fr') ? 'fr' : 'en');
+const TR = {
+  // Nav
+  nav_solo: { en:'Solo Game', fr:'Jeu Solo' },
+  nav_lb: { en:'Leaderboard', fr:'Classement' },
+  // Auth
+  auth_subtitle: { en:'Competitive Leaderboard', fr:'Classement Compétitif' },
+  auth_login: { en:'Login', fr:'Connexion' },
+  auth_signup: { en:'Sign Up', fr:'Inscription' },
+  auth_email: { en:'Email', fr:'E-mail' },
+  auth_password: { en:'Password', fr:'Mot de passe' },
+  auth_username: { en:'Username', fr:'Pseudo' },
+  auth_ph_email: { en:'you@email.com', fr:'vous@email.com' },
+  auth_ph_password: { en:'Your password', fr:'Votre mot de passe' },
+  auth_ph_username: { en:'TrailRunner42', fr:'TrailRunner42' },
+  auth_ph_password_min: { en:'Min 6 characters', fr:'6 caractères minimum' },
+  auth_login_btn: { en:'Login', fr:'Se connecter' },
+  auth_create_btn: { en:'Create Account', fr:'Créer un compte' },
+  auth_fill_all: { en:'Please fill all fields', fr:'Veuillez remplir tous les champs' },
+  auth_username_min: { en:'Username must be at least 3 characters', fr:'Le pseudo doit faire au moins 3 caractères' },
+  auth_password_min: { en:'Password must be at least 6 characters', fr:'Le mot de passe doit faire au moins 6 caractères' },
+  auth_check_email: { en:'Check your email to confirm your account!', fr:'Vérifiez votre e-mail pour confirmer votre compte !' },
+  auth_logging_in: { en:'Logging in...', fr:'Connexion...' },
+  auth_creating: { en:'Creating account...', fr:'Création du compte...' },
+  // App header
+  logout: { en:'Logout', fr:'Déconnexion' },
+  // Tabs
+  tab_dashboard: { en:'Dashboard', fr:'Tableau de bord' },
+  tab_leaderboard: { en:'Leaderboard', fr:'Classement' },
+  tab_results: { en:'Results', fr:'Résultats' },
+  tab_profile: { en:'Profile', fr:'Profil' },
+  // Dashboard
+  fitness: { en:'FITNESS', fr:'FORME' },
+  stat_end: { en:'END', fr:'END' },
+  stat_spd: { en:'SPD', fr:'VIT' },
+  stat_tec: { en:'TEC', fr:'TEC' },
+  stat_men: { en:'MEN', fr:'MEN' },
+  energy: { en:'Energy', fr:'Énergie' },
+  health: { en:'Health', fr:'Santé' },
+  fatigue: { en:'Fatigue', fr:'Fatigue' },
+  injured: { en:'Injured', fr:'Blessé' },
+  training: { en:'Training', fr:'Entraînement' },
+  today_sessions: { en:'Today: <strong>$1/2</strong> sessions used', fr:'Aujourd\'hui : <strong>$1/2</strong> séances utilisées' },
+  energy_unit: { en:'energy', fr:'énergie' },
+  loading_profile: { en:'Loading profile...', fr:'Chargement du profil...' },
+  // Race widget
+  weekly_race: { en:'Weekly Race', fr:'Course de la semaine' },
+  no_race: { en:'No race scheduled this week. Check back Monday!', fr:'Pas de course cette semaine. Revenez lundi !' },
+  completed: { en:'Completed', fr:'Terminée' },
+  racing: { en:'Racing...', fr:'En course...' },
+  registered: { en:'You are registered!', fr:'Vous êtes inscrit !' },
+  register_btn: { en:'Register for Race', fr:'S\'inscrire à la course' },
+  runners_registered: { en:'$1 runners registered', fr:'$1 coureurs inscrits' },
+  effect: { en:'effect', fr:'effet' },
+  race_started: { en:'RACE STARTED!', fr:'COURSE LANCÉE !' },
+  // Training
+  train_completed: { en:'completed!', fr:'terminé !' },
+  recovery_session: { en:'Recovery session', fr:'Séance de récupération' },
+  toast_train_ok: { en:'Training completed!', fr:'Entraînement terminé !' },
+  toast_train_fail: { en:'Training failed', fr:'Entraînement échoué' },
+  // Registration
+  toast_already_reg: { en:'Already registered!', fr:'Déjà inscrit !' },
+  toast_reg_fail: { en:'Registration failed', fr:'Inscription échouée' },
+  toast_reg_ok: { en:'Registered for the race!', fr:'Inscrit à la course !' },
+  // Leaderboard
+  global_lb: { en:'Global', fr:'Classement' },
+  lb_word: { en:'Leaderboard', fr:'Global' },
+  th_rank: { en:'Rank', fr:'Rang' },
+  th_player: { en:'Player', fr:'Joueur' },
+  th_points: { en:'Points', fr:'Points' },
+  th_races: { en:'Races', fr:'Courses' },
+  th_medals: { en:'Medals', fr:'Médailles' },
+  th_best: { en:'Best', fr:'Meilleur' },
+  you: { en:'(you)', fr:'(vous)' },
+  lb_empty: { en:'No players yet. Be the first to compete!', fr:'Aucun joueur pour le moment. Soyez le premier !' },
+  lb_error: { en:'Could not load leaderboard.', fr:'Impossible de charger le classement.' },
+  lb_loading: { en:'Loading leaderboard...', fr:'Chargement du classement...' },
+  // Results
+  th_pos: { en:'Pos', fr:'Pos' },
+  th_runner: { en:'Runner', fr:'Coureur' },
+  th_time: { en:'Time', fr:'Temps' },
+  th_badge: { en:'Badge', fr:'Badge' },
+  no_races: { en:'No races yet.', fr:'Aucune course pour le moment.' },
+  no_results: { en:'No results yet. Race hasn\'t been simulated.', fr:'Pas encore de résultats. La course n\'a pas été simulée.' },
+  // Profile
+  stats_overview: { en:'Stats Overview', fr:'Aperçu des stats' },
+  total_points: { en:'Total Points', fr:'Points totaux' },
+  races_run: { en:'Races Run', fr:'Courses courues' },
+  best_position: { en:'Best Position', fr:'Meilleure position' },
+  wins: { en:'Wins', fr:'Victoires' },
+  badges_collection: { en:'Badges Collection', fr:'Collection de badges' },
+  no_badges: { en:'No badges yet. Compete in races to earn medals!', fr:'Aucun badge. Participez aux courses pour gagner des médailles !' },
+  race_history: { en:'Race History', fr:'Historique des courses' },
+  no_history: { en:'No races completed yet.', fr:'Aucune course terminée.' },
+  loading: { en:'Loading...', fr:'Chargement...' },
+  // Race detail
+  rd_elevation: { en:'Elevation Profile', fr:'Profil altimétrique' },
+  rd_key_stats: { en:'Key Stats', fr:'Statistiques clés' },
+  rd_history: { en:'History', fr:'Historique' },
+  rd_records: { en:'Records', fr:'Records' },
+  rd_anecdotes: { en:'Anecdotes', fr:'Anecdotes' },
+  rd_distance: { en:'Distance', fr:'Distance' },
+  rd_elev_dplus: { en:'Elevation D+', fr:'Dénivelé D+' },
+  rd_alt_min: { en:'Min Altitude', fr:'Alt. min' },
+  rd_alt_max: { en:'Max Altitude', fr:'Alt. max' },
+  // Tutorial
+  tut_step: { en:'STEP', fr:'ÉTAPE' },
+  tut_skip: { en:'Skip', fr:'Passer' },
+  tut_back: { en:'Back', fr:'Retour' },
+  tut_next: { en:'Next', fr:'Suivant' },
+  tut_start: { en:'Start Playing!', fr:'C\'est parti !' },
+  // Tutorial steps
+  tut1_title: { en:'Welcome to the Leaderboard!', fr:'Bienvenue sur le Classement !' },
+  tut1_text: {
+    en:'This is the <strong>competitive multiplayer mode</strong> of Trail Tycoon.<br><br>Here, your runner is <strong>persistent</strong> — stats are saved on the server, and you train every day to compete in <strong>weekly races against other players</strong>.<br><br>Unlike Solo mode, there are no shortcuts. Every stat point must be earned, and anti-cheat protection ensures fair play.',
+    fr:'Voici le <strong>mode multijoueur compétitif</strong> de Trail Tycoon.<br><br>Ici, votre coureur est <strong>persistant</strong> — les stats sont sauvegardées sur le serveur, et vous vous entraînez chaque jour pour concourir dans des <strong>courses hebdomadaires contre d\'autres joueurs</strong>.<br><br>Contrairement au mode Solo, pas de raccourcis. Chaque point de stat doit être mérité, et la protection anti-triche garantit le fair-play.'
+  },
+  tut2_title: { en:'Daily Training — 2 Sessions/Day', fr:'Entraînement quotidien — 2 Séances/Jour' },
+  tut2_text: {
+    en:'You can perform <strong>2 training sessions per day</strong>. Choose wisely!<br><br>• <strong>14 training types</strong> available: running, intervals, yoga, strength...<br>• Each training costs <strong>energy</strong> and increases <strong>fatigue</strong><br>• Stats use <strong>diminishing returns</strong> — the higher your stats, the smaller the gains<br>• <strong>Rest</strong> and <strong>Yoga</strong> are always available, even when injured<br><br>Your training counter resets every day at midnight UTC.',
+    fr:'Vous pouvez effectuer <strong>2 séances d\'entraînement par jour</strong>. Choisissez bien !<br><br>• <strong>14 types d\'entraînement</strong> disponibles : course, intervalles, yoga, musculation...<br>• Chaque entraînement coûte de l\'<strong>énergie</strong> et augmente la <strong>fatigue</strong><br>• Les stats utilisent des <strong>rendements décroissants</strong> — plus vos stats sont hautes, plus les gains sont faibles<br>• <strong>Repos</strong> et <strong>Yoga</strong> sont toujours disponibles, même blessé<br><br>Votre compteur d\'entraînement se réinitialise chaque jour à minuit UTC.'
+  },
+  tut3_title: { en:'Your Player Card', fr:'Votre Carte Joueur' },
+  tut3_text: {
+    en:'Your card shows 4 core stats:<br><br>• <strong>END</strong> (Endurance) — stamina, energy drain in races<br>• <strong>SPD</strong> (Speed) — base pace, how fast you run<br>• <strong>TEC</strong> (Technique) — terrain efficiency, elevation handling<br>• <strong>MEN</strong> (Mental) — willpower, prevents DNF when exhausted<br><br>Below: <strong>Energy</strong> (training fuel), <strong>Health</strong> (injury prevention), <strong>Fatigue</strong> (reduces effectiveness).<br><br>Stay active! If you don\'t train for 3+ days, your stats will <strong>decay</strong>.',
+    fr:'Votre carte affiche 4 stats principales :<br><br>• <strong>END</strong> (Endurance) — stamina, consommation d\'énergie en course<br>• <strong>VIT</strong> (Vitesse) — allure de base<br>• <strong>TEC</strong> (Technique) — efficacité terrain, gestion du dénivelé<br>• <strong>MEN</strong> (Mental) — volonté, empêche les abandons<br><br>En dessous : <strong>Énergie</strong> (carburant d\'entraînement), <strong>Santé</strong> (prévention blessures), <strong>Fatigue</strong> (réduit l\'efficacité).<br><br>Restez actif ! Sans entraînement pendant 3+ jours, vos stats vont <strong>diminuer</strong>.'
+  },
+  tut4_title: { en:'Weekly Races — Every Saturday 18h UTC', fr:'Courses Hebdomadaires — Chaque Samedi 18h UTC' },
+  tut4_text: {
+    en:'A new race is announced <strong>every Monday</strong>. You have until Saturday to register.<br><br>• Races rotate through <strong>10 iconic real-world courses</strong><br>• Click the race name to see <strong>elevation profile, history, and anecdotes</strong><br>• When you register, your <strong>current stats are snapshotted</strong> — keep training until then!<br>• At Saturday 18:00 UTC, the race is <strong>simulated automatically</strong> with <strong>real weather</strong> from the race location<br><br>Weather affects performance: rain (-5%), snow (-10%), storms (-10%).',
+    fr:'Une nouvelle course est annoncée <strong>chaque lundi</strong>. Vous avez jusqu\'au samedi pour vous inscrire.<br><br>• Les courses alternent entre <strong>10 parcours réels iconiques</strong><br>• Cliquez sur le nom de la course pour voir le <strong>profil altimétrique, l\'histoire et les anecdotes</strong><br>• À l\'inscription, vos <strong>stats actuelles sont figées</strong> — continuez à vous entraîner d\'ici là !<br>• Samedi 18h00 UTC, la course est <strong>simulée automatiquement</strong> avec la <strong>vraie météo</strong> du lieu de course<br><br>La météo affecte les performances : pluie (-5%), neige (-10%), orages (-10%).'
+  },
+  tut5_title: { en:'Points, Medals & Leaderboard', fr:'Points, Médailles & Classement' },
+  tut5_text: {
+    en:'After each race, points are awarded:<br><br>• 🥇 1st — <strong>100 pts</strong><br>• 🥈 2nd — <strong>80 pts</strong><br>• 🥉 3rd — <strong>60 pts</strong><br>• 4th-10th — 50 to 20 pts<br>• Finisher — <strong>10 pts</strong><br>• DNF — <strong>5 pts</strong><br><br>Top 3 earn <strong>medals</strong> that appear on your profile. Points accumulate in the <strong>global leaderboard</strong> — climb the ranks!',
+    fr:'Après chaque course, des points sont attribués :<br><br>• 🥇 1er — <strong>100 pts</strong><br>• 🥈 2ème — <strong>80 pts</strong><br>• 🥉 3ème — <strong>60 pts</strong><br>• 4ème-10ème — 50 à 20 pts<br>• Finisher — <strong>10 pts</strong><br>• DNF — <strong>5 pts</strong><br><br>Le Top 3 gagne des <strong>médailles</strong> visibles sur votre profil. Les points s\'accumulent dans le <strong>classement global</strong> — grimpez les rangs !'
+  },
+  tut6_title: { en:'You\'re Ready!', fr:'Vous êtes prêt !' },
+  tut6_text: {
+    en:'Quick recap:<br><br>1. <strong>Train</strong> 2x/day to build your stats<br>2. <strong>Register</strong> for the weekly race before Saturday<br>3. <strong>Race</strong> is simulated with real weather<br>4. <strong>Earn points</strong> and climb the leaderboard<br>5. <strong>Collect medals</strong> and badges<br><br>Click on any race name to discover its <strong>real history, elevation profile, and records</strong>.<br><br>Good luck, runner!',
+    fr:'Récapitulatif :<br><br>1. <strong>Entraînez-vous</strong> 2x/jour pour améliorer vos stats<br>2. <strong>Inscrivez-vous</strong> à la course hebdomadaire avant samedi<br>3. La <strong>course</strong> est simulée avec la vraie météo<br>4. <strong>Gagnez des points</strong> et grimpez au classement<br>5. <strong>Collectionnez médailles</strong> et badges<br><br>Cliquez sur le nom d\'une course pour découvrir son <strong>histoire, profil altimétrique et records</strong>.<br><br>Bonne chance, coureur !'
+  },
+};
+function t(key) { return (TR[key] && TR[key][currentLang]) || (TR[key] && TR[key].en) || key; }
+function applyStaticLang() {
+  const s = (id, key) => { const el = document.getElementById(id); if (el) el.textContent = t(key); };
+  const p = (id, key) => { const el = document.getElementById(id); if (el) el.placeholder = t(key); };
+  s('nav-solo','nav_solo'); s('nav-lb','nav_lb');
+  s('auth-subtitle','auth_subtitle');
+  s('auth-tab-login','auth_login'); s('auth-tab-signup','auth_signup');
+  s('lbl-login-email','auth_email'); s('lbl-login-password','auth_password');
+  s('lbl-signup-username','auth_username'); s('lbl-signup-email','auth_email'); s('lbl-signup-password','auth_password');
+  p('login-email','auth_ph_email'); p('login-password','auth_ph_password');
+  p('signup-email','auth_ph_email'); p('signup-password','auth_ph_password_min'); p('signup-username','auth_ph_username');
+  s('login-btn','auth_login_btn'); s('signup-btn','auth_create_btn');
+  s('btn-logout','logout');
+  s('tab-btn-dashboard','tab_dashboard'); s('tab-btn-leaderboard','tab_leaderboard');
+  s('tab-btn-results','tab_results'); s('tab-btn-profile','tab_profile');
+  document.documentElement.lang = currentLang;
+}
+
 /* ═══ TRAINING DATA ═══ */
 const TRAININGS = [
-  {id:'easy_run',name:'Easy Run',icon:'🏃',effect:'END +1.5',stats:{endurance:1.5},energyCost:10},
-  {id:'long_run',name:'Long Run',icon:'🛤️',effect:'END +3, TEC +1',stats:{endurance:3,technique:1},energyCost:30},
-  {id:'interval',name:'Intervals',icon:'⚡',effect:'SPD +2.5',stats:{speed:2.5},energyCost:25},
-  {id:'hill_repeats',name:'Hill Repeats',icon:'📈',effect:'SPD +1.5, TEC +1.5',stats:{speed:1.5,technique:1.5},energyCost:25},
-  {id:'trail_run',name:'Trail Run',icon:'🏔️',effect:'TEC +2.5, END +1',stats:{technique:2.5,endurance:1},energyCost:25},
-  {id:'rest',name:'Rest',icon:'😴',effect:'Energy +40, Health +10',stats:{},energyCost:-40},
-  {id:'yoga',name:'Yoga',icon:'🧘',effect:'MEN +2, Health +8',stats:{mental:2},energyCost:-10},
-  {id:'mental_training',name:'Visualization',icon:'🧠',effect:'MEN +3',stats:{mental:3},energyCost:5},
-  {id:'cross_training',name:'Cross-training',icon:'🚴',effect:'END +1, SPD +1',stats:{endurance:1,speed:1},energyCost:15},
-  {id:'muscu',name:'Strength',icon:'💪',effect:'SPD +1.5, END +1',stats:{speed:1.5,endurance:1},energyCost:20},
-  {id:'renforcement',name:'Core Work',icon:'🏋️',effect:'TEC +1.5, MEN +1',stats:{technique:1.5,mental:1},energyCost:12},
-  {id:'night_run',name:'Night Run',icon:'🌙',effect:'TEC +2, MEN +1.5',stats:{technique:2,mental:1.5},energyCost:20},
-  {id:'back_to_back',name:'Back-to-back',icon:'🔥',effect:'END +4, MEN +2',stats:{endurance:4,mental:2},energyCost:50},
-  {id:'altitude_camp',name:'Altitude Camp',icon:'🏔️',effect:'END +5, SPD +2.5',stats:{endurance:5,speed:2.5},energyCost:40},
+  {id:'easy_run',name:'Easy Run',name_fr:'Course facile',icon:'🏃',effect:'END +1.5',stats:{endurance:1.5},energyCost:10},
+  {id:'long_run',name:'Long Run',name_fr:'Sortie longue',icon:'🛤️',effect:'END +3, TEC +1',stats:{endurance:3,technique:1},energyCost:30},
+  {id:'interval',name:'Intervals',name_fr:'Intervalles',icon:'⚡',effect:'SPD +2.5',stats:{speed:2.5},energyCost:25},
+  {id:'hill_repeats',name:'Hill Repeats',name_fr:'Côtes',icon:'📈',effect:'SPD +1.5, TEC +1.5',stats:{speed:1.5,technique:1.5},energyCost:25},
+  {id:'trail_run',name:'Trail Run',name_fr:'Trail',icon:'🏔️',effect:'TEC +2.5, END +1',stats:{technique:2.5,endurance:1},energyCost:25},
+  {id:'rest',name:'Rest',name_fr:'Repos',icon:'😴',effect:'Energy +40, Health +10',effect_fr:'Énergie +40, Santé +10',stats:{},energyCost:-40},
+  {id:'yoga',name:'Yoga',name_fr:'Yoga',icon:'🧘',effect:'MEN +2, Health +8',effect_fr:'MEN +2, Santé +8',stats:{mental:2},energyCost:-10},
+  {id:'mental_training',name:'Visualization',name_fr:'Visualisation',icon:'🧠',effect:'MEN +3',stats:{mental:3},energyCost:5},
+  {id:'cross_training',name:'Cross-training',name_fr:'Cross-training',icon:'🚴',effect:'END +1, SPD +1',stats:{endurance:1,speed:1},energyCost:15},
+  {id:'muscu',name:'Strength',name_fr:'Musculation',icon:'💪',effect:'SPD +1.5, END +1',stats:{speed:1.5,endurance:1},energyCost:20},
+  {id:'renforcement',name:'Core Work',name_fr:'Gainage',icon:'🏋️',effect:'TEC +1.5, MEN +1',stats:{technique:1.5,mental:1},energyCost:12},
+  {id:'night_run',name:'Night Run',name_fr:'Course nocturne',icon:'🌙',effect:'TEC +2, MEN +1.5',stats:{technique:2,mental:1.5},energyCost:20},
+  {id:'back_to_back',name:'Back-to-back',name_fr:'Enchaînement',icon:'🔥',effect:'END +4, MEN +2',stats:{endurance:4,mental:2},energyCost:50},
+  {id:'altitude_camp',name:'Altitude Camp',name_fr:'Stage altitude',icon:'🏔️',effect:'END +5, SPD +2.5',stats:{endurance:5,speed:2.5},energyCost:40},
 ];
 
 /* ═══ STATE ═══ */
@@ -433,10 +587,10 @@ async function doLogin() {
   const password = document.getElementById('login-password').value;
   const msg = document.getElementById('auth-msg');
   const btn = document.getElementById('login-btn');
-  if (!email || !password) { msg.textContent = 'Please fill all fields'; msg.className = 'auth-error'; return; }
-  btn.disabled = true; btn.textContent = 'Logging in...';
+  if (!email || !password) { msg.textContent = t('auth_fill_all'); msg.className = 'auth-error'; return; }
+  btn.disabled = true; btn.textContent = t('auth_logging_in');
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  btn.disabled = false; btn.textContent = 'Login';
+  btn.disabled = false; btn.textContent = t('auth_login_btn');
   if (error) { msg.textContent = error.message; msg.className = 'auth-error'; return; }
   msg.textContent = '';
   await onAuthSuccess(data.user);
@@ -449,18 +603,18 @@ async function doSignup() {
   const password = document.getElementById('signup-password').value;
   const msg = document.getElementById('auth-msg');
   const btn = document.getElementById('signup-btn');
-  if (!username || !email || !password) { msg.textContent = 'Please fill all fields'; msg.className = 'auth-error'; return; }
-  if (username.length < 3) { msg.textContent = 'Username must be at least 3 characters'; msg.className = 'auth-error'; return; }
-  if (password.length < 6) { msg.textContent = 'Password must be at least 6 characters'; msg.className = 'auth-error'; return; }
-  btn.disabled = true; btn.textContent = 'Creating account...';
+  if (!username || !email || !password) { msg.textContent = t('auth_fill_all'); msg.className = 'auth-error'; return; }
+  if (username.length < 3) { msg.textContent = t('auth_username_min'); msg.className = 'auth-error'; return; }
+  if (password.length < 6) { msg.textContent = t('auth_password_min'); msg.className = 'auth-error'; return; }
+  btn.disabled = true; btn.textContent = t('auth_creating');
   const { data, error } = await sb.auth.signUp({
     email, password,
     options: { data: { username } }
   });
-  btn.disabled = false; btn.textContent = 'Create Account';
+  btn.disabled = false; btn.textContent = t('auth_create_btn');
   if (error) { msg.textContent = error.message; msg.className = 'auth-error'; return; }
   if (data.user && !data.user.confirmed_at && !data.session) {
-    msg.textContent = 'Check your email to confirm your account!';
+    msg.textContent = t('auth_check_email');
     msg.className = 'auth-success';
     return;
   }
@@ -485,7 +639,10 @@ async function onAuthSuccess(user) {
 }
 
 function showTutIfFirstTime() {
-  if (!localStorage.getItem('lb_tut_done')) startTutorial();
+  if (!localStorage.getItem('lb_tut_done')) {
+    // Small delay to ensure DOM is ready
+    setTimeout(() => startTutorial(), 100);
+  }
 }
 
 /* ═══ DATA LOADING ═══ */
@@ -553,7 +710,7 @@ function switchTab(tab) {
 /* ═══ RENDER: DASHBOARD ═══ */
 function renderDashboard() {
   if (!userProfile) {
-    document.getElementById('tab-dashboard').innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading profile...</div>';
+    document.getElementById('tab-dashboard').innerHTML = `<div class="loading-state"><div class="spinner"></div>${t('loading_profile')}</div>`;
     return;
   }
   const s = userProfile.stats || {endurance:5,speed:5,technique:5,mental:5};
@@ -570,21 +727,21 @@ function renderDashboard() {
       <div class="player-card">
         <div class="shine"></div>
         <div class="pc-rating">${fitness}</div>
-        <div class="pc-rating-label">FITNESS</div>
+        <div class="pc-rating-label">${t('fitness')}</div>
         <div class="pc-avatar">🏃</div>
         <div class="pc-name">${userProfile.username || 'Runner'}</div>
         <div class="pc-stats">
-          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.endurance))}">${Math.round(s.endurance)}</span><span class="pc-stat-label">END</span></div>
-          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.speed))}">${Math.round(s.speed)}</span><span class="pc-stat-label">SPD</span></div>
-          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.technique))}">${Math.round(s.technique)}</span><span class="pc-stat-label">TEC</span></div>
-          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.mental))}">${Math.round(s.mental)}</span><span class="pc-stat-label">MEN</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.endurance))}">${Math.round(s.endurance)}</span><span class="pc-stat-label">${t('stat_end')}</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.speed))}">${Math.round(s.speed)}</span><span class="pc-stat-label">${t('stat_spd')}</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.technique))}">${Math.round(s.technique)}</span><span class="pc-stat-label">${t('stat_tec')}</span></div>
+          <div class="pc-stat"><span class="pc-stat-val ${statClass(Math.round(s.mental))}">${Math.round(s.mental)}</span><span class="pc-stat-label">${t('stat_men')}</span></div>
         </div>
         <div class="pc-bars">
-          <div class="bar-row"><span class="bar-label">Energy</span><div class="bar-track"><div class="bar-fill energy" style="width:${energy}%"></div></div><span class="bar-val">${energy}%</span></div>
-          <div class="bar-row"><span class="bar-label">Health</span><div class="bar-track"><div class="bar-fill health" style="width:${health}%"></div></div><span class="bar-val">${health}%</span></div>
-          <div class="bar-row"><span class="bar-label">Fatigue</span><div class="bar-track"><div class="bar-fill fatigue" style="width:${fatigue}%"></div></div><span class="bar-val">${fatigue}%</span></div>
+          <div class="bar-row"><span class="bar-label">${t('energy')}</span><div class="bar-track"><div class="bar-fill energy" style="width:${energy}%"></div></div><span class="bar-val">${energy}%</span></div>
+          <div class="bar-row"><span class="bar-label">${t('health')}</span><div class="bar-track"><div class="bar-fill health" style="width:${health}%"></div></div><span class="bar-val">${health}%</span></div>
+          <div class="bar-row"><span class="bar-label">${t('fatigue')}</span><div class="bar-track"><div class="bar-fill fatigue" style="width:${fatigue}%"></div></div><span class="bar-val">${fatigue}%</span></div>
         </div>
-        ${userProfile.is_injured ? `<div style="margin-top:12px;padding:8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:6px;font-size:.8rem;color:var(--red);">🤕 Injured: ${userProfile.injury_name || 'Unknown'}</div>` : ''}
+        ${userProfile.is_injured ? `<div style="margin-top:12px;padding:8px;background:rgba(239,68,68,.1);border:1px solid var(--red);border-radius:6px;font-size:.8rem;color:var(--red);">🤕 ${t('injured')}: ${userProfile.injury_name || 'Unknown'}</div>` : ''}
       </div>
     </div>
     <div class="dash-right">`;
@@ -594,20 +751,22 @@ function renderDashboard() {
 
   // Training section
   html += `<div class="section-box">
-    <h3>🏋️ <span class="orange">Training</span></h3>
-    <div class="training-count">Today: <strong>${trainingsToday}/2</strong> sessions used</div>
+    <h3>🏋️ <span class="orange">${t('training')}</span></h3>
+    <div class="training-count">${t('today_sessions').replace('$1', trainingsToday)}</div>
     <div class="train-grid">`;
 
   const canTrain = trainingsToday < 2 && !userProfile.is_injured;
-  TRAININGS.forEach(t => {
-    const hasEnergy = t.energyCost <= 0 || energy >= t.energyCost;
-    const isRest = t.id === 'rest' || t.id === 'yoga';
+  TRAININGS.forEach(tr => {
+    const hasEnergy = tr.energyCost <= 0 || energy >= tr.energyCost;
+    const isRest = tr.id === 'rest' || tr.id === 'yoga';
     const disabled = !canTrain && !isRest || (!hasEnergy && !isRest) || (userProfile.is_injured && !isRest);
-    html += `<button class="train-btn${disabled ? ' disabled' : ''}" onclick="${disabled ? '' : `doTrain('${t.id}')`}" ${disabled ? 'disabled' : ''}>
-      <div class="t-icon">${t.icon}</div>
-      <div class="t-name">${t.name}</div>
-      <div class="t-effect">${t.effect}</div>
-      <div class="t-cost">${t.energyCost > 0 ? '-' + t.energyCost : '+' + Math.abs(t.energyCost)} energy</div>
+    const tName = currentLang === 'fr' && tr.name_fr ? tr.name_fr : tr.name;
+    const tEffect = currentLang === 'fr' && tr.effect_fr ? tr.effect_fr : tr.effect;
+    html += `<button class="train-btn${disabled ? ' disabled' : ''}" onclick="${disabled ? '' : `doTrain('${tr.id}')`}" ${disabled ? 'disabled' : ''}>
+      <div class="t-icon">${tr.icon}</div>
+      <div class="t-name">${tName}</div>
+      <div class="t-effect">${tEffect}</div>
+      <div class="t-cost">${tr.energyCost > 0 ? '-' + tr.energyCost : '+' + Math.abs(tr.energyCost)} ${t('energy_unit')}</div>
     </button>`;
   });
 
@@ -620,7 +779,7 @@ function renderDashboard() {
 
 function renderRaceWidget() {
   if (!currentRaceWeek) {
-    return `<div class="section-box"><h3>🏁 <span class="orange">Weekly Race</span></h3><p style="color:var(--faint)">No race scheduled this week. Check back Monday!</p></div>`;
+    return `<div class="section-box"><h3>🏁 <span class="orange">${t('weekly_race')}</span></h3><p style="color:var(--faint)">${t('no_race')}</p></div>`;
   }
   const r = currentRaceWeek;
   const raceDate = new Date(r.race_date);
@@ -629,22 +788,22 @@ function renderRaceWidget() {
 
   let weatherHtml = '';
   if (r.weather_desc) {
-    weatherHtml = `<div class="rw-weather"><span class="w-icon">${getWeatherIcon(r.weather_code)}</span>${r.weather_desc}${r.temperature != null ? `, ${Math.round(r.temperature)}°C` : ''} (${r.weather_effect || 0}% effect)</div>`;
+    weatherHtml = `<div class="rw-weather"><span class="w-icon">${getWeatherIcon(r.weather_code)}</span>${r.weather_desc}${r.temperature != null ? `, ${Math.round(r.temperature)}°C` : ''} (${r.weather_effect || 0}% ${t('effect')})</div>`;
   }
 
   let actionHtml = '';
   if (isCompleted) {
-    actionHtml = `<span class="rw-status completed">Completed</span>`;
+    actionHtml = `<span class="rw-status completed">${t('completed')}</span>`;
   } else if (isRacing) {
-    actionHtml = `<span class="rw-status racing">Racing...</span>`;
+    actionHtml = `<span class="rw-status racing">${t('racing')}</span>`;
   } else if (isRegistered) {
-    actionHtml = `<div class="rw-registered">✅ You are registered!</div>`;
+    actionHtml = `<div class="rw-registered">✅ ${t('registered')}</div>`;
   } else {
-    actionHtml = `<button class="btn-register" onclick="doRegister()">Register for Race</button>`;
+    actionHtml = `<button class="btn-register" onclick="doRegister()">${t('register_btn')}</button>`;
   }
 
   return `<div class="race-widget">
-    <h3>🏁 Weekly Race</h3>
+    <h3>🏁 ${t('weekly_race')}</h3>
     <div class="rw-name" style="cursor:pointer;transition:color .2s" onclick="openRaceDetail('${r.race_id}')" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color=''">${r.race_name} <span style="font-size:.7rem;color:var(--faint)">ℹ️</span></div>
     <div class="rw-meta">${r.race_loc} — ${r.race_dist}km, ${r.race_elev}m D+ (${r.race_diff})</div>
     <div class="rw-countdown" id="race-countdown"></div>
@@ -674,7 +833,7 @@ function startCountdown() {
     const now = new Date();
     const target = new Date(currentRaceWeek.race_date);
     const diff = target - now;
-    if (diff <= 0) { el.textContent = 'RACE STARTED!'; return; }
+    if (diff <= 0) { el.textContent = t('race_started'); return; }
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
@@ -694,7 +853,7 @@ async function loadParticipantCount() {
     .select('id', { count: 'exact', head: true })
     .eq('race_week_id', currentRaceWeek.id);
   const el = document.getElementById('race-participants');
-  if (el) el.textContent = `${count || 0} runners registered`;
+  if (el) el.textContent = t('runners_registered').replace('$1', count || 0);
 }
 
 /* ═══ TRAIN ═══ */
@@ -707,7 +866,7 @@ async function doTrain(trainingId) {
   });
 
   if (error) {
-    toast(error.message || 'Training failed', 'error');
+    toast(error.message || t('toast_train_fail'), 'error');
     resultEl.innerHTML = '';
     return;
   }
@@ -729,13 +888,14 @@ async function doTrain(trainingId) {
     }
   });
 
-  const training = TRAININGS.find(t => t.id === trainingId);
+  const training = TRAININGS.find(tr => tr.id === trainingId);
+  const trName = training ? (currentLang === 'fr' && training.name_fr ? training.name_fr : training.name) : trainingId;
   resultEl.innerHTML = `<div class="train-result">
-    <div class="tr-title">${training?.icon || ''} ${training?.name || trainingId} completed!</div>
-    <div class="tr-gains">${gainsHtml || '<span style="color:var(--muted)">Recovery session</span>'}</div>
+    <div class="tr-title">${training?.icon || ''} ${trName} ${t('train_completed')}</div>
+    <div class="tr-gains">${gainsHtml || `<span style="color:var(--muted)">${t('recovery_session')}</span>`}</div>
   </div>`;
 
-  toast('Training completed!', 'success');
+  toast(t('toast_train_ok'), 'success');
   renderDashboard();
 }
 
@@ -753,20 +913,20 @@ async function doRegister() {
   });
 
   if (error) {
-    if (error.code === '23505') toast('Already registered!', 'error');
-    else toast(error.message || 'Registration failed', 'error');
+    if (error.code === '23505') toast(t('toast_already_reg'), 'error');
+    else toast(error.message || t('toast_reg_fail'), 'error');
     return;
   }
 
   isRegistered = true;
-  toast('Registered for the race!', 'success');
+  toast(t('toast_reg_ok'), 'success');
   renderDashboard();
 }
 
 /* ═══ RENDER: LEADERBOARD ═══ */
 async function renderLeaderboard() {
   const panel = document.getElementById('tab-leaderboard');
-  panel.innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading leaderboard...</div>';
+  panel.innerHTML = `<div class="loading-state"><div class="spinner"></div>${t('lb_loading')}</div>`;
 
   const { data, error } = await sb.from('lb_global_leaderboard')
     .select('*')
@@ -774,19 +934,19 @@ async function renderLeaderboard() {
     .limit(100);
 
   if (error || !data) {
-    panel.innerHTML = '<div class="lb-empty">Could not load leaderboard.</div>';
+    panel.innerHTML = `<div class="lb-empty">${t('lb_error')}</div>`;
     return;
   }
 
   if (data.length === 0) {
-    panel.innerHTML = '<div class="lb-empty">No players yet. Be the first to compete!</div>';
+    panel.innerHTML = `<div class="lb-empty">${t('lb_empty')}</div>`;
     return;
   }
 
-  let html = `<h2 style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:20px;">Global <span style="color:var(--orange)">Leaderboard</span></h2>
+  let html = `<h2 style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.3rem;margin-bottom:20px;">${t('global_lb')} <span style="color:var(--orange)">${t('lb_word')}</span></h2>
   <table class="lb-table">
     <thead><tr>
-      <th>Rank</th><th>Player</th><th>Points</th><th>Races</th><th>Medals</th><th>Best</th>
+      <th>${t('th_rank')}</th><th>${t('th_player')}</th><th>${t('th_points')}</th><th>${t('th_races')}</th><th>${t('th_medals')}</th><th>${t('th_best')}</th>
     </tr></thead><tbody>`;
 
   data.forEach((row, i) => {
@@ -797,7 +957,7 @@ async function renderLeaderboard() {
 
     html += `<tr class="${isMe ? 'highlight' : ''}">
       <td class="rank ${rankClass}">${rankIcon}</td>
-      <td class="player-name">${escHtml(row.username)}${isMe ? ' <span style="color:var(--green);font-size:.7rem">(you)</span>' : ''}</td>
+      <td class="player-name">${escHtml(row.username)}${isMe ? ` <span style="color:var(--green);font-size:.7rem">${t('you')}</span>` : ''}</td>
       <td class="points">${row.total_points}</td>
       <td>${row.races_completed || 0}</td>
       <td class="medals">
@@ -825,7 +985,7 @@ async function renderResults() {
     .limit(5);
 
   if (!races || races.length === 0) {
-    panel.innerHTML = '<div class="lb-empty">No races yet.</div>';
+    panel.innerHTML = `<div class="lb-empty">${t('no_races')}</div>`;
     return;
   }
 
@@ -849,18 +1009,18 @@ async function renderResults() {
     html += `<div class="results-weather">
       <span class="w-icon">${getWeatherIcon(completedRace.weather_code)}</span>
       ${completedRace.weather_desc}${completedRace.temperature != null ? `, ${Math.round(completedRace.temperature)}°C` : ''}
-      (${completedRace.weather_effect || 0}% effect)
+      (${completedRace.weather_effect || 0}% ${t('effect')})
     </div>`;
   }
 
   if (!results || results.length === 0) {
-    html += '<div class="lb-empty">No results yet. Race hasn\'t been simulated.</div>';
+    html += `<div class="lb-empty">${t('no_results')}</div>`;
     panel.innerHTML = html;
     return;
   }
 
   html += `<table class="lb-table">
-    <thead><tr><th>Pos</th><th>Runner</th><th>Time</th><th>Points</th><th>Badge</th></tr></thead><tbody>`;
+    <thead><tr><th>${t('th_pos')}</th><th>${t('th_runner')}</th><th>${t('th_time')}</th><th>${t('th_points')}</th><th>${t('th_badge')}</th></tr></thead><tbody>`;
 
   results.forEach(r => {
     const isMe = r.user_id === currentUser?.id;
@@ -869,7 +1029,7 @@ async function renderResults() {
 
     html += `<tr class="${isMe ? 'highlight' : ''}">
       <td class="rank ${r.position <= 3 ? ['','gold','silver','bronze'][r.position] : ''}">${r.dnf ? 'DNF' : posIcon}</td>
-      <td class="player-name">${escHtml(r.username)}${isMe ? ' <span style="color:var(--green);font-size:.7rem">(you)</span>' : ''}</td>
+      <td class="player-name">${escHtml(r.username)}${isMe ? ` <span style="color:var(--green);font-size:.7rem">${t('you')}</span>` : ''}</td>
       <td style="font-family:'JetBrains Mono',monospace">${r.dnf ? 'DNF' : formatTime(r.finish_time)}</td>
       <td class="points">${r.points}</td>
       <td>${badgeHtml}</td>
@@ -884,7 +1044,7 @@ async function renderResults() {
 async function renderProfile() {
   const panel = document.getElementById('tab-profile');
   if (!userProfile || !userLeaderboard) {
-    panel.innerHTML = '<div class="loading-state"><div class="spinner"></div>Loading...</div>';
+    panel.innerHTML = `<div class="loading-state"><div class="spinner"></div>${t('loading')}</div>`;
     return;
   }
 
@@ -897,20 +1057,20 @@ async function renderProfile() {
 
   let html = `<div class="profile-grid">
     <div class="profile-section">
-      <h3>Stats Overview</h3>
+      <h3>${t('stats_overview')}</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Total Points</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--amber)">${userLeaderboard.total_points}</div></div>
-        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Races Run</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green)">${userLeaderboard.races_completed}</div></div>
-        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Best Position</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--orange)">${userLeaderboard.best_position ? '#' + userLeaderboard.best_position : '—'}</div></div>
-        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Wins</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:#ffd700">${userLeaderboard.races_won}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${t('total_points')}</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--amber)">${userLeaderboard.total_points}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${t('races_run')}</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--green)">${userLeaderboard.races_completed}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${t('best_position')}</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:var(--orange)">${userLeaderboard.best_position ? '#' + userLeaderboard.best_position : '—'}</div></div>
+        <div><span style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">${t('wins')}</span><div style="font-family:'Orbitron',sans-serif;font-weight:800;font-size:1.6rem;color:#ffd700">${userLeaderboard.races_won}</div></div>
       </div>
     </div>
     <div class="profile-section">
-      <h3>Badges Collection</h3>
+      <h3>${t('badges_collection')}</h3>
       <div class="badge-grid">`;
 
   if (badges.length === 0) {
-    html += '<span style="color:var(--faint);font-size:.85rem">No badges yet. Compete in races to earn medals!</span>';
+    html += `<span style="color:var(--faint);font-size:.85rem">${t('no_badges')}</span>`;
   } else {
     badges.forEach(b => {
       html += `<div class="badge ${b.type || ''}">${b.type === 'gold' ? '🥇' : b.type === 'silver' ? '🥈' : '🥉'} ${b.race || ''}</div>`;
@@ -921,11 +1081,11 @@ async function renderProfile() {
 
   // Race history
   html += `<div class="profile-section" style="grid-column:1/span 2">
-    <h3>Race History</h3>
+    <h3>${t('race_history')}</h3>
     <div class="history-list">`;
 
   if (!raceHistory || raceHistory.length === 0) {
-    html += '<span style="color:var(--faint);font-size:.85rem">No races completed yet.</span>';
+    html += `<span style="color:var(--faint);font-size:.85rem">${t('no_history')}</span>`;
   } else {
     raceHistory.forEach(r => {
       const raceName = r.lb_race_weeks?.race_name || 'Unknown Race';
@@ -973,42 +1133,82 @@ function toast(msg, type = '') {
    TUTORIAL SYSTEM
    ═══════════════════════════════════════════════════════════════ */
 const TUT_STEPS = [
-  { icon:'🏔️', title:'Welcome to the Leaderboard!',
-    text:'This is the <strong>competitive multiplayer mode</strong> of Trail Tycoon.<br><br>Here, your runner is <strong>persistent</strong> — stats are saved on the server, and you train every day to compete in <strong>weekly races against other players</strong>.<br><br>Unlike Solo mode, there are no shortcuts. Every stat point must be earned, and anti-cheat protection ensures fair play.' },
-  { icon:'🏋️', title:'Daily Training — 2 Sessions/Day',
-    text:'You can perform <strong>2 training sessions per day</strong>. Choose wisely!<br><br>• <strong>14 training types</strong> available: running, intervals, yoga, strength...<br>• Each training costs <strong>energy</strong> and increases <strong>fatigue</strong><br>• Stats use <strong>diminishing returns</strong> — the higher your stats, the smaller the gains<br>• <strong>Rest</strong> and <strong>Yoga</strong> are always available, even when injured<br><br>Your training counter resets every day at midnight UTC.' },
-  { icon:'📊', title:'Your Player Card',
-    text:'Your card shows 4 core stats:<br><br>• <strong>END</strong> (Endurance) — stamina, energy drain in races<br>• <strong>SPD</strong> (Speed) — base pace, how fast you run<br>• <strong>TEC</strong> (Technique) — terrain efficiency, elevation handling<br>• <strong>MEN</strong> (Mental) — willpower, prevents DNF when exhausted<br><br>Below: <strong>Energy</strong> (training fuel), <strong>Health</strong> (injury prevention), <strong>Fatigue</strong> (reduces effectiveness).<br><br>Stay active! If you don\'t train for 3+ days, your stats will <strong>decay</strong>.' },
-  { icon:'🏁', title:'Weekly Races — Every Saturday 18h UTC',
-    text:'A new race is announced <strong>every Monday</strong>. You have until Saturday to register.<br><br>• Races rotate through <strong>10 iconic real-world courses</strong><br>• Click the race name to see <strong>elevation profile, history, and anecdotes</strong><br>• When you register, your <strong>current stats are snapshotted</strong> — keep training until then!<br>• At Saturday 18:00 UTC, the race is <strong>simulated automatically</strong> with <strong>real weather</strong> from the race location<br><br>Weather affects performance: rain (-5%), snow (-10%), storms (-10%).' },
-  { icon:'🏆', title:'Points, Medals & Leaderboard',
-    text:'After each race, points are awarded:<br><br>• 🥇 1st — <strong>100 pts</strong><br>• 🥈 2nd — <strong>80 pts</strong><br>• 🥉 3rd — <strong>60 pts</strong><br>• 4th-10th — 50 to 20 pts<br>• Finisher — <strong>10 pts</strong><br>• DNF — <strong>5 pts</strong><br><br>Top 3 earn <strong>medals</strong> that appear on your profile. Points accumulate in the <strong>global leaderboard</strong> — climb the ranks!' },
-  { icon:'🚀', title:'You\'re Ready!',
-    text:'Quick recap:<br><br>1. <strong>Train</strong> 2x/day to build your stats<br>2. <strong>Register</strong> for the weekly race before Saturday<br>3. <strong>Race</strong> is simulated with real weather<br>4. <strong>Earn points</strong> and climb the leaderboard<br>5. <strong>Collect medals</strong> and badges<br><br>Click on any race name to discover its <strong>real history, elevation profile, and records</strong>.<br><br>Good luck, runner! 🏔️' },
+  { icon:'🏔️', titleKey:'tut1_title', textKey:'tut1_text' },
+  { icon:'🏋️', titleKey:'tut2_title', textKey:'tut2_text' },
+  { icon:'📊', titleKey:'tut3_title', textKey:'tut3_text' },
+  { icon:'🏁', titleKey:'tut4_title', textKey:'tut4_text' },
+  { icon:'🏆', titleKey:'tut5_title', textKey:'tut5_text' },
+  { icon:'🚀', titleKey:'tut6_title', textKey:'tut6_text' },
 ];
 
 let tutStep = 0;
+let tutVisible = false;
+
 function startTutorial() {
   tutStep = 0;
-  document.getElementById('tut-overlay').classList.add('show');
-  renderTutStep();
+  tutVisible = true;
+  renderInlineTutorial();
 }
-function tutSkip() { document.getElementById('tut-overlay').classList.remove('show'); localStorage.setItem('lb_tut_done','1'); }
-function tutNext() { if (tutStep < TUT_STEPS.length - 1) { tutStep++; renderTutStep(); } else { tutSkip(); } }
-function tutPrev() { if (tutStep > 0) { tutStep--; renderTutStep(); } }
-function renderTutStep() {
+
+function tutSkip() {
+  tutVisible = false;
+  localStorage.setItem('lb_tut_done','1');
+  const el = document.getElementById('tut-inline');
+  if (el) { el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(() => el.remove(), 300); }
+}
+
+function tutNext() {
+  if (tutStep < TUT_STEPS.length - 1) { tutStep++; renderInlineTutorial(); }
+  else { tutSkip(); }
+}
+
+function tutPrev() {
+  if (tutStep > 0) { tutStep--; renderInlineTutorial(); }
+}
+
+function tutGoTo(i) {
+  tutStep = i;
+  renderInlineTutorial();
+}
+
+function renderInlineTutorial() {
+  if (!tutVisible) return;
   const s = TUT_STEPS[tutStep];
-  document.getElementById('tut-step-label').textContent = `STEP ${tutStep+1} / ${TUT_STEPS.length}`;
-  document.getElementById('tut-icon').textContent = s.icon;
-  document.getElementById('tut-title').textContent = s.title;
-  document.getElementById('tut-text').innerHTML = s.text;
-  document.getElementById('tut-prev').style.display = tutStep > 0 ? 'inline-block' : 'none';
-  document.getElementById('tut-next').textContent = tutStep === TUT_STEPS.length - 1 ? 'Start Playing!' : 'Next';
-  const dots = document.getElementById('tut-dots'); dots.innerHTML = '';
+  const isLast = tutStep === TUT_STEPS.length - 1;
+
+  let dotsHtml = '';
   for (let i = 0; i < TUT_STEPS.length; i++) {
-    const d = document.createElement('div');
-    d.className = 'tut-dot' + (i === tutStep ? ' active' : i < tutStep ? ' done' : '');
-    dots.appendChild(d);
+    dotsHtml += `<div class="tut-dot${i === tutStep ? ' active' : i < tutStep ? ' done' : ''}" onclick="tutGoTo(${i})"></div>`;
+  }
+
+  const html = `<div class="tut-inline" id="tut-inline">
+    <div class="tut-header">
+      <div class="tut-step-label">${t('tut_step')} ${tutStep+1} / ${TUT_STEPS.length}</div>
+      <button class="tut-close" onclick="tutSkip()" title="${t('tut_skip')}">&times;</button>
+    </div>
+    <div class="tut-body">
+      <div class="tut-icon">${s.icon}</div>
+      <div class="tut-content">
+        <div class="tut-title">${t(s.titleKey)}</div>
+        <div class="tut-text">${t(s.textKey)}</div>
+      </div>
+    </div>
+    <div class="tut-footer">
+      <div class="tut-dots">${dotsHtml}</div>
+      <div class="tut-btns">
+        ${tutStep > 0 ? `<button class="tut-btn secondary" onclick="tutPrev()">${t('tut_back')}</button>` : ''}
+        <button class="tut-btn primary" onclick="tutNext()">${isLast ? t('tut_start') : t('tut_next')}</button>
+      </div>
+    </div>
+  </div>`;
+
+  // Insert or replace the inline tutorial after the tab-nav
+  const existing = document.getElementById('tut-inline');
+  if (existing) {
+    existing.outerHTML = html;
+  } else {
+    const tabNav = document.querySelector('.tab-nav');
+    if (tabNav) tabNav.insertAdjacentHTML('afterend', html);
   }
 }
 
@@ -1207,25 +1407,25 @@ function openRaceDetail(raceId) {
     </div>
     <div class="rd-body">
       <div class="rd-section">
-        <h4>📈 Elevation Profile</h4>
+        <h4>📈 ${t('rd_elevation')}</h4>
         <div class="rd-elev-chart">${svg}</div>
       </div>
       <div class="rd-section">
-        <h4>📊 Key Stats</h4>
+        <h4>📊 ${t('rd_key_stats')}</h4>
         <div class="rd-stats-grid">
-          <div class="rd-stat"><div class="val">${race.dist}<span style="font-size:.7rem;color:var(--muted)">km</span></div><div class="label">Distance</div></div>
-          <div class="rd-stat"><div class="val">${race.elev}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Elevation D+</div></div>
-          <div class="rd-stat"><div class="val">${race.altMin}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Min Altitude</div></div>
-          <div class="rd-stat"><div class="val" style="color:var(--orange)">${race.altMax}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">Max Altitude</div></div>
+          <div class="rd-stat"><div class="val">${race.dist}<span style="font-size:.7rem;color:var(--muted)">km</span></div><div class="label">${t('rd_distance')}</div></div>
+          <div class="rd-stat"><div class="val">${race.elev}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">${t('rd_elev_dplus')}</div></div>
+          <div class="rd-stat"><div class="val">${race.altMin}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">${t('rd_alt_min')}</div></div>
+          <div class="rd-stat"><div class="val" style="color:var(--orange)">${race.altMax}<span style="font-size:.7rem;color:var(--muted)">m</span></div><div class="label">${t('rd_alt_max')}</div></div>
         </div>
       </div>
       <div class="rd-section">
-        <h4>📜 History</h4>
+        <h4>📜 ${t('rd_history')}</h4>
         <div class="rd-history">${race.history}</div>
       </div>`;
 
   if (race.records && race.records.length > 0) {
-    html += `<div class="rd-section"><h4>🏅 Records</h4><div class="rd-records">`;
+    html += `<div class="rd-section"><h4>🏅 ${t('rd_records')}</h4><div class="rd-records">`;
     race.records.forEach(r => {
       html += `<div class="rd-record"><span class="rr-name">${r.name}</span><span class="rr-time">${r.time}</span><span class="rr-year">${r.year}</span></div>`;
     });
@@ -1233,7 +1433,7 @@ function openRaceDetail(raceId) {
   }
 
   if (race.anecdotes && race.anecdotes.length > 0) {
-    html += `<div class="rd-section"><h4>💡 Anecdotes</h4><div class="rd-anecdotes">`;
+    html += `<div class="rd-section"><h4>💡 ${t('rd_anecdotes')}</h4><div class="rd-anecdotes">`;
     race.anecdotes.forEach(a => {
       html += `<div class="rd-anecdote">${a.text}</div>`;
     });
@@ -1251,6 +1451,8 @@ function closeRaceDetail() {
 
 /* ═══ INIT ═══ */
 (async function init() {
+  applyStaticLang();
+
   const { data: { session } } = await sb.auth.getSession();
   if (session?.user) {
     onAuthSuccess(session.user);
